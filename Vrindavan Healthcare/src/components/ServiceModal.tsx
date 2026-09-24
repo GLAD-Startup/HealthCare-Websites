@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, CheckCircle2, Sparkles, Phone, Calendar } from 'lucide-react';
 import { type ServiceItem, CLINIC_INFO } from '../data/clinicData';
+import vrindavanLogo from '../assets/Vrindavan_Healthcare_logo.png';
 
 interface ServiceModalProps {
   service: ServiceItem | null;
@@ -24,8 +25,22 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
             <X className="w-5 h-5" />
           </button>
 
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-white shadow-md shrink-0 p-0.5 border border-white/80">
+              <img
+                src={vrindavanLogo}
+                alt="Vrindavan Healthcare Official Logo"
+                className="w-full h-full object-contain rounded-full"
+              />
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[#CCFBF1] font-bold">Vrindavan Healthcare</div>
+              <div className="text-[11px] text-white/80 font-medium">Dr. Chaitanya Gupta (DM Gastro)</div>
+            </div>
+          </div>
+
           {service.isConfirmedProcedure && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F59E0B] text-slate-950 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F59E0B] text-slate-950 text-xs font-bold uppercase tracking-wider mb-2">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Active Endoscopy Centre</span>
             </div>
@@ -34,9 +49,6 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
           <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             {service.name}
           </h3>
-          <p className="text-white/80 text-sm mt-1 font-medium">
-            Vrindavan Healthcare • Dr. Chaitanya Gupta (DM Gastroenterology)
-          </p>
         </div>
 
         {/* Modal Content */}

@@ -106,7 +106,7 @@ export const GastroCareServices: React.FC<GastroCareServicesProps> = ({
               <div className="pt-4 border-t border-slate-200/80 flex items-center justify-between gap-3">
                 <button
                   onClick={() => onSelectService(service)}
-                  className="text-xs font-bold text-slate-700 hover:text-[#0F766E] transition-colors flex items-center gap-1 cursor-pointer"
+                  className="min-h-[44px] text-xs font-bold text-slate-700 hover:text-[#0F766E] transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <span>Read Overview</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -114,7 +114,7 @@ export const GastroCareServices: React.FC<GastroCareServicesProps> = ({
 
                 <button
                   onClick={() => onBookService(service.name)}
-                  className="px-4 py-2 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  className="min-h-[44px] px-4 py-2 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center"
                 >
                   <span>Book (₹200)</span>
                 </button>

@@ -116,7 +116,7 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
                 setActiveTab(tab.id as any);
                 setActiveItemIndex(0);
               }}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`min-h-[44px] px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center justify-center cursor-pointer ${
                 activeTab === tab.id
                   ? 'bg-[#0F766E] text-white shadow-md'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -128,7 +128,7 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
         </div>
 
         {/* Main Case Study Feature Card */}
-        <div className="bg-[#F8FAFC] rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-lg max-w-5xl mx-auto">
+        <div className="bg-[#F8FAFC] rounded-3xl border border-slate-200/90 p-5 sm:p-8 lg:p-10 shadow-lg max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left: Case Info */}
@@ -177,7 +177,7 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
               <div className="pt-2">
                 <button
                   onClick={() => onBookTreatment(currentItem.treatmentName)}
-                  className="px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto min-h-[44px] justify-center px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
                 >
                   <span>Book Consultation for this Condition</span>
                   <ArrowRight className="w-4 h-4" />

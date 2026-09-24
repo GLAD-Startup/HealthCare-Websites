@@ -46,7 +46,7 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
       {controlledIsOpen === undefined && (
         <button
           onClick={() => setInternalIsOpen(true)}
-          className="fixed left-0 top-1/2 -translate-y-1/2 z-50 bg-gradient-to-r from-red-700 via-red-600 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold text-xs tracking-wider uppercase py-4 px-2.5 rounded-r-2xl shadow-2xl flex flex-col items-center gap-2.5 cursor-pointer transition-all duration-300 hover:translate-x-1 border-r-2 border-t border-b border-white/20"
+          className="hidden md:flex fixed left-0 top-1/2 -translate-y-1/2 z-40 bg-gradient-to-r from-red-700 via-red-600 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold text-xs tracking-wider uppercase py-4 px-2.5 rounded-r-2xl shadow-2xl flex-col items-center gap-2.5 cursor-pointer transition-all duration-300 hover:translate-x-1 border-r-2 border-t border-b border-white/20"
           aria-label="Request Callback"
         >
           <span className="[writing-mode:vertical-rl] rotate-180 tracking-widest">Request Callback</span>

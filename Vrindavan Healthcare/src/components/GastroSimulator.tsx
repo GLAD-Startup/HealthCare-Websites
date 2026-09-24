@@ -142,17 +142,17 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
             <span>Interactive Gastro &amp; Liver Condition Explorer</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             See the Difference Super-Specialty Gastro Care Makes
           </h2>
           
-          <p className="text-slate-300 text-base sm:text-lg mt-3 font-medium">
+          <p className="text-slate-300 text-sm sm:text-base lg:text-lg mt-2 sm:mt-3 font-medium">
             Drag the interactive slider below to compare untreated gastrointestinal &amp; liver distress versus restored digestive wellness under Dr. Chaitanya Gupta.
           </p>
         </div>
 
         {/* Condition Tabs */}
-        <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10">
           {(Object.keys(conditions) as ConditionType[]).map((condKey) => {
             const item = conditions[condKey];
             const isActive = activeCondition === condKey;
@@ -160,39 +160,39 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
               <button
                 key={condKey}
                 onClick={() => setActiveCondition(condKey)}
-                className={`px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 min-h-[40px] ${
                   isActive
                     ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
                     : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
                 }`}
               >
                 <span>{item.title.split('&')[0]}</span>
-                {isActive && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+                {isActive && <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />}
               </button>
             );
           })}
         </div>
 
         {/* Interactive Comparison Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-10 mb-8">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl p-4 sm:p-8 lg:p-10 mb-8">
           
           {/* Badge & Tagline */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-800">
             <div>
-              <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                 {current.badge}
               </span>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white mt-2">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white mt-2">
                 {current.title}
               </h3>
-              <p className="text-sm text-slate-400 mt-1 font-medium">
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
                 {current.tagline}
               </p>
             </div>
 
             <button
               onClick={() => onBookService(current.serviceName)}
-              className="px-5 py-2.5 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md cursor-pointer transition-all hover:scale-105"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#0F766E] hover:bg-[#0D9488] active:bg-[#0D9488] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all hover:scale-105 min-h-[44px]"
             >
               <span>Consult for {current.title.split('(')[0]}</span>
               <ArrowRight className="w-4 h-4" />
@@ -200,51 +200,51 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
           </div>
 
           {/* Dual Interactive Split Comparison Canvas */}
-          <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 min-h-[360px] sm:min-h-[420px] select-none">
+          <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 min-h-[340px] sm:min-h-[420px] select-none">
             
             {/* Background Layer: Untreated Condition (Left Side) */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${current.untreatedState.visualBg} p-6 sm:p-10 flex flex-col justify-between`}>
+            <div className={`absolute inset-0 bg-gradient-to-br ${current.untreatedState.visualBg} p-4 sm:p-8 flex flex-col justify-between`}>
               <div>
-                <span className="inline-block px-3 py-1 rounded-md bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold uppercase tracking-wider mb-2">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2">
                   ⚠️ {current.untreatedState.label}
                 </span>
-                <div className="space-y-2 mt-4 max-w-sm">
+                <div className="space-y-1.5 sm:space-y-2 mt-2 sm:mt-4 max-w-sm">
                   {current.untreatedState.metrics.map((m, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-red-100 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-                      <span>{m}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                      <span className="text-[11px] sm:text-xs md:text-sm">{m}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="text-xs text-red-200/80 font-medium">
+              <div className="text-[10px] sm:text-xs text-red-200/80 font-medium">
                 *Untreated condition can lead to chronic complications, ulcer perforation, or progressive liver fibrosis.
               </div>
             </div>
 
             {/* Foreground Layer: Treated Condition (Right Side, clipped by sliderPosition) */}
             <div
-              className={`absolute inset-0 bg-gradient-to-br ${current.treatedState.visualBg} p-6 sm:p-10 flex flex-col justify-between`}
+              className={`absolute inset-0 bg-gradient-to-br ${current.treatedState.visualBg} p-4 sm:p-8 flex flex-col justify-between`}
               style={{
                 clipPath: `polygon(${sliderPosition}% 0, 100% 0, 100% 100%, ${sliderPosition}% 100%)`
               }}
             >
               <div className="text-right ml-auto">
-                <span className="inline-block px-3 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider mb-2">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2">
                   ✅ {current.treatedState.label}
                 </span>
-                <div className="space-y-2 mt-4 max-w-sm ml-auto">
+                <div className="space-y-1.5 sm:space-y-2 mt-2 sm:mt-4 max-w-sm ml-auto">
                   {current.treatedState.metrics.map((m, idx) => (
                     <div key={idx} className="flex items-center justify-end gap-2 text-xs sm:text-sm text-emerald-100 font-medium">
-                      <span>{m}</span>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-[11px] sm:text-xs md:text-sm">{m}</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" />
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="text-right text-xs text-emerald-200/80 font-medium ml-auto">
+              <div className="text-right text-[10px] sm:text-xs text-emerald-200/80 font-medium ml-auto">
                 *Targeted care by Dr. Chaitanya Gupta with transparent ₹200 consultation fee in Vrindavan.
               </div>
             </div>

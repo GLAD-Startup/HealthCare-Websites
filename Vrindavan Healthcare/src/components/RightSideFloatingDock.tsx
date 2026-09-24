@@ -65,8 +65,8 @@ export const RightSideFloatingDock: React.FC<RightSideFloatingDockProps> = ({ on
 
   return (
     <>
-      {/* Apollo-Style Hover Expanding Dock on Right Edge */}
-      <div className="fixed right-3 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3.5 items-end pointer-events-none">
+      {/* Desktop: Apollo-Style Hover Expanding Dock on Right Edge (md and above) */}
+      <div className="hidden md:flex fixed right-3 top-1/2 -translate-y-1/2 z-40 flex-col gap-3.5 items-end pointer-events-none">
         {dockItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -94,6 +94,55 @@ export const RightSideFloatingDock: React.FC<RightSideFloatingDockProps> = ({ on
             </div>
           );
         })}
+      </div>
+
+      {/* Mobile: Bottom Sticky Quick Action Bar (below md, touch-friendly min 44px) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-3 py-2 shadow-2xl pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        <div className="grid grid-cols-4 gap-2 max-w-md mx-auto">
+          {/* 1. Direct Call */}
+          <a
+            href={`tel:${CLINIC_INFO.phoneRaw}`}
+            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-600 active:bg-emerald-700 text-white text-center min-h-[44px] transition-transform active:scale-95"
+            aria-label="Call Clinic"
+          >
+            <Phone className="w-4 h-4 mb-0.5 text-white" />
+            <span className="text-[10px] font-bold">Call</span>
+          </a>
+
+          {/* 2. WhatsApp */}
+          <a
+            href={CLINIC_INFO.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-[#25D366] active:bg-[#1ebd59] text-white text-center min-h-[44px] transition-transform active:scale-95"
+            aria-label="Chat on WhatsApp"
+          >
+            <MessageCircle className="w-4 h-4 mb-0.5 text-white" />
+            <span className="text-[10px] font-bold">WhatsApp</span>
+          </a>
+
+          {/* 3. Book OPD */}
+          <button
+            type="button"
+            onClick={onOpenAppointment}
+            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-[#0F766E] active:bg-[#0D9488] text-white text-center min-h-[44px] transition-transform active:scale-95 cursor-pointer"
+            aria-label="Book OPD Consultation"
+          >
+            <Calendar className="w-4 h-4 mb-0.5 text-white" />
+            <span className="text-[10px] font-bold">Book (₹200)</span>
+          </button>
+
+          {/* 4. Request Callback */}
+          <button
+            type="button"
+            onClick={() => setIsCallbackOpen(true)}
+            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-red-600 active:bg-red-700 text-white text-center min-h-[44px] transition-transform active:scale-95 cursor-pointer"
+            aria-label="Request Callback"
+          >
+            <PhoneCall className="w-4 h-4 mb-0.5 text-white" />
+            <span className="text-[10px] font-bold">Callback</span>
+          </button>
+        </div>
       </div>
 
       {/* Render Request Callback Drawer Modal when triggered */}

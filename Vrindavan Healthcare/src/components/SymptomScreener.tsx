@@ -205,47 +205,49 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
             <span>Interactive Patient Guidance Tool</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
             Digestive &amp; Health Symptom Screener
           </h2>
           
-          <p className="text-slate-600 text-base sm:text-lg mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-2 sm:mt-3 font-medium">
             Select what you are experiencing to receive a personalized clinical recommendation and priority OPD consultation with Dr. Chaitanya Gupta.
           </p>
         </div>
 
         {/* Category Selector Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex p-1 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <div className="flex justify-center mb-6 sm:mb-8 w-full">
+          <div className="flex flex-col sm:flex-row w-full sm:w-auto p-1 rounded-2xl bg-white border border-slate-200 shadow-xs gap-1">
             <button
+              type="button"
               onClick={() => {
                 setCategory('gastro');
                 setSelectedSymptoms([]);
                 setIsSubmitted(false);
               }}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
+              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
                 category === 'gastro'
                   ? 'bg-[#0F766E] text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 hover:text-slate-900 active:bg-slate-50'
               }`}
             >
-              <Activity className="w-4 h-4" />
+              <Activity className="w-4 h-4 shrink-0" />
               <span>Liver &amp; Gastro Symptoms</span>
             </button>
 
             <button
+              type="button"
               onClick={() => {
                 setCategory('general');
                 setSelectedSymptoms([]);
                 setIsSubmitted(false);
               }}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 ${
+              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
                 category === 'general'
                   ? 'bg-[#0F766E] text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 hover:text-slate-900 active:bg-slate-50'
               }`}
             >
-              <HeartPulse className="w-4 h-4" />
+              <HeartPulse className="w-4 h-4 shrink-0" />
               <span>General Physician &amp; Metabolic</span>
             </button>
           </div>

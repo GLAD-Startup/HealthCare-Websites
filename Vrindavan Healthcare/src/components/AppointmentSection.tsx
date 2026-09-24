@@ -121,7 +121,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
 
           {/* Right Column: Interactive Booking Form */}
           <div className="lg:col-span-7">
-            <div className="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xl">
+            <div className="p-5 sm:p-8 lg:p-10 rounded-3xl bg-white border border-slate-200 shadow-xl">
               
               <div className="mb-6">
                 <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -165,7 +165,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                         value={formData.patientName}
                         onChange={(e) => setFormData({ ...formData, patientName: e.target.value })}
                         placeholder="e.g. Ramesh Kumar"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                        className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
                       />
                     </div>
 
@@ -179,7 +179,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="e.g. 9876543210"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                        className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
                       />
                     </div>
                   </div>
@@ -192,7 +192,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                     <select
                       value={formData.service}
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white"
+                      className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white"
                     >
                       <option value="Upper GI Endoscopy (Diagnostic & Therapeutic)">Upper GI Endoscopy (Diagnostic &amp; Therapeutic)</option>
                       <option value="Fatty Liver & Liver Cirrhosis Management">Fatty Liver &amp; Liver Cirrhosis Management</option>
@@ -214,7 +214,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                     <select
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white"
+                      className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white"
                     >
                       <option value="Location A — Raman Reti (ISKCON Area)">Location A: Bhakti Vedant Marg, Raman Reti (Near ISKCON Temple)</option>
                       <option value="Location B — Hanuman Bagh (City Centre)">Location B: Bankey Bihari Nikunj, Hanuman Bagh (Near Brijwasi)</option>
@@ -230,7 +230,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                         type="date"
                         value={formData.preferredDate}
                         onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                        className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
                       />
                     </div>
 
@@ -241,7 +241,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                       <select
                         value={formData.preferredTime}
                         onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white"
+                        className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white"
                       >
                         <option value="Morning (9:00 AM - 1:00 PM)">Morning (9:00 AM - 1:00 PM)</option>
                         <option value="Afternoon (1:00 PM - 4:00 PM)">Afternoon (1:00 PM - 4:00 PM)</option>
@@ -259,14 +259,14 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       placeholder="Briefly describe your symptoms or existing reports..."
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                      className="w-full min-h-[60px] px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
                     />
                   </div>
 
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full py-4 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#0F766E]/30 transition-all hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full min-h-[48px] py-3.5 sm:py-4 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#0F766E]/30 transition-all hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Calendar className="w-4 h-4 text-white" />
                       <span>Confirm Appointment Request (₹200 Fee)</span>

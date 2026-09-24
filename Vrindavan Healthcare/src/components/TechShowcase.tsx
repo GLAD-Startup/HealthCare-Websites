@@ -91,10 +91,10 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
           <button
             onClick={() => setActiveTech('endoscopy')}
-            className={`px-6 py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
+            className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTech === 'endoscopy'
                 ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
@@ -106,7 +106,7 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
 
           <button
             onClick={() => setActiveTech('hepatology')}
-            className={`px-6 py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
+            className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTech === 'hepatology'
                 ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
@@ -118,7 +118,7 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
 
           <button
             onClick={() => setActiveTech('colonoscopy')}
-            className={`px-6 py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
+            className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTech === 'colonoscopy'
                 ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
@@ -130,7 +130,7 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
         </div>
 
         {/* Tab Content Box */}
-        <div className="tech-tab-content bg-slate-800/80 rounded-3xl border border-slate-700/80 p-6 sm:p-10 lg:p-12 overflow-hidden backdrop-blur-md">
+        <div className="tech-tab-content bg-slate-800/80 rounded-3xl border border-slate-700/80 p-5 sm:p-10 lg:p-12 overflow-hidden backdrop-blur-md">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left: Info */}
@@ -165,7 +165,7 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
               <div className="pt-2">
                 <button
                   onClick={() => onBookTechService(current.serviceName)}
-                  className="px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#0F766E]/30 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto min-h-[44px] justify-center px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#0F766E]/30 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
                 >
                   <span>Book Consultation for {current.title.split(' ')[0]}</span>
                   <ArrowRight className="w-4 h-4" />

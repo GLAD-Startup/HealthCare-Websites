@@ -41,11 +41,11 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
 
         {/* Doctor Main Showcase Card */}
         <div className="doctor-profile-anime bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden max-w-5xl mx-auto hover:shadow-2xl transition-all duration-300">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-6 sm:p-10 lg:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-5 sm:p-10 lg:p-12">
             
             {/* Left Col: Photo & Verified Badges */}
             <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="relative w-64 sm:w-72 h-80 sm:h-92 rounded-3xl overflow-hidden shadow-2xl border-4 border-[#F0FDFA] bg-slate-100 group">
+              <div className="relative w-56 sm:w-72 h-72 sm:h-92 rounded-3xl overflow-hidden shadow-2xl border-4 border-[#F0FDFA] bg-slate-100 group">
                 <img
                   src={DOCTOR_CHAITANYA.image}
                   alt={DOCTOR_CHAITANYA.name}
@@ -142,15 +142,15 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
               </div>
 
               {/* Bottom Actions */}
-              <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="text-xs text-slate-500">
                   Consultation Fee: <strong className="text-slate-900 font-bold text-sm">₹200</strong> (Cash, UPI, Cards)
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
                   <button
                     onClick={() => onBookDoctor(DOCTOR_CHAITANYA.name)}
-                    className="px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                    className="w-full sm:w-auto min-h-[44px] justify-center px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
                   >
                     <Calendar className="w-4 h-4 text-white" />
                     <span>Book Appointment with Dr. Gupta</span>

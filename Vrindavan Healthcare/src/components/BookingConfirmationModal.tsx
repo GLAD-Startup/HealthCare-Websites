@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle2, X, Calendar, Download, MessageSquare, MapPin, Printer } from 'lucide-react';
 import { CLINIC_INFO } from '../data/clinicData';
+import vrindavanLogo from '../assets/Vrindavan_Healthcare_logo.png';
 
 export interface BookingDetails {
   refNumber: string;
@@ -55,7 +56,7 @@ END:VCALENDAR`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
         
         {/* Close Button */}
         <button
@@ -67,8 +68,15 @@ END:VCALENDAR`;
 
         {/* Header Ribbon */}
         <div className="bg-[#0F766E] text-white p-6 text-center space-y-2">
-          <div className="w-14 h-14 rounded-full bg-white/20 text-white flex items-center justify-center mx-auto mb-2 border-2 border-white/40 shadow-inner">
-            <CheckCircle2 className="w-8 h-8" />
+          <div className="relative w-16 h-16 rounded-full bg-white p-1 mx-auto mb-2 shadow-lg flex items-center justify-center border-2 border-white/80">
+            <img
+              src={vrindavanLogo}
+              alt="Vrindavan Healthcare Official Logo"
+              className="w-full h-full object-contain rounded-full"
+            />
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white shadow-xs">
+              <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+            </div>
           </div>
           <h3 className="text-2xl font-extrabold text-white tracking-tight">
             OPD Appointment Requested!

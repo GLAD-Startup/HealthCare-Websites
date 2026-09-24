@@ -22,24 +22,25 @@ export const ClinicInfoAndMap: React.FC = () => {
             <span>2 Clinic Locations in Vrindavan (PIN 281121)</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
             Clinic Locations &amp; OPD Hours
           </h2>
 
-          <p className="text-slate-600 text-base sm:text-lg mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-2 sm:mt-3 font-medium">
             Conveniently accessible at Bhakti Vedant Marg (Raman Reti near ISKCON) and Hanuman Bagh (near Brijwasi Mithai Wala).
           </p>
         </div>
 
         {/* Location Switcher Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="flex flex-col sm:flex-row justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-10 w-full max-w-xl mx-auto">
           {CLINIC_LOCATIONS.map((loc) => {
             const isSelected = selectedLocation.id === loc.id;
             return (
               <button
                 key={loc.id}
+                type="button"
                 onClick={() => setSelectedLocation(loc)}
-                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3 ${
+                className={`w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3 min-h-[44px] ${
                   isSelected
                     ? 'bg-[#0F766E] text-white border-[#0F766E] shadow-lg shadow-[#0F766E]/20 scale-102'
                     : 'bg-white text-slate-800 border-slate-200 hover:border-slate-300 shadow-xs'
@@ -205,13 +206,13 @@ export const ClinicInfoAndMap: React.FC = () => {
 
           {/* Right Column: Interactive Embedded Map */}
           <div className="lg:col-span-7 h-full">
-            <div className="rounded-3xl border border-slate-200 overflow-hidden shadow-lg bg-slate-100 flex flex-col h-full min-h-[500px]">
+            <div className="rounded-2xl sm:rounded-3xl border border-slate-200 overflow-hidden shadow-lg bg-slate-100 flex flex-col h-full min-h-[340px] sm:min-h-[500px]">
               
               {/* Map Bar */}
-              <div className="p-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-3">
+              <div className="p-3 sm:p-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2 sm:gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                  <span className="text-xs font-bold">
+                  <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="text-[11px] sm:text-xs font-bold">
                     GPS Coordinates: {selectedLocation.coordinates.lat}, {selectedLocation.coordinates.lng}
                   </span>
                 </div>
@@ -219,7 +220,7 @@ export const ClinicInfoAndMap: React.FC = () => {
                   href={selectedLocation.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-teal-300 hover:text-white font-bold flex items-center gap-1"
+                  className="text-xs text-teal-300 hover:text-white font-bold flex items-center gap-1 min-h-[36px]"
                 >
                   <span>Open Full Screen Map</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -227,7 +228,7 @@ export const ClinicInfoAndMap: React.FC = () => {
               </div>
 
               {/* Map Iframe */}
-              <div className="relative flex-1 w-full min-h-[460px]">
+              <div className="relative flex-1 w-full min-h-[280px] sm:min-h-[460px]">
                 <iframe
                   title="Dr. Chaitanya Gupta Clinic Map"
                   src={
