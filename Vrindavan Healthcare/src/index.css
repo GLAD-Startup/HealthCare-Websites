@@ -1,58 +1,56 @@
 @import "tailwindcss";
 
-@layer base {
-  html {
-    scroll-padding-top: 110px;
-  }
+html {
+  scroll-padding-top: 110px;
+}
 
-  /* Lenis Smooth Scroll Rules */
-  html.lenis, html.lenis body {
-    height: auto;
-  }
+/* Lenis Smooth Scroll Rules */
+html.lenis, html.lenis body {
+  height: auto;
+}
 
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
 
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
 
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
 
-  :root {
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --color-primary: #0F766E;
-    --color-primary-dark: #0D9488;
-    --color-primary-light: #F0FDFA;
-    --color-pink: #EC4899;
-    --color-pink-light: #FDF2F8;
-    --color-blue: #2563EB;
-    --color-blue-light: #EFF6FF;
-    --color-accent: #F59E0B;
-    --color-surface: #F8FAFC;
-  }
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --color-primary: #0F766E;
+  --color-primary-dark: #0D9488;
+  --color-primary-light: #F0FDFA;
+  --color-pink: #EC4899;
+  --color-pink-light: #FDF2F8;
+  --color-blue: #2563EB;
+  --color-blue-light: #EFF6FF;
+  --color-accent: #F59E0B;
+  --color-surface: #F8FAFC;
+}
 
-  body {
-    font-family: var(--font-sans);
-    background-color: #F8FAFC;
-    color: #0F172A;
-    overflow-x: hidden;
-  }
+body {
+  font-family: var(--font-sans);
+  background-color: #F8FAFC;
+  color: #0F172A;
+  overflow-x: hidden;
+}
 
-  /* Fluid images & media across all viewports */
-  img, svg, video, canvas, audio, iframe, embed, object {
-    max-width: 100%;
-    height: auto;
-  }
+/* Fluid images & media across all viewports */
+img, svg, video, canvas, audio, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
 
-  /* Prevent automatic iOS zooming on text inputs */
-  @media screen and (max-width: 767px) {
-    input, select, textarea {
-      font-size: 16px !important;
-    }
+/* Prevent automatic iOS zooming on text inputs */
+@media screen and (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important;
   }
 }
 
