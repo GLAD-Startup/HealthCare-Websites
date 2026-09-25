@@ -174,7 +174,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Developed by GLAD Studio Tag */}
-          <div className="flex items-center gap-2 text-slate-500 text-xs font-medium bg-[#FAFAF8] px-3 py-1 rounded-full border border-slate-200/90 shadow-2xs">
+          <div className="flex items-center gap-2 text-slate-500 text-xs font-medium bg-[#FAFAF8] px-3.5 py-1.5 rounded-full border border-slate-200/90 shadow-2xs">
             <span>Developed by</span>
             <a
               href="https://gladstudio.net"
@@ -186,8 +186,8 @@ export const Footer: React.FC = () => {
               <img
                 src={gladStudioLogo}
                 alt="GLAD Studio"
-                style={{ height: '16px', maxHeight: '16px', width: 'auto', display: 'block' }}
-                className="h-4 max-h-4 w-auto object-contain shrink-0"
+                style={{ height: '22px', maxHeight: '22px', width: 'auto', display: 'block' }}
+                className="h-[22px] max-h-[22px] w-auto object-contain shrink-0"
               />
             </a>
           </div>
