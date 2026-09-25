@@ -5,7 +5,7 @@ interface GastroSimulatorProps {
   onBookService: (serviceName: string) => void;
 }
 
-type ConditionType = 'ulcers' | 'fatty-liver' | 'gerd';
+type ConditionType = 'fatty-liver' | 'gerd' | 'ulcers';
 
 interface ConditionDetail {
   id: ConditionType;
@@ -25,7 +25,7 @@ interface ConditionDetail {
 }
 
 export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService }) => {
-  const [activeCondition, setActiveCondition] = useState<ConditionType>('ulcers');
+  const [activeCondition, setActiveCondition] = useState<ConditionType>('fatty-liver');
   const [sliderPosition, setSliderPosition] = useState<number>(50); // percentage 0 - 100
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,32 +60,6 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
   };
 
   const conditions: Record<ConditionType, ConditionDetail> = {
-    ulcers: {
-      id: 'ulcers',
-      title: 'Active Gastric Ulcer vs Healed Mucosa',
-      badge: 'UPPER GI ENDOSCOPY IN VRINDAVAN',
-      tagline: 'High-Definition Video Mucosal Inspection & Epithelial Re-Sealing',
-      description: 'H. pylori bacterial infection or NSAID overuse breaks down the stomach\'s mucosal barrier, creating bleeding ulcer craters. Targeted quadruple eradication therapy leads to complete epithelial healing.',
-      solutionTitle: 'Olympus Video Endoscopy & Quadruple Eradication Protocol',
-      solutionDesc: 'Dr. Chaitanya Gupta conducts diagnostic endoscopy to visualize the ulcer base, rule out bleeding, and prescribe tailored mucosal healing regimens that permanently eliminate burning.',
-      serviceName: 'Upper GI Endoscopy (Diagnostic & Therapeutic)',
-      beforeImage: '/images/ulcer_16_9_before.jpg',
-      afterImage: '/images/ulcer_16_9_after.jpg',
-      beforeLabel: 'Severe Active Bleeding Ulcer',
-      afterLabel: '100% Healed Gastric Mucosa',
-      untreatedMetrics: [
-        'Deep mucosal crater with inflamed red bleeding margins',
-        'Severe retrosternal gnawing pain after eating',
-        'Continuous risk of internal hemorrhage & dark black stools',
-        'Active H. pylori bacterial colonization damaging tissue'
-      ],
-      treatedMetrics: [
-        'Fully re-epithelialized smooth pink gastric mucosa',
-        '100% Eradicated H. pylori bacterial culture',
-        'Complete freedom from burning stomach ache & belching',
-        'Restored protective mucus barrier preventing recurrence'
-      ]
-    },
     'fatty-liver': {
       id: 'fatty-liver',
       title: 'Grade 2 Fatty Liver to Healthy Liver',
@@ -136,6 +110,32 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
         '100% Intact, smooth esophageal mucosal barrier',
         'Zero burning sensation & uninterrupted restful sleep',
         'Harmonized gastric acid balance without medication reliance'
+      ]
+    },
+    ulcers: {
+      id: 'ulcers',
+      title: 'Active Gastric Ulcer vs Healed Mucosa',
+      badge: 'UPPER GI ENDOSCOPY IN VRINDAVAN',
+      tagline: 'High-Definition Video Mucosal Inspection & Epithelial Re-Sealing',
+      description: 'H. pylori bacterial infection or NSAID overuse breaks down the stomach\'s mucosal barrier, creating bleeding ulcer craters. Targeted quadruple eradication therapy leads to complete epithelial healing.',
+      solutionTitle: 'Olympus Video Endoscopy & Quadruple Eradication Protocol',
+      solutionDesc: 'Dr. Chaitanya Gupta conducts diagnostic endoscopy to visualize the ulcer base, rule out bleeding, and prescribe tailored mucosal healing regimens that permanently eliminate burning.',
+      serviceName: 'Upper GI Endoscopy (Diagnostic & Therapeutic)',
+      beforeImage: '/images/ulcer_16_9_before.jpg',
+      afterImage: '/images/ulcer_16_9_after.jpg',
+      beforeLabel: 'Severe Active Bleeding Ulcer',
+      afterLabel: '100% Healed Gastric Mucosa',
+      untreatedMetrics: [
+        'Deep mucosal crater with inflamed red bleeding margins',
+        'Severe retrosternal gnawing pain after eating',
+        'Continuous risk of internal hemorrhage & dark black stools',
+        'Active H. pylori bacterial colonization damaging tissue'
+      ],
+      treatedMetrics: [
+        'Fully re-epithelialized smooth pink gastric mucosa',
+        '100% Eradicated H. pylori bacterial culture',
+        'Complete freedom from burning stomach ache & belching',
+        'Restored protective mucus barrier preventing recurrence'
       ]
     }
   };
@@ -193,7 +193,11 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
           {/* Card Top Title Row */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
             <div>
-              <span className="px-3 py-1 rounded-full bg-[#E6F7F5] text-teal-900 border border-teal-200 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+              <span className={`px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider border ${
+                current.id === 'fatty-liver'
+                  ? 'bg-[#FEF08A] text-slate-900 border-amber-300 shadow-2xs'
+                  : 'bg-[#E6F7F5] text-teal-900 border-teal-200 shadow-2xs'
+              }`}>
                 {current.badge}
               </span>
               <h3 className="font-serif text-2xl sm:text-3xl text-slate-900 mt-2 tracking-tight">
@@ -205,7 +209,7 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1.5 rounded-full bg-[#FEF9C3] text-amber-950 font-bold text-xs border border-amber-200 shadow-2xs hidden sm:inline-block">
+              <span className="px-3.5 py-1.5 rounded-full bg-[#FEF08A] text-slate-900 font-bold text-xs border border-amber-300 shadow-2xs hidden sm:inline-block">
                 OPD Fee: ₹200 only
               </span>
               <button
