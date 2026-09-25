@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { getLenis } from '../hooks/useSmoothScroll';
 import { animate, createTimeline, stagger } from 'animejs';
 import { animateCounter, animateFloatingLoop } from '../utils/animeEffects';
+import heroDocImg from '../assets/WhatsApp Image 2026-09-24 at 22.47.12.jpeg';
 
 interface HeroProps {
   onOpenAppointment: () => void;
@@ -165,8 +166,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
             {/* Main Rounded Photo Card */}
             <div className="hero-doctor-frame relative rounded-[36px] sm:rounded-[44px] overflow-hidden shadow-xl border border-slate-200/80 bg-slate-100 aspect-4/3 sm:aspect-auto sm:h-[480px] lg:h-[530px]">
               <img
-                src="/images/hero_doctor_family.jpg"
-                alt="Dr. Chaitanya Gupta consulting with patients"
+                src={heroDocImg}
+                alt="Dr. Chaitanya Gupta - DM Gastroenterologist at World IBD Day Press Conference"
                 className="w-full h-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
