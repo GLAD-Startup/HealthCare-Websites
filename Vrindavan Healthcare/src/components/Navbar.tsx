@@ -139,19 +139,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
             ))}
           </nav>
 
-          {/* Right Action: Search Circle + Black Pill Button */}
+          {/* Right Action: Black Pill Button */}
           <div className="hidden sm:flex items-center gap-3 shrink-0">
-            <a
-              href="#screener"
-              onClick={(e) => handleNavClick(e, '#screener')}
-              aria-label="Search and Screener"
-              className="w-10 h-10 rounded-full border border-slate-300/80 bg-white hover:bg-slate-100 flex items-center justify-center text-slate-700 shadow-2xs transition-all min-h-[40px] min-w-[40px]"
-            >
-              <svg className="w-4 h-4 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </a>
-
             <button
               onClick={onOpenAppointment}
               className="flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white bg-slate-900 hover:bg-slate-800 shadow-xs transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[42px]"
