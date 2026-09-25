@@ -106,13 +106,13 @@ export const FaqSection: React.FC = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search question (e.g. Endoscopy, Fee, Locations, Fatty Liver)..."
-              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] shadow-xs"
+              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 shadow-2xs"
             />
           </div>
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10">
           {[
             { id: 'all', label: 'All Questions' },
             { id: 'doctor', label: 'Dr. Chaitanya Gupta' },
@@ -123,10 +123,10 @@ export const FaqSection: React.FC = () => {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id as any)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              className={`px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 activeCategory === cat.id
-                  ? 'bg-[#0F766E] text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
               }`}
             >
               {cat.label}
@@ -141,24 +141,28 @@ export const FaqSection: React.FC = () => {
             return (
               <div
                 key={faq.id}
-                className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-xs transition-all"
+                className={`rounded-2xl border transition-all ${
+                  isOpen
+                    ? 'border-amber-300/90 bg-white shadow-xs ring-1 ring-amber-300/60'
+                    : 'border-slate-200/90 bg-white shadow-2xs hover:border-slate-300'
+                }`}
               >
                 <button
                   onClick={() => toggleFaq(faq.id)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/70 transition-colors"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
                 >
                   <span className="font-bold text-slate-900 text-sm sm:text-base">
                     {faq.question}
                   </span>
-                  <div className={`w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                    isOpen ? 'rotate-180 bg-[#F0FDFA] text-[#0F766E]' : 'text-slate-500'
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                    isOpen ? 'rotate-180 bg-[#FEF08A] text-slate-900 shadow-2xs' : 'bg-slate-100 text-slate-500'
                   }`}>
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed font-medium border-t border-slate-100 pt-3">
+                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal border-t border-slate-100 pt-3.5 bg-[#FAFAF8]/40">
                     {faq.answer}
                   </div>
                 )}

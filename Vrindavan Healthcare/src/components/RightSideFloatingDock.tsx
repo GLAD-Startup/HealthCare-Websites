@@ -35,8 +35,8 @@ export const RightSideFloatingDock: React.FC<RightSideFloatingDockProps> = ({ on
       id: 'book',
       label: 'Book OPD (₹200 Fee)',
       icon: Calendar,
-      bg: 'bg-[#0F766E]',
-      textBg: 'bg-teal-50 text-teal-950 border-teal-200',
+      bg: 'bg-slate-900',
+      textBg: 'bg-slate-900 text-white border-slate-800',
       action: () => {
         onOpenAppointment();
       }
@@ -125,10 +125,10 @@ export const RightSideFloatingDock: React.FC<RightSideFloatingDockProps> = ({ on
           <button
             type="button"
             onClick={onOpenAppointment}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-[#0F766E] active:bg-[#0D9488] text-white text-center min-h-[44px] transition-transform active:scale-95 cursor-pointer"
+            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-slate-900 active:bg-slate-800 text-white text-center min-h-[44px] transition-transform active:scale-95 cursor-pointer"
             aria-label="Book OPD Consultation"
           >
-            <Calendar className="w-4 h-4 mb-0.5 text-white" />
+            <Calendar className="w-4 h-4 mb-0.5 text-amber-300" />
             <span className="text-[10px] font-bold">Book (₹200)</span>
           </button>
 

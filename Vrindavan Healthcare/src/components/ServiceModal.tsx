@@ -15,7 +15,7 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-3xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
         {/* Modal Header */}
-        <div className="p-6 sm:p-8 bg-[#0F766E] text-white relative">
+        <div className="p-6 sm:p-8 bg-slate-900 text-white relative">
           <button
             onClick={onClose}
             className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
@@ -33,19 +33,19 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
               />
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wider text-[#CCFBF1] font-bold">Vrindavan Healthcare</div>
-              <div className="text-[11px] text-white/80 font-medium">Dr. Chaitanya Gupta (DM Gastro)</div>
+              <div className="text-xs uppercase tracking-wider text-amber-300 font-bold">Vrindavan Healthcare</div>
+              <div className="text-[11px] text-slate-300 font-medium">Dr. Chaitanya Gupta (DM Gastro)</div>
             </div>
           </div>
 
           {service.isConfirmedProcedure && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F59E0B] text-slate-950 text-xs font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FEF08A] text-slate-900 text-xs font-bold uppercase tracking-wider mb-2 border border-amber-300">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Active Endoscopy Centre</span>
             </div>
           )}
 
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight">
             {service.name}
           </h3>
         </div>
@@ -56,7 +56,7 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
             <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
               Clinical Overview &amp; Protocol
             </h4>
-            <p className="text-slate-700 text-base leading-relaxed font-medium">
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
               {service.fullDesc}
             </p>
           </div>
@@ -68,26 +68,26 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
             </h4>
             <div className="space-y-2.5">
               {service.benefits.map((benefit, i) => (
-                <div key={i} className="flex items-start gap-3 text-slate-800 text-sm font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
+                <div key={i} className="flex items-start gap-3 text-slate-800 text-xs sm:text-sm font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <span>{benefit}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#F0FDFA] border border-[#CCFBF1] text-xs font-semibold text-[#0F766E]">
+          <div className="p-4 rounded-2xl bg-[#E6F7F5] border border-teal-200/80 text-xs font-medium text-teal-950">
             <strong>Clinical Note:</strong> Super-specialist consultation available at Raman Reti (near ISKCON Temple) and Hanuman Bagh (near Brijwasi Mithai Wala), Vrindavan. Transparent OPD fee: ₹200.
           </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 sm:p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 sm:p-6 bg-[#FAFAF8] border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <a
             href={`tel:${CLINIC_INFO.phoneRaw}`}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 hover:bg-slate-200 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-full border border-slate-300 text-slate-800 hover:bg-slate-100 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
           >
-            <Phone className="w-4 h-4 text-[#0F766E]" />
+            <Phone className="w-4 h-4 text-slate-900" />
             <span>Call {CLINIC_INFO.phone}</span>
           </a>
 
@@ -96,7 +96,7 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
               onClose();
               onBook(service.name);
             }}
-            className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
           >
             <Calendar className="w-4 h-4 text-white" />
             <span>Book OPD for {service.name.split('(')[0]} (₹200)</span>

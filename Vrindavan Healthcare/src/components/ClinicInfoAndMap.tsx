@@ -40,11 +40,11 @@ export const ClinicInfoAndMap: React.FC = () => {
         className: 'custom-leaflet-marker',
         html: `
           <div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); pointer-events: auto; cursor: pointer;">
-            <div style="background: ${isPrimary ? '#0F766E' : '#1E293B'}; color: white; padding: 6px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, sans-serif; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.35); border: 2px solid white; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+            <div style="background: ${isPrimary ? '#0F172A' : '#334155'}; color: white; padding: 6px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, sans-serif; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.35); border: 2px solid white; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
               <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #34D399; box-shadow: 0 0 6px #34D399;"></span>
               <span>${loc.badge}</span>
             </div>
-            <div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 7px solid ${isPrimary ? '#0F766E' : '#1E293B'}; margin-top: -1px;"></div>
+            <div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 7px solid ${isPrimary ? '#0F172A' : '#334155'}; margin-top: -1px;"></div>
           </div>
         `,
         iconSize: [0, 0],
@@ -55,13 +55,13 @@ export const ClinicInfoAndMap: React.FC = () => {
         .addTo(map)
         .bindPopup(`
           <div style="font-family: system-ui, sans-serif; padding: 4px 2px; min-width: 220px;">
-            <div style="font-size: 10px; font-weight: 700; color: ${isPrimary ? '#0F766E' : '#64748B'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px;">${loc.badge}</div>
+            <div style="font-size: 10px; font-weight: 700; color: ${isPrimary ? '#0F172A' : '#64748B'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px;">${loc.badge}</div>
             <div style="font-size: 14px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 6px;">${loc.name}</div>
             <div style="font-size: 12px; color: #475569; margin-bottom: 4px; line-height: 1.4;">${loc.address}</div>
-            <div style="font-size: 11px; color: #0F766E; font-weight: 600; margin-bottom: 10px;">Landmark: ${loc.landmark}</div>
+            <div style="font-size: 11px; color: #0F172A; font-weight: 600; margin-bottom: 10px;">Landmark: ${loc.landmark}</div>
             <div style="display: flex; gap: 8px;">
-              <a href="${loc.googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="flex: 1; text-align: center; background: #0F766E; color: white; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; text-decoration: none;">Get Directions</a>
-              <a href="tel:${CLINIC_INFO.phoneRaw}" style="flex: 1; text-align: center; background: #F1F5F9; color: #0F172A; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; text-decoration: none;">Call Clinic</a>
+              <a href="${loc.googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="flex: 1; text-align: center; background: #0F172A; color: white; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 9999px; text-decoration: none;">Get Directions</a>
+              <a href="tel:${CLINIC_INFO.phoneRaw}" style="flex: 1; text-align: center; background: #F1F5F9; color: #0F172A; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 9999px; text-decoration: none;">Call Clinic</a>
             </div>
           </div>
         `);
@@ -147,17 +147,17 @@ export const ClinicInfoAndMap: React.FC = () => {
                 onClick={() => setSelectedLocation(loc)}
                 className={`w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-center gap-3 min-h-[44px] ${
                   isSelected
-                    ? 'bg-[#0F766E] text-white border-[#0F766E] shadow-lg shadow-[#0F766E]/20 scale-102'
-                    : 'bg-white text-slate-800 border-slate-200 hover:border-slate-300 shadow-xs'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-md scale-101'
+                    : 'bg-white text-slate-800 border-slate-200/90 hover:border-slate-300 shadow-2xs hover:shadow-xs'
                 }`}
               >
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                  isSelected ? 'bg-white/20 text-white' : 'bg-[#F0FDFA] text-[#0F766E]'
+                  isSelected ? 'bg-white/20 text-white' : 'bg-[#E6F7F5] text-slate-900'
                 }`}>
                   <Compass className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className={`text-xs font-bold uppercase tracking-wider ${isSelected ? 'text-teal-200' : 'text-slate-500'}`}>
+                  <div className={`text-xs font-bold uppercase tracking-wider ${isSelected ? 'text-amber-300' : 'text-slate-500'}`}>
                     {loc.badge}
                   </div>
                   <div className="text-sm font-extrabold">
@@ -175,49 +175,49 @@ export const ClinicInfoAndMap: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             
             {/* Live Today Status Badge */}
-            <div className={`p-4 rounded-2xl border flex items-center justify-between ${
+            <div className={`p-4 rounded-2xl border flex items-center justify-between shadow-2xs ${
               isOpenToday
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-950'
-                : 'bg-amber-50 border-amber-200 text-amber-950'
+                ? 'bg-[#E6F7F5] border-teal-200/80 text-teal-950'
+                : 'bg-[#FEF9C3] border-amber-300 text-amber-950'
             }`}>
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-wider">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-700">
                     Today is {todayName}
                   </div>
-                  <div className="text-sm font-semibold">
+                  <div className="text-sm font-semibold text-slate-900">
                     Open Today: {todaySchedule?.hours}
                   </div>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-bold uppercase">
+              <span className="px-2.5 py-1 rounded-full bg-slate-900 text-white text-[10px] font-bold uppercase tracking-wider">
                 Active OPD
               </span>
             </div>
 
             {/* Selected Location Address Card */}
-            <div className="p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200 shadow-sm space-y-4">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-4">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#0F766E]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-teal-900">
                     {selectedLocation.badge}
                   </span>
                   <h3 className="text-lg font-bold text-slate-900 mt-1">
                     {selectedLocation.name}
                   </h3>
                 </div>
-                <span className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs font-bold text-slate-700">
+                <span className="px-3 py-1 rounded-full bg-[#FEF08A] border border-amber-300 text-xs font-bold text-slate-900 shadow-2xs">
                   PIN 281121
                 </span>
               </div>
 
-              <div className="text-sm text-slate-700 space-y-1.5 pt-1 border-t border-slate-200">
+              <div className="text-sm text-slate-700 space-y-1.5 pt-1 border-t border-slate-100">
                 <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
-                  <span className="font-medium">{selectedLocation.address}</span>
+                  <MapPin className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
+                  <span className="font-medium text-slate-800">{selectedLocation.address}</span>
                 </div>
-                <div className="text-xs text-slate-500 pl-6">
+                <div className="text-xs text-slate-600 pl-6">
                   Landmark: <strong>{selectedLocation.landmark}</strong>
                 </div>
                 <div className="text-xs text-slate-500 pl-6">
@@ -231,7 +231,7 @@ export const ClinicInfoAndMap: React.FC = () => {
                   href={selectedLocation.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
+                  className="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all hover:scale-102 active:scale-98"
                 >
                   <Navigation className="w-3.5 h-3.5" />
                   <span>Google Maps</span>
@@ -242,7 +242,7 @@ export const ClinicInfoAndMap: React.FC = () => {
                   href={selectedLocation.mapplsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
+                  className="px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
                 >
                   <span>Mappls Pin: {selectedLocation.mapplsPin}</span>
                   <ExternalLink className="w-3 h-3 ml-0.5" />
@@ -251,10 +251,10 @@ export const ClinicInfoAndMap: React.FC = () => {
             </div>
 
             {/* Weekly Schedule Card */}
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-2xs">
               <div className="flex items-center gap-3 mb-5 pb-3 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-2xl bg-[#0F766E] text-white flex items-center justify-center shadow-md">
-                  <Clock className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-xs">
+                  <Clock className="w-5 h-5 text-amber-300" />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 text-base">Weekly OPD Consultation Schedule</h3>
@@ -270,14 +270,14 @@ export const ClinicInfoAndMap: React.FC = () => {
                       key={h.day}
                       className={`flex items-center justify-between p-2 rounded-xl text-xs sm:text-sm transition-colors ${
                         isCurrentDay
-                          ? 'bg-[#F0FDFA] font-bold text-[#0F766E] border border-[#CCFBF1]'
+                          ? 'bg-[#FEF9C3] font-bold text-slate-900 border border-amber-300/80 shadow-2xs'
                           : 'text-slate-700 hover:bg-slate-50 font-medium'
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         <span>{h.day}</span>
                         {isCurrentDay && (
-                          <span className="text-[9px] bg-[#0F766E] text-white px-2 py-0.5 rounded-full font-bold">
+                          <span className="text-[9px] bg-slate-900 text-white px-2 py-0.5 rounded-full font-bold">
                             Today
                           </span>
                         )}
@@ -289,21 +289,21 @@ export const ClinicInfoAndMap: React.FC = () => {
               </div>
             </div>
 
-            {/* Fee & Payment Modes Card */}
-            <div className="p-5 rounded-2xl bg-[#F0FDFA] border border-[#CCFBF1] flex items-center justify-between gap-4">
+            {/* Fee & Payment Modes Card (Warm Pastel Yellow Card) */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-[#FEF08A] border border-amber-300 shadow-2xs flex items-center justify-between gap-4">
               <div>
-                <div className="text-xs font-bold text-[#0F766E] uppercase tracking-wider">
+                <div className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                   Affordable &amp; Ethical Healthcare
                 </div>
-                <div className="text-xl font-extrabold text-slate-900 mt-0.5">
+                <div className="text-2xl font-extrabold text-slate-900 mt-0.5">
                   OPD Fee: ₹200
                 </div>
-                <div className="text-xs text-slate-600 mt-0.5">
+                <div className="text-xs text-slate-800 font-medium mt-0.5">
                   Modes: UPI (GPay/PhonePe), Cash, Debit &amp; Credit Cards
                 </div>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-white text-[#0F766E] border border-[#CCFBF1] flex items-center justify-center shadow-xs shrink-0">
-                <CreditCard className="w-6 h-6" />
+              <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-xs shrink-0">
+                <CreditCard className="w-6 h-6 text-amber-300" />
               </div>
             </div>
 

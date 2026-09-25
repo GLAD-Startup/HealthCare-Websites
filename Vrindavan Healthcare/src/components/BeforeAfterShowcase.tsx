@@ -83,27 +83,27 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
   const currentItem = filteredItems[activeItemIndex] || filteredItems[0];
 
   return (
-    <section id="results-gallery" className="py-20 bg-white border-t border-slate-200">
+    <section id="results-gallery" className="py-20 bg-[#FAFAF8] border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F0FDFA] text-[#0F766E] text-xs font-bold uppercase tracking-wider mb-3">
-            <Award className="w-4 h-4 text-[#F59E0B]" />
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <Award className="w-4 h-4 text-amber-500" />
             <span>Documented Clinical Outcomes</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
             Real Patient Recoveries in Vrindavan
           </h2>
           
-          <p className="text-slate-600 text-base sm:text-lg mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Explore case studies of clinical relief across liver diseases, endoscopy diagnoses, chronic acidity, and intestinal health delivered by Dr. Chaitanya Gupta.
           </p>
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10">
           {[
             { id: 'all', label: 'All Case Studies' },
             { id: 'gastro', label: 'Endoscopy & Reflux' },
@@ -116,10 +116,10 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
                 setActiveTab(tab.id as any);
                 setActiveItemIndex(0);
               }}
-              className={`min-h-[44px] px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center justify-center cursor-pointer ${
+              className={`min-h-[44px] px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center justify-center cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-[#0F766E] text-white shadow-md'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
               }`}
             >
               {tab.label}
@@ -128,34 +128,34 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
         </div>
 
         {/* Main Case Study Feature Card */}
-        <div className="bg-[#F8FAFC] rounded-3xl border border-slate-200/90 p-5 sm:p-8 lg:p-10 shadow-lg max-w-5xl mx-auto">
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-8 lg:p-10 shadow-lg max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left: Case Info */}
             <div className="lg:col-span-7 space-y-5 text-left">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-[#F0FDFA] text-[#0F766E] text-xs font-bold uppercase tracking-wider border border-[#CCFBF1]">
+                <span className="px-3.5 py-1 rounded-full bg-[#E6F7F5] text-teal-900 text-xs font-bold uppercase tracking-wider border border-teal-200/80">
                   {currentItem.category}
                 </span>
-                <span className="px-3 py-1 rounded-full bg-slate-200/80 text-slate-700 text-xs font-bold">
+                <span className="px-3.5 py-1 rounded-full bg-[#FEF08A] text-slate-900 border border-amber-300 text-xs font-bold">
                   ⏱️ {currentItem.timeframe}
                 </span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <h3 className="text-2xl sm:text-3xl font-serif text-slate-900 tracking-tight">
                 {currentItem.title}
               </h3>
 
-              <div className="text-xs text-slate-500 font-semibold">
-                Supervised by <span className="text-[#0F766E] font-bold">{currentItem.doctor}</span>
+              <div className="text-xs text-slate-600 font-semibold">
+                Supervised by <span className="text-teal-800 font-bold">{currentItem.doctor}</span>
               </div>
 
-              <p className="text-sm text-slate-600 leading-relaxed font-medium">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                 {currentItem.description}
               </p>
 
               {/* Symptoms Resolved */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 space-y-2">
+              <div className="p-4 rounded-2xl bg-[#FAFAF8] border border-slate-200 space-y-2">
                 <div className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                   Key Symptoms Relieved:
                 </div>
@@ -168,7 +168,7 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
               </div>
 
               {/* Outcome Highlight */}
-              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 font-semibold flex items-center gap-2">
+              <div className="p-3.5 rounded-2xl bg-[#E6F7F5] border border-teal-200/80 text-xs text-teal-950 font-semibold flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>{currentItem.clinicalOutcome}</span>
               </div>
@@ -177,7 +177,7 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
               <div className="pt-2">
                 <button
                   onClick={() => onBookTreatment(currentItem.treatmentName)}
-                  className="w-full sm:w-auto min-h-[44px] justify-center px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto min-h-[46px] justify-center px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
                 >
                   <span>Book Consultation for this Condition</span>
                   <ArrowRight className="w-4 h-4" />
@@ -186,9 +186,9 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
             </div>
 
             {/* Right: Clinical Photo Frame & Quick Selection Cards */}
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-5 space-y-3.5">
               {/* Clinical Documentation Photo Frame */}
-              <div className="relative rounded-2xl overflow-hidden shadow-md border-2 border-white bg-slate-100 aspect-16/10 group">
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-md border-4 border-white bg-slate-100 aspect-16/10 group">
                 <img
                   src={currentItem.image}
                   alt={currentItem.title}
@@ -196,7 +196,7 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-2.5 left-3 right-3 text-white text-[11px] font-semibold flex items-center justify-between">
-                  <span className="bg-[#0F766E]/90 px-2 py-0.5 rounded-md text-[10px]">Clinical Case Evidence</span>
+                  <span className="bg-slate-900/80 backdrop-blur-sm px-2.5 py-0.5 rounded-md text-[10px] font-bold">Clinical Case Evidence</span>
                   <span className="text-slate-200 text-[10px]">{currentItem.category}</span>
                 </div>
               </div>
@@ -209,21 +209,21 @@ export const BeforeAfterShowcase: React.FC<BeforeAfterShowcaseProps> = ({ onBook
                 <div
                   key={item.id}
                   onClick={() => setActiveItemIndex(idx)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                  className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                     activeItemIndex === idx
-                      ? 'bg-white border-[#0F766E] shadow-md ring-1 ring-[#0F766E]'
-                      : 'bg-white/80 border-slate-200 hover:bg-white'
+                      ? 'bg-[#FEF9C3] border-amber-300 shadow-sm ring-2 ring-amber-300/70'
+                      : 'bg-white border-slate-200 hover:border-slate-300 shadow-2xs hover:shadow-xs'
                   }`}
                 >
                   <div>
-                    <h4 className={`text-sm font-bold ${activeItemIndex === idx ? 'text-[#0F766E]' : 'text-slate-900'}`}>
+                    <h4 className="text-sm font-bold text-slate-900">
                       {item.title}
                     </h4>
-                    <span className="text-[11px] text-slate-500">
+                    <span className="text-[11px] text-slate-600">
                       {item.category} • {item.timeframe}
                     </span>
                   </div>
-                  <ArrowRight className={`w-4 h-4 ${activeItemIndex === idx ? 'text-[#0F766E]' : 'text-slate-400'}`} />
+                  <ArrowRight className={`w-4 h-4 ${activeItemIndex === idx ? 'text-slate-900' : 'text-slate-400'}`} />
                 </div>
               ))}
             </div>

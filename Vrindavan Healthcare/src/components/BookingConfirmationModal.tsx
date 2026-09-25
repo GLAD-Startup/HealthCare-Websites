@@ -66,7 +66,7 @@ END:VCALENDAR`;
         </button>
 
         {/* Header Ribbon */}
-        <div className="bg-[#0F766E] text-white p-6 text-center space-y-2">
+        <div className="bg-slate-900 text-white p-6 text-center space-y-2">
           <div className="relative w-16 h-16 rounded-full bg-white p-1 mx-auto mb-2 shadow-lg flex items-center justify-center border-2 border-white/80">
             <img
               src="/favicon.png"
@@ -77,10 +77,10 @@ END:VCALENDAR`;
               <CheckCircle2 className="w-3.5 h-3.5 text-white" />
             </div>
           </div>
-          <h3 className="text-2xl font-extrabold text-white tracking-tight">
+          <h3 className="font-serif text-2xl font-bold text-white tracking-tight">
             OPD Appointment Requested!
           </h3>
-          <p className="text-xs text-[#CCFBF1] font-semibold">
+          <p className="text-xs text-amber-200 font-medium">
             Thank you, {booking.patientName}. Your appointment with Dr. Chaitanya Gupta is recorded.
           </p>
         </div>
@@ -88,21 +88,21 @@ END:VCALENDAR`;
         {/* Details Card Body */}
         <div className="p-6 space-y-6">
           
-          {/* Reference ID Pill */}
-          <div className="p-4 rounded-2xl bg-[#F0FDFA] border border-[#CCFBF1] text-center space-y-1">
-            <div className="text-[11px] font-extrabold text-[#0F766E] uppercase tracking-wider">
+          {/* Reference ID Pill (Pastel Yellow Card) */}
+          <div className="p-4 rounded-2xl bg-[#FEF08A] border border-amber-300 text-center space-y-1 shadow-2xs">
+            <div className="text-[11px] font-extrabold text-slate-900 uppercase tracking-wider">
               Appointment Reference ID
             </div>
             <div className="text-2xl font-extrabold text-slate-900 tracking-wider font-mono">
               {booking.refNumber}
             </div>
-            <div className="text-[11px] text-slate-500 font-semibold">
-              Consultation Fee: <strong className="text-slate-900">₹200 only</strong>
+            <div className="text-[11px] text-slate-800 font-medium">
+              Consultation Fee: <strong className="text-slate-950 font-bold">₹200 only</strong>
             </div>
           </div>
 
           {/* Details Table */}
-          <div className="space-y-3 text-xs sm:text-sm text-slate-700 bg-[#F8FAFC] p-4 rounded-2xl border border-slate-100">
+          <div className="space-y-3 text-xs sm:text-sm text-slate-700 bg-[#FAFAF8] p-4 rounded-2xl border border-slate-200">
             <div className="flex justify-between border-b border-slate-200/60 pb-2">
               <span className="text-slate-500 font-medium">Patient Name:</span>
               <span className="font-bold text-slate-900">{booking.patientName}</span>
@@ -117,7 +117,7 @@ END:VCALENDAR`;
             </div>
             <div className="flex justify-between border-b border-slate-200/60 pb-2">
               <span className="text-slate-500 font-medium">Requested Service:</span>
-              <span className="font-bold text-[#0F766E]">{booking.service}</span>
+              <span className="font-bold text-teal-900">{booking.service}</span>
             </div>
             <div className="flex justify-between border-b border-slate-200/60 pb-2">
               <span className="text-slate-500 font-medium">Preferred Slot:</span>
@@ -126,7 +126,7 @@ END:VCALENDAR`;
             <div className="flex justify-between">
               <span className="text-slate-500 font-medium">Clinic Location:</span>
               <span className="font-bold text-slate-900 text-right flex items-center justify-end gap-1">
-                <MapPin className="w-3.5 h-3.5 text-[#F59E0B]" />
+                <MapPin className="w-3.5 h-3.5 text-amber-500" />
                 <span>{booking.location || 'Raman Reti (Near ISKCON), Vrindavan'}</span>
               </span>
             </div>
@@ -136,7 +136,7 @@ END:VCALENDAR`;
           <div className="space-y-2.5">
             <button
               onClick={handleWhatsAppSend}
-              className="w-full py-3.5 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Confirm Instant via WhatsApp</span>
@@ -147,7 +147,7 @@ END:VCALENDAR`;
                 onClick={handleDownloadICS}
                 className="py-3 px-4 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#0F766E]" />
+                <Calendar className="w-3.5 h-3.5 text-slate-900" />
                 <Download className="w-3.5 h-3.5" />
                 <span>Calendar Invite</span>
               </button>

@@ -216,7 +216,7 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
 
         {/* Category Selector Tabs */}
         <div className="flex justify-center mb-6 sm:mb-8 w-full">
-          <div className="flex flex-col sm:flex-row w-full sm:w-auto p-1 rounded-2xl bg-white border border-slate-200 shadow-xs gap-1">
+          <div className="flex flex-col sm:flex-row w-full sm:w-auto p-1.5 rounded-2xl bg-white border border-slate-200 shadow-2xs gap-1.5">
             <button
               type="button"
               onClick={() => {
@@ -224,13 +224,13 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                 setSelectedSymptoms([]);
                 setIsSubmitted(false);
               }}
-              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
+              className={`w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
                 category === 'gastro'
-                  ? 'bg-[#0F766E] text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900 active:bg-slate-50'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
-              <Activity className="w-4 h-4 shrink-0" />
+              <Activity className="w-4 h-4 shrink-0 text-emerald-400" />
               <span>Liver &amp; Gastro Symptoms</span>
             </button>
 
@@ -241,13 +241,13 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                 setSelectedSymptoms([]);
                 setIsSubmitted(false);
               }}
-              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
+              className={`w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
                 category === 'general'
-                  ? 'bg-[#0F766E] text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900 active:bg-slate-50'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
-              <HeartPulse className="w-4 h-4 shrink-0" />
+              <HeartPulse className="w-4 h-4 shrink-0 text-amber-300" />
               <span>General Physician &amp; Metabolic</span>
             </button>
           </div>
@@ -265,8 +265,10 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                     onClick={() => toggleSymptom(symptom.id)}
                     className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer select-none flex items-start gap-4 ${
                       isSelected
-                        ? 'bg-[#F0FDFA] border-[#0F766E] shadow-md ring-1 ring-[#0F766E]'
-                        : 'bg-white border-slate-200/90 hover:border-slate-300 shadow-xs'
+                        ? category === 'gastro'
+                          ? 'bg-[#E6F7F5] border-teal-300 shadow-sm ring-2 ring-teal-400/50'
+                          : 'bg-[#FEF9C3] border-amber-300 shadow-sm ring-2 ring-amber-300/70'
+                        : 'bg-white border-slate-200/90 hover:border-slate-300 shadow-2xs hover:shadow-xs'
                     }`}
                   >
                     <div className="text-2xl shrink-0 mt-0.5">
@@ -275,17 +277,17 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
 
                     <div className="flex-1">
                       <div className="flex items-center justify-between gap-2">
-                        <h4 className={`text-base font-bold ${isSelected ? 'text-[#0F766E]' : 'text-slate-900'}`}>
+                        <h4 className="text-base font-bold text-slate-900">
                           {symptom.label}
                         </h4>
-                        <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 border ${
-                          isSelected ? 'bg-[#0F766E] border-[#0F766E] text-white' : 'border-slate-300 bg-white'
+                        <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 border transition-colors ${
+                          isSelected ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-300 bg-white'
                         }`}>
-                          {isSelected && <Check className="w-3.5 h-3.5" />}
+                          {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
                       </div>
 
-                      <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                      <p className="text-xs text-slate-600 font-medium mt-1 leading-relaxed">
                         {symptom.description}
                       </p>
                     </div>
@@ -296,12 +298,13 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
 
             {/* Bottom Actions */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
-              <div className="text-xs text-slate-500 font-medium">
+              <div className="text-xs text-slate-600 font-medium">
                 {selectedSymptoms.length === 0 ? (
                   <span>Select at least 1 symptom above to generate recommendation</span>
                 ) : (
-                  <span className="text-[#0F766E] font-bold">
-                    {selectedSymptoms.length} symptom{selectedSymptoms.length > 1 ? 's' : ''} selected
+                  <span className="text-slate-900 font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                    <span>{selectedSymptoms.length} symptom{selectedSymptoms.length > 1 ? 's' : ''} selected</span>
                   </span>
                 )}
               </div>
@@ -309,9 +312,9 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
               <button
                 type="submit"
                 disabled={selectedSymptoms.length === 0}
-                className={`w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                className={`w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   selectedSymptoms.length > 0
-                    ? 'bg-[#0F766E] hover:bg-[#0D9488] text-white hover:scale-105 active:scale-95'
+                    ? 'bg-slate-900 hover:bg-slate-800 text-white hover:scale-102 active:scale-98'
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 }`}
               >
@@ -324,14 +327,14 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
           /* Results Card */
           <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-10 animate-fadeIn">
             <div className="flex items-center justify-between gap-4 pb-6 border-b border-slate-100">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FEF08A] text-slate-900 border border-amber-300 text-xs font-bold uppercase tracking-wider shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-slate-900" />
                 <span>Clinical Triage Recommendation</span>
               </div>
 
               <button
                 onClick={handleReset}
-                className="text-xs font-bold text-slate-500 hover:text-slate-800 flex items-center gap-1.5 cursor-pointer"
+                className="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Screener</span>
@@ -339,21 +342,21 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
             </div>
 
             <div className="py-6 space-y-4">
-              <div className="text-xs font-bold text-amber-600 uppercase tracking-wider">
+              <div className="text-xs font-bold text-amber-800 uppercase tracking-wider">
                 {recommendation.priority}
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <h3 className="text-2xl sm:text-3xl font-serif text-slate-900 tracking-tight">
                 Recommended: {recommendation.service}
               </h3>
 
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
                 {recommendation.description}
               </p>
 
               {/* Doctor Card */}
-              <div className="p-4 rounded-2xl bg-[#F0FDFA] border border-[#CCFBF1] flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl overflow-hidden shadow-sm shrink-0 border-2 border-white bg-slate-100">
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#E6F7F5] border border-teal-200/80 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl overflow-hidden shadow-sm shrink-0 border-2 border-white bg-white">
                   <img
                     src={DOCTOR_CHAITANYA.image}
                     alt={DOCTOR_CHAITANYA.name}
@@ -361,13 +364,13 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                   />
                 </div>
                 <div>
-                  <div className="text-xs text-teal-800 font-bold uppercase tracking-wider">
+                  <div className="text-[11px] text-teal-900 font-bold uppercase tracking-wider">
                     Recommended Specialist
                   </div>
-                  <div className="text-base font-extrabold text-slate-900">
+                  <div className="text-base sm:text-lg font-extrabold text-slate-900">
                     {DOCTOR_CHAITANYA.name}
                   </div>
-                  <div className="text-xs text-[#0F766E] font-semibold">
+                  <div className="text-xs text-teal-800 font-medium">
                     {DOCTOR_CHAITANYA.title} • {DOCTOR_CHAITANYA.qualifications}
                   </div>
                 </div>
@@ -376,13 +379,13 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100">
-              <div className="text-xs text-slate-500 font-medium">
+              <div className="text-xs text-slate-600 font-medium">
                 OPD Fee: <strong className="text-slate-900 font-bold">₹200</strong> | Raman Reti &amp; Hanuman Bagh Clinics
               </div>
 
               <button
                 onClick={() => onBookRecommendation(recommendation.service, recommendation.doctor)}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>Book Priority OPD with {recommendation.doctor}</span>
                 <ArrowRight className="w-4 h-4" />

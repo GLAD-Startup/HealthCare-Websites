@@ -60,19 +60,19 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
           <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
 
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#0F766E] to-[#115E59] p-6 text-white relative">
+            <div className="bg-slate-900 p-6 text-white relative">
               <button
                 onClick={handleClose}
                 className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="flex items-center gap-2 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
-                <Phone className="w-4 h-4" />
+              <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider mb-1">
+                <Phone className="w-4 h-4 text-amber-300" />
                 <span>Instant Call Back Service</span>
               </div>
-              <h2 className="text-2xl font-extrabold tracking-tight">Request a Callback</h2>
-              <p className="text-xs text-teal-100 mt-1 font-medium">
+              <h2 className="font-serif text-2xl font-bold tracking-tight text-white">Request a Callback</h2>
+              <p className="text-xs text-slate-300 mt-1 font-normal">
                 Our care manager will call you back within 15 minutes.
               </p>
             </div>
@@ -81,11 +81,11 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
             <div className="p-6">
               {submitted ? (
                 <div className="text-center py-8 space-y-4">
-                  <div className="w-16 h-16 bg-emerald-100 text-[#0F766E] rounded-full flex items-center justify-center mx-auto animate-bounce">
-                    <CheckCircle2 className="w-10 h-10" />
+                  <div className="w-16 h-16 bg-[#E6F7F5] text-teal-800 border border-teal-200 rounded-full flex items-center justify-center mx-auto animate-bounce">
+                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900">Request Received!</h3>
-                  <p className="text-sm text-slate-600 max-w-xs mx-auto">
+                  <h3 className="font-serif text-xl font-bold text-slate-900">Request Received!</h3>
+                  <p className="text-sm text-slate-600 max-w-xs mx-auto font-normal">
                     Connecting to WhatsApp and scheduling your callback with Dr. Chaitanya Gupta's medical desk...
                   </p>
                 </div>
@@ -103,7 +103,7 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Your full name"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800"
                       />
                     </div>
                   </div>
@@ -120,7 +120,7 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="Mobile number for callback"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800"
                       />
                     </div>
                   </div>
@@ -132,7 +132,7 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
                     <select
                       value={formData.department}
                       onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white text-slate-700"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 bg-white text-slate-700"
                     >
                       <option value="Liver & Gastro Care (Dr. Chaitanya Gupta)">Liver &amp; Gastro Care (Dr. Chaitanya Gupta)</option>
                       <option value="Upper GI Endoscopy Procedure">Upper GI Endoscopy Procedure</option>
@@ -152,7 +152,7 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
                       <select
                         value={formData.time}
                         onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] bg-white text-slate-700"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 bg-white text-slate-700"
                       >
                         <option value="Immediately (Within 15 mins)">Immediately (Within 15 mins)</option>
                         <option value="Morning (9am - 12pm)">Morning (9:00 AM - 12:00 PM)</option>
@@ -165,14 +165,14 @@ export const RequestCallbackModal: React.FC<RequestCallbackModalProps> = ({
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full py-3 rounded-xl bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-sm shadow-md transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center justify-center gap-2"
                     >
-                      <Phone className="w-4 h-4" />
+                      <Phone className="w-4 h-4 text-white" />
                       <span>Request Immediate Callback</span>
                     </button>
                   </div>
 
-                  <p className="text-[10px] text-center text-slate-400 font-medium">
+                  <p className="text-[10px] text-center text-slate-500 font-medium">
                     Strict medical confidentiality. Vrindavan Healthcare OPD fee: ₹200.
                   </p>
                 </form>

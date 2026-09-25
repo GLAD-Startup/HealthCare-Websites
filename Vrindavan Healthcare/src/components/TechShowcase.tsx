@@ -67,40 +67,36 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
   const current = techDetails[activeTech];
 
   return (
-    <section id="technology" className="py-20 bg-slate-900 text-white relative overflow-hidden">
-      {/* Glow Orbs */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#0F766E]/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-80 h-80 bg-[#0F766E]/20 rounded-full blur-3xl pointer-events-none" />
-
+    <section id="technology" className="py-20 bg-[#FAFAF8] text-slate-900 relative overflow-hidden border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-teal-400 text-xs font-bold uppercase tracking-wider mb-3">
-            <Cpu className="w-4 h-4 text-teal-400" />
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <Cpu className="w-4 h-4 text-slate-900" />
             <span>Advanced Clinical Facilities</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
             Diagnostic Technology in Vrindavan
           </h2>
 
-          <p className="text-slate-300 text-base sm:text-lg mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Equipped with modern video endoscopy and liver diagnostic protocols under Dr. Chaitanya Gupta (DM Gastroenterology).
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10">
           <button
             onClick={() => setActiveTech('endoscopy')}
             className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTech === 'endoscopy'
-                ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
             }`}
           >
-            <Activity className="w-4 h-4" />
+            <Activity className="w-4 h-4 text-emerald-500" />
             <span>Upper GI Endoscopy</span>
           </button>
 
@@ -108,11 +104,11 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
             onClick={() => setActiveTech('hepatology')}
             className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTech === 'hepatology'
-                ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
             }`}
           >
-            <ShieldCheck className="w-4 h-4" />
+            <ShieldCheck className="w-4 h-4 text-amber-500" />
             <span>Liver &amp; Hepatology Suite</span>
           </button>
 
@@ -120,43 +116,56 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
             onClick={() => setActiveTech('colonoscopy')}
             className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTech === 'colonoscopy'
-                ? 'bg-[#0F766E] text-white shadow-lg shadow-[#0F766E]/40 ring-2 ring-[#0F766E]'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
             }`}
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-4 h-4 text-teal-600" />
             <span>Colonoscopy &amp; Lower GI</span>
           </button>
         </div>
 
-        {/* Tab Content Box */}
-        <div className="tech-tab-content bg-slate-800/80 rounded-3xl border border-slate-700/80 p-5 sm:p-10 lg:p-12 overflow-hidden backdrop-blur-md">
+        {/* Tab Content Bento Box */}
+        <div className={`tech-tab-content rounded-[32px] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xs transition-colors duration-300 ${
+          activeTech === 'hepatology'
+            ? 'bg-[#FEF9C3] border border-amber-300/80'
+            : 'bg-[#E6F7F5] border border-teal-200/70'
+        }`}>
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left: Info */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="lg:col-span-6 space-y-5 text-left">
               <div>
-                <span className="inline-block px-3.5 py-1 rounded-full bg-teal-400/20 text-teal-300 text-xs font-bold uppercase tracking-wider mb-2">
-                  {current.badge}
-                </span>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <span className="px-3.5 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider">
+                    {current.badge}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-[11px] font-semibold border ${
+                    activeTech === 'hepatology'
+                      ? 'bg-white/80 text-amber-950 border-amber-300'
+                      : 'bg-white/80 text-teal-950 border-teal-200'
+                  }`}>
+                    Vrindavan Facility
+                  </span>
+                </div>
 
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+                <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-slate-900 tracking-tight leading-tight">
                   {current.title}
                 </h3>
 
-                <p className="text-[#F59E0B] font-semibold text-sm mt-1">
+                <p className="text-slate-700 font-semibold text-xs sm:text-sm mt-1.5">
                   {current.subtitle}
                 </p>
               </div>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
                 {current.description}
               </p>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {current.features.map((feature, i) => (
-                  <div key={i} className="flex items-start gap-3 text-xs sm:text-sm text-slate-200 font-medium">
-                    <CheckCircle className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                  <div key={i} className="p-3 rounded-2xl bg-white/90 border border-white/60 flex items-start gap-3 text-xs sm:text-sm text-slate-800 font-medium shadow-2xs">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -165,7 +174,7 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
               <div className="pt-2">
                 <button
                   onClick={() => onBookTechService(current.serviceName)}
-                  className="w-full sm:w-auto min-h-[44px] justify-center px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#0F766E]/30 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto min-h-[46px] justify-center px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
                 >
                   <span>Book Consultation for {current.title.split(' ')[0]}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -175,16 +184,16 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
 
             {/* Right: Facility Image */}
             <div className="lg:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-slate-700 bg-slate-950 aspect-16/10 group">
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-md border-4 border-white bg-white aspect-16/10 group">
                 <img
                   src={current.image}
                   alt={current.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-semibold bg-slate-950/60 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                  <div className="text-teal-300 font-bold">{current.title}</div>
-                  <div className="text-slate-300 text-[11px]">Vrindavan Healthcare • Dr. Chaitanya Gupta</div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-3 right-3 text-white text-xs font-semibold bg-slate-900/75 backdrop-blur-md p-3 rounded-xl border border-white/20">
+                  <div className="text-amber-300 font-bold">{current.title}</div>
+                  <div className="text-slate-200 text-[11px]">Vrindavan Healthcare • Dr. Chaitanya Gupta</div>
                 </div>
               </div>
             </div>
