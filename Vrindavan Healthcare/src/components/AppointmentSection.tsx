@@ -60,26 +60,26 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
   };
 
   return (
-    <section id="contact" className="py-20 bg-[#F0FDFA] border-t border-[#CCFBF1]">
+    <section id="contact" className="py-20 bg-[#FAFAF8] border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           
           {/* Left Column: CTA Pitch & Direct Call */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white text-[#0F766E] text-xs font-bold uppercase tracking-wider shadow-xs">
-              <Calendar className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider shadow-2xs">
+              <Calendar className="w-4 h-4 text-slate-900" />
               <span>Easy Appointment Request</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
-              Consult Dr. Chaitanya Gupta (₹200 Fee)
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+              Consult Dr. Chaitanya Gupta
             </h2>
 
-            <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-medium">
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
               Schedule your consultation for Upper GI Endoscopy, fatty liver management, chronic acidity relief, or internal medicine. Fast confirmation via phone or WhatsApp.
             </p>
 
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md space-y-4">
+            <div className="p-6 rounded-[28px] bg-white border border-slate-200 shadow-2xs space-y-4">
               <div className="text-xs font-bold uppercase text-slate-500 tracking-wider">
                 Direct OPD &amp; Emergency Helpline
               </div>
@@ -266,10 +266,10 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full min-h-[48px] py-3.5 sm:py-4 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#0F766E]/30 transition-all hover:scale-[1.01] active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full min-h-[48px] py-3.5 sm:py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-[1.01] active:scale-98 cursor-pointer flex items-center justify-center gap-2"
                     >
                       <Calendar className="w-4 h-4 text-white" />
-                      <span>Confirm Appointment Request (₹200 Fee)</span>
+                      <span>CONFIRM APPOINTMENT REQUEST (₹200 FEE)</span>
                     </button>
                   </div>
                 </form>

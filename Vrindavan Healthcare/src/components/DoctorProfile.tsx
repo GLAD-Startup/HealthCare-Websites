@@ -18,23 +18,22 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
   }, []);
 
   return (
-    <section id="doctor" className="py-20 bg-white border-t border-slate-200/60">
+    <section id="doctor" className="py-20 bg-[#FAFAF8] border-t border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-teal-50 via-slate-50 to-emerald-50 border border-slate-200/80 text-xs font-bold uppercase tracking-wider mb-3 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-[#0F766E]" />
-            <UserCheck className="w-4 h-4 text-[#0F766E]" />
-            <span className="w-2 h-2 rounded-full bg-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-slate-900" />
+            <UserCheck className="w-4 h-4 text-slate-900" />
             <span>Consultant Profile</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Meet <span className="bg-gradient-to-r from-[#0F766E] to-emerald-600 bg-clip-text text-transparent">Dr. Chaitanya Gupta</span>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+            Meet Dr. Chaitanya Gupta
           </h2>
 
-          <p className="text-slate-600 text-base sm:text-lg mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Dedicated Liver &amp; Gastro Specialist and Consultant Physician bringing high-definition endoscopic care and ethical medicine to Vrindavan.
           </p>
         </div>
@@ -150,10 +149,10 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <button
                     onClick={() => onBookDoctor(DOCTOR_CHAITANYA.name)}
-                    className="w-full sm:w-auto min-h-[44px] justify-center px-6 py-3 rounded-full bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs sm:text-sm shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                    className="w-full sm:w-auto min-h-[46px] justify-center px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
                   >
                     <Calendar className="w-4 h-4 text-white" />
-                    <span>Book Appointment with Dr. Gupta</span>
+                    <span>BOOK APPOINTMENT WITH DR. GUPTA</span>
                   </button>
                 </div>
               </div>

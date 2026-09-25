@@ -195,21 +195,21 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
   const recommendation = getRecommendation();
 
   return (
-    <section id="screener" className="py-20 bg-[#F8FAFC] border-t border-slate-200">
+    <section id="screener" className="py-20 bg-[#FAFAF8] border-t border-slate-200/80">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F0FDFA] text-[#0F766E] text-xs font-bold uppercase tracking-wider mb-3">
-            <Stethoscope className="w-4 h-4 text-[#0F766E]" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <Stethoscope className="w-4 h-4 text-slate-900" />
             <span>Interactive Patient Guidance Tool</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
             Digestive &amp; Health Symptom Screener
           </h2>
           
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-2 sm:mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Select what you are experiencing to receive a personalized clinical recommendation and priority OPD consultation with Dr. Chaitanya Gupta.
           </p>
         </div>

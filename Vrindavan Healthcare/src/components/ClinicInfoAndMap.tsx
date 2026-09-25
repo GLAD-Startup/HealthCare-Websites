@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock, MapPin, ExternalLink, CheckCircle2, CreditCard, Navigation, Compass } from 'lucide-react';
 import { CLINIC_INFO, CLINIC_LOCATIONS, type ClinicLocation } from '../data/clinicData';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 export const ClinicInfoAndMap: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState<ClinicLocation>(CLINIC_LOCATIONS[0]);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<{ [key: string]: L.Marker }>({});
 
   // Determine if open today dynamically
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -11,22 +16,122 @@ export const ClinicInfoAndMap: React.FC = () => {
   const todaySchedule = CLINIC_INFO.hours.find(h => h.day === todayName);
   const isOpenToday = todaySchedule && !todaySchedule.isClosed;
 
+  // Initialize Leaflet map
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+    if (mapInstanceRef.current) return;
+
+    const map = L.map(mapContainerRef.current, {
+      center: [selectedLocation.coordinates.lat, selectedLocation.coordinates.lng],
+      zoom: 15,
+      zoomControl: true,
+      scrollWheelZoom: false,
+    });
+
+    // High performance OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
+    }).addTo(map);
+
+    CLINIC_LOCATIONS.forEach((loc) => {
+      const isPrimary = loc.id === 'raman-reti';
+      const customIcon = L.divIcon({
+        className: 'custom-leaflet-marker',
+        html: `
+          <div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); pointer-events: auto; cursor: pointer;">
+            <div style="background: ${isPrimary ? '#0F766E' : '#1E293B'}; color: white; padding: 6px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, sans-serif; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.35); border: 2px solid white; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+              <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #34D399; box-shadow: 0 0 6px #34D399;"></span>
+              <span>${loc.badge}</span>
+            </div>
+            <div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 7px solid ${isPrimary ? '#0F766E' : '#1E293B'}; margin-top: -1px;"></div>
+          </div>
+        `,
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
+      });
+
+      const marker = L.marker([loc.coordinates.lat, loc.coordinates.lng], { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`
+          <div style="font-family: system-ui, sans-serif; padding: 4px 2px; min-width: 220px;">
+            <div style="font-size: 10px; font-weight: 700; color: ${isPrimary ? '#0F766E' : '#64748B'}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px;">${loc.badge}</div>
+            <div style="font-size: 14px; font-weight: 800; color: #0F172A; line-height: 1.25; margin-bottom: 6px;">${loc.name}</div>
+            <div style="font-size: 12px; color: #475569; margin-bottom: 4px; line-height: 1.4;">${loc.address}</div>
+            <div style="font-size: 11px; color: #0F766E; font-weight: 600; margin-bottom: 10px;">Landmark: ${loc.landmark}</div>
+            <div style="display: flex; gap: 8px;">
+              <a href="${loc.googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="flex: 1; text-align: center; background: #0F766E; color: white; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; text-decoration: none;">Get Directions</a>
+              <a href="tel:${CLINIC_INFO.phoneRaw}" style="flex: 1; text-align: center; background: #F1F5F9; color: #0F172A; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; text-decoration: none;">Call Clinic</a>
+            </div>
+          </div>
+        `);
+
+      marker.on('click', () => {
+        setSelectedLocation(loc);
+      });
+
+      markersRef.current[loc.id] = marker;
+    });
+
+    mapInstanceRef.current = map;
+
+    // Trigger initial invalidateSize to ensure 100% full height coverage
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+      markersRef.current[selectedLocation.id]?.openPopup();
+    }, 250);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  // Update map center smoothly when selectedLocation changes
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo(
+        [selectedLocation.coordinates.lat, selectedLocation.coordinates.lng],
+        16,
+        { animate: true, duration: 1 }
+      );
+      setTimeout(() => {
+        mapInstanceRef.current?.invalidateSize();
+        markersRef.current[selectedLocation.id]?.openPopup();
+      }, 300);
+    }
+  }, [selectedLocation]);
+
+  // Clean up on component unmount
+  useEffect(() => {
+    const handleResize = () => {
+      mapInstanceRef.current?.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
+
   return (
-    <section id="location" className="py-20 bg-white border-t border-slate-200/60">
+    <section id="location" className="py-20 bg-[#FAFAF8] border-t border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F0FDFA] text-[#0F766E] text-xs font-bold uppercase tracking-wider mb-3">
-            <MapPin className="w-4 h-4" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <MapPin className="w-4 h-4 text-slate-900" />
             <span>2 Clinic Locations in Vrindavan (PIN 281121)</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
             Clinic Locations &amp; OPD Hours
           </h2>
 
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-2 sm:mt-3 font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Conveniently accessible at Bhakti Vedant Marg (Raman Reti near ISKCON) and Hanuman Bagh (near Brijwasi Mithai Wala).
           </p>
         </div>
@@ -204,53 +309,61 @@ export const ClinicInfoAndMap: React.FC = () => {
 
           </div>
 
-          {/* Right Column: Interactive Embedded Map */}
-          <div className="lg:col-span-7 h-full">
-            <div className="rounded-2xl sm:rounded-3xl border border-slate-200 overflow-hidden shadow-lg bg-slate-100 flex flex-col h-full min-h-[340px] sm:min-h-[500px]">
+          {/* Right Column: Native Interactive Leaflet Map */}
+          <div className="lg:col-span-7 flex flex-col">
+            <div className="rounded-2xl sm:rounded-3xl border border-slate-200 overflow-hidden shadow-xs bg-white flex flex-col">
               
               {/* Map Bar */}
-              <div className="p-3 sm:p-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+              <div className="p-3 sm:p-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2 sm:gap-3 z-20">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                  <span className="text-[11px] sm:text-xs font-bold">
-                    GPS Coordinates: {selectedLocation.coordinates.lat}, {selectedLocation.coordinates.lng}
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-bold font-mono">
+                    GPS: {selectedLocation.coordinates.lat}, {selectedLocation.coordinates.lng}
+                  </span>
+                  <span className="text-[10px] text-teal-300 font-semibold hidden sm:inline">
+                    • Live Location Pin
                   </span>
                 </div>
-                <a
-                  href={selectedLocation.googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-teal-300 hover:text-white font-bold flex items-center gap-1 min-h-[36px]"
-                >
-                  <span>Open Full Screen Map</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${selectedLocation.coordinates.lat},${selectedLocation.coordinates.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-white font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 transition-colors cursor-pointer"
+                  >
+                    <span>Directions</span>
+                    <Navigation className="w-3 h-3" />
+                  </a>
+                  <a
+                    href={selectedLocation.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-slate-900 font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-400 hover:bg-emerald-300 transition-colors cursor-pointer"
+                  >
+                    <span>Google Maps</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
 
-              {/* Map Iframe */}
-              <div className="relative flex-1 w-full min-h-[280px] sm:min-h-[460px]">
-                <iframe
-                  title="Dr. Chaitanya Gupta Clinic Map"
-                  src={
-                    selectedLocation.id === 'raman-reti'
-                      ? "https://maps.google.com/maps?q=27.572217,77.678634&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                      : "https://maps.google.com/maps?q=Bankey+Bihari+Nikunj,+Hanuman+Bagh,+Vrindavan+281121&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                  }
-                  className="w-full h-full border-0 absolute inset-0"
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
+              {/* Native Leaflet Map Container: fills exactly 500px, 100% height, zero empty space */}
+              <div className="relative w-full h-[460px] sm:h-[540px] bg-slate-100 overflow-hidden">
+                <div
+                  ref={mapContainerRef}
+                  className="w-full h-full"
+                  style={{ width: '100%', height: '100%', minHeight: '460px' }}
                 />
               </div>
 
               {/* Map Bottom Footer info */}
-              <div className="p-4 bg-white border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="text-slate-600 font-medium">
-                  📍 {selectedLocation.address} ({selectedLocation.landmark})
+              <div className="p-4 bg-white border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs z-20">
+                <div className="text-slate-700 font-medium">
+                  📍 <strong>{selectedLocation.name}:</strong> {selectedLocation.address} ({selectedLocation.landmark})
                 </div>
                 <a
                   href={`tel:${CLINIC_INFO.phoneRaw}`}
-                  className="font-bold text-[#0F766E] hover:underline"
+                  className="font-bold text-slate-900 hover:text-teal-700 transition-colors"
                 >
                   Call Clinic: {CLINIC_INFO.phone}
                 </a>
@@ -265,3 +378,4 @@ export const ClinicInfoAndMap: React.FC = () => {
     </section>
   );
 };
+

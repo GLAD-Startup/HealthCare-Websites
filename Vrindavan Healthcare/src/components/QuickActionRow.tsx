@@ -1,6 +1,4 @@
 import React from 'react';
-import { Calendar, Stethoscope, Activity, Phone, ArrowRight } from 'lucide-react';
-import { CLINIC_INFO } from '../data/clinicData';
 import { getLenis } from '../hooks/useSmoothScroll';
 
 interface QuickActionRowProps {
@@ -11,103 +9,105 @@ export const QuickActionRow: React.FC<QuickActionRowProps> = ({ onOpenAppointmen
   const scrollToSection = (id: string) => {
     const lenis = getLenis();
     if (lenis) {
-      lenis.scrollTo(id, { offset: -110 });
+      lenis.scrollTo(id, { offset: -70 });
     } else {
       document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <section className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 mb-12">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <section className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-2 sm:-mt-4 mb-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
-        {/* Card 1: Book an Appointment (Red / Ruby) */}
-        <button
-          onClick={onOpenAppointment}
-          className="group relative bg-gradient-to-br from-[#991B1B] to-[#7F1D1D] text-white p-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 text-left overflow-hidden border border-red-500/20 cursor-pointer flex flex-col justify-between min-h-[120px]"
+        {/* Card 1: Photo Card with Bottom Text Overlay */}
+        <div
+          onClick={() => scrollToSection('#about-us')}
+          className="group relative rounded-[28px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer h-[210px] sm:h-[220px]"
         >
-          <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Calendar className="w-24 h-24 text-white" />
+          <img
+            src="/images/medical_team_faculty.jpeg"
+            alt="Compassionate Care for Seniors and Outpatients"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <h3 className="text-sm sm:text-base font-bold leading-snug">
+              Compassionate Care for Seniors and Outpatients
+            </h3>
           </div>
-          <div className="flex items-start justify-between">
-            <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-              <Calendar className="w-6 h-6 text-white" />
-            </div>
-            <span className="p-1.5 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-lg font-bold leading-tight">Book Consultation</h3>
-            <p className="text-xs text-red-100 font-medium mt-0.5">₹200 Fee • In-Clinic &amp; Online</p>
-          </div>
-        </button>
+        </div>
 
-        {/* Card 2: Liver & Gastro Specialty (Teal / Jade) */}
-        <button
-          onClick={() => scrollToSection('#gastro-care')}
-          className="group relative bg-gradient-to-br from-[#0F766E] via-[#0D9488] to-[#115E59] text-white p-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 text-left overflow-hidden border border-teal-400/20 cursor-pointer flex flex-col justify-between min-h-[120px]"
-        >
-          <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Activity className="w-24 h-24 text-white" />
-          </div>
-          <div className="flex items-start justify-between">
-            <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="p-1.5 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-lg font-bold leading-tight">Liver &amp; Gastro Care</h3>
-            <p className="text-xs text-teal-100 font-medium mt-0.5">Fatty Liver, Acidity, GERD &amp; IBS</p>
-          </div>
-        </button>
-
-        {/* Card 3: Upper GI Endoscopy Suite (Royal Blue) */}
-        <button
+        {/* Card 2: Photo Card with Top-Left Arrow Circle + Bottom Label */}
+        <div
           onClick={() => scrollToSection('#technology')}
-          className="group relative bg-gradient-to-br from-[#2563EB] via-[#1D4ED8] to-[#1E40AF] text-white p-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 text-left overflow-hidden border border-blue-400/20 cursor-pointer flex flex-col justify-between min-h-[120px]"
+          className="group relative rounded-[28px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer h-[210px] sm:h-[220px]"
         >
-          <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Stethoscope className="w-24 h-24 text-white" />
+          <img
+            src="/images/dr_chaitanya_endoscopy_procedure.jpeg"
+            alt="Endoscopy Tech & Diagnostics"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+          
+          {/* Top-Left Arrow Pill Circle */}
+          <div className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md text-slate-900 flex items-center justify-center font-bold text-sm shadow-xs group-hover:bg-slate-900 group-hover:text-white transition-colors">
+            ↗
           </div>
-          <div className="flex items-start justify-between">
-            <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-              <Stethoscope className="w-6 h-6 text-white" />
-            </div>
-            <span className="p-1.5 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
-            </span>
-          </div>
-          <div className="mt-4">
-            <h3 className="text-lg font-bold leading-tight">Upper GI Endoscopy</h3>
-            <p className="text-xs text-blue-100 font-medium mt-0.5">Direct High-Definition Diagnostics</p>
-          </div>
-        </button>
 
-        {/* Card 4: 2 Vrindavan Clinics & Helpline (Emerald / Green) */}
-        <a
-          href={`tel:${CLINIC_INFO.phoneRaw}`}
-          className="group relative bg-gradient-to-br from-[#047857] to-[#065F46] text-white p-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 text-left overflow-hidden border border-emerald-400/20 cursor-pointer flex flex-col justify-between min-h-[120px]"
-        >
-          <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Phone className="w-24 h-24 text-white" />
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <h3 className="text-sm sm:text-base font-bold leading-snug">
+              Upper GI Endoscopy &amp; Diagnostics
+            </h3>
           </div>
-          <div className="flex items-start justify-between">
-            <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-              <Phone className="w-6 h-6 text-white" />
-            </div>
-            <span className="p-1.5 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+        </div>
+
+        {/* Card 3: Soft Pastel Warm Peach Card (Hear From Our Patients) */}
+        <div
+          onClick={() => scrollToSection('#faq')}
+          className="group relative rounded-[28px] p-5 sm:p-5.5 bg-gradient-to-br from-[#FFF1EE] via-[#FFF6EE] to-[#FEF3C7] border border-orange-200/70 shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col justify-between h-[210px] sm:h-[220px]"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs sm:text-[13px] font-bold text-slate-900">
+              Hear From Our Patients
+            </span>
+            <span className="w-8 h-8 rounded-full bg-white/80 border border-orange-200/60 text-slate-900 flex items-center justify-center font-bold text-xs group-hover:bg-slate-900 group-hover:text-white transition-colors">
+              ↗
             </span>
           </div>
-          <div className="mt-4">
-            <h3 className="text-lg font-extrabold tracking-tight leading-tight">{CLINIC_INFO.phone}</h3>
-            <p className="text-xs text-emerald-100 font-medium mt-0.5">Raman Reti &amp; Hanuman Bagh</p>
+
+          <p className="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed my-2">
+            "An incredibly caring clinic with doctors who truly go above and beyond!"
+          </p>
+
+          <div className="flex items-center justify-between pt-1 border-t border-orange-200/50">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-1.5">
+                <img src="/images/dr_chaitanya_press_conf.jpeg" alt="Reviewer" className="w-5 h-5 rounded-full border border-white object-cover" />
+                <img src="/images/medical_team_faculty.jpeg" alt="Reviewer" className="w-5 h-5 rounded-full border border-white object-cover" />
+              </div>
+              <span className="text-[11px] font-bold text-slate-700">Reviews (4.5★)</span>
+            </div>
+            <span className="text-xl font-serif text-slate-900 font-black leading-none">“</span>
           </div>
-        </a>
+        </div>
+
+        {/* Card 4: Photo Card of Medical Staff */}
+        <div
+          onClick={onOpenAppointment}
+          className="group relative rounded-[28px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer h-[210px] sm:h-[220px]"
+        >
+          <img
+            src="/images/digestive_clinic.jpg"
+            alt="Doctors Who Truly Care for You"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <h3 className="text-sm sm:text-base font-bold leading-snug">
+              Doctors Who Truly Care for You
+            </h3>
+          </div>
+        </div>
 
       </div>
     </section>

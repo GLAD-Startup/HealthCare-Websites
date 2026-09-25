@@ -138,7 +138,7 @@ export const AboutUsSection: React.FC = () => {
 
           {/* Right Column: Visual Showcase Frame */}
           <div className="lg:col-span-6 relative pt-4 lg:pt-0">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
+            <div className="relative mx-auto max-w-md lg:max-w-none pb-5 sm:pb-0">
               
               {/* Main Image Card */}
               <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-4/3 group">
@@ -150,15 +150,15 @@ export const AboutUsSection: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
                 
                 {/* Overlay Text */}
-                <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 text-white">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-[#0F766E]/90 text-white text-[11px] sm:text-xs font-bold mb-1.5 sm:mb-2">
+                <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 text-white pb-4 sm:pb-0">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-[#0F766E]/90 text-white text-[10px] sm:text-xs font-bold mb-1 sm:mb-2">
                     <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                     <span>Specialist Clinical Team</span>
                   </div>
-                  <h4 className="text-base sm:text-xl font-bold leading-tight">
+                  <h4 className="text-sm sm:text-xl font-bold leading-tight">
                     Dedicated Physicians &amp; Critical Care Staff
                   </h4>
-                  <p className="text-[11px] sm:text-xs text-slate-200 mt-0.5 sm:mt-1">
+                  <p className="text-[10px] sm:text-xs text-slate-200 mt-0.5 sm:mt-1 hidden sm:block">
                     Dr. Chaitanya Gupta alongside senior medical colleagues and critical care specialists.
                   </p>
                 </div>
@@ -167,10 +167,10 @@ export const AboutUsSection: React.FC = () => {
               {/* Floating Badge: Consultation Fee & Rating */}
               <div
                 ref={clockBadgeRef}
-                className="absolute -bottom-4 left-1 sm:-left-8 bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-xl border border-slate-100 flex items-center gap-2.5 sm:gap-3.5 max-w-[85%] sm:max-w-xs"
+                className="absolute -bottom-3 sm:-bottom-4 left-2 sm:-left-8 bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl shadow-xl border border-slate-100 flex items-center gap-2 sm:gap-3.5 max-w-[90%] sm:max-w-xs z-20"
               >
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
-                  <Award className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+                  <Award className="w-4 h-4 sm:w-6 sm:h-6" />
                 </div>
                 <div>
                   <div className="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight">
@@ -183,9 +183,9 @@ export const AboutUsSection: React.FC = () => {
               </div>
 
               {/* Floating Badge: OPD Timings */}
-              <div className="absolute -top-3 right-1 sm:-right-6 bg-slate-900 text-white py-1.5 px-3 sm:py-2.5 sm:px-4 rounded-xl sm:rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2 max-w-[85%]">
+              <div className="absolute -top-3 right-1 sm:-right-6 bg-slate-900 text-white py-1.5 px-3 sm:py-2.5 sm:px-4 rounded-xl sm:rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2 max-w-[85%] z-20">
                 <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
-                <div className="text-[11px] sm:text-xs font-bold">
+                <div className="text-[10px] sm:text-xs font-bold">
                   Open 7 Days a Week
                 </div>
               </div>

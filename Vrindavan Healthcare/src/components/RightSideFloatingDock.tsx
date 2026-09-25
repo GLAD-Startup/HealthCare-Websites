@@ -97,7 +97,7 @@ export const RightSideFloatingDock: React.FC<RightSideFloatingDockProps> = ({ on
       </div>
 
       {/* Mobile: Bottom Sticky Quick Action Bar (below md, touch-friendly min 44px) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-3 py-2 shadow-2xl pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <div className="mobile-bottom-dock md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-3 py-2 shadow-2xl pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <div className="grid grid-cols-4 gap-2 max-w-md mx-auto">
           {/* 1. Direct Call */}
           <a
