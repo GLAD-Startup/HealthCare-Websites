@@ -92,12 +92,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
       >
         {/* Main Navbar */}
         <header
-        className={`w-full transition-all duration-300 ${
-          isScrolled
-            ? 'bg-[#FAFAF8]/95 backdrop-blur-md shadow-xs py-3 sm:py-3.5 border-b border-slate-200/80'
-            : 'bg-[#FAFAF8] py-3.5 sm:py-4 border-b border-slate-200/60'
-        }`}
-      >
+          className={`w-full transition-all duration-300 ${
+            isScrolled
+              ? 'bg-[#FAFAF8]/95 backdrop-blur-md shadow-xs pt-[max(0.95rem,env(safe-area-inset-top))] pb-2.5 sm:py-3.5 border-b border-slate-200/80'
+              : 'bg-[#FAFAF8] pt-[max(1.2rem,env(safe-area-inset-top))] pb-3 sm:py-4 border-b border-slate-200/60'
+          }`}
+        >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 w-full">
           {/* Brand Logo */}
           <a
@@ -105,16 +105,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
             onClick={(e) => handleNavClick(e, '#hero')}
             className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0"
           >
-            <img
-              src="/favicon.png"
-              alt="Vrindavan Healthcare Official Logo"
-              className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 group-hover:scale-105 transition-transform duration-300"
-            />
+            <div className="w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-xl bg-white sm:bg-transparent p-0.5 sm:p-0 flex items-center justify-center shrink-0 border border-slate-200/80 sm:border-0 shadow-2xs sm:shadow-none">
+              <img
+                src="/favicon.png"
+                alt="Vrindavan Healthcare Official Logo"
+                className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0 group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
             <div className="shrink min-w-0">
-              <div className="font-sans text-sm sm:text-base font-extrabold text-slate-900 tracking-wider uppercase leading-none">
-                Vrindavan <span className="text-slate-500 font-medium">Healthcare</span>
+              <div className="font-sans text-[13px] sm:text-base font-extrabold text-slate-900 tracking-wider uppercase leading-tight sm:leading-none flex items-center gap-1.5">
+                <span>Vrindavan</span>
+                <span className="text-slate-500 font-medium">Healthcare</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse sm:hidden" title="OPD Active" />
               </div>
-              <div className="text-[8px] sm:text-[9px] text-slate-400 font-semibold tracking-wider uppercase mt-1 truncate">
+              <div className="text-[8px] sm:text-[9px] text-slate-500 sm:text-slate-400 font-semibold tracking-wider uppercase mt-0.5 sm:mt-1 truncate">
                 Dr. Chaitanya Gupta • DM Gastro
               </div>
             </div>
@@ -156,13 +160,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
             <a
               href={`tel:${CLINIC_INFO.phoneRaw}`}
               aria-label="Call Clinic"
-              className="w-10 h-10 rounded-full text-slate-900 bg-slate-100 active:bg-slate-200 flex items-center justify-center transition-colors sm:hidden min-h-[44px] min-w-[44px]"
+              className="w-9 h-9 rounded-full text-emerald-700 bg-emerald-50 border border-emerald-200/90 active:bg-emerald-100 flex items-center justify-center transition-all sm:hidden min-h-[40px] min-w-[40px] active:scale-95 shadow-2xs"
             >
               <Phone className="w-4 h-4" />
             </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-10 h-10 rounded-full text-slate-900 hover:bg-slate-100 active:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer min-h-[44px] min-w-[44px]"
+              className="w-9 h-9 rounded-full text-slate-800 bg-white border border-slate-200/90 active:bg-slate-100 flex items-center justify-center transition-all cursor-pointer min-h-[40px] min-w-[40px] active:scale-95 shadow-2xs"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -177,7 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
     {mobileMenuOpen && (
       <div className="lg:hidden fixed inset-0 z-[100] bg-white flex flex-col justify-between animate-fadeIn">
         {/* Top Header inside Drawer */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-slate-100 bg-[#FAFAF8]">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-[max(1.2rem,env(safe-area-inset-top))] pb-3.5 border-b border-slate-100 bg-[#FAFAF8]">
           <a
             href="#hero"
             onClick={(e) => handleNavClick(e, '#hero')}

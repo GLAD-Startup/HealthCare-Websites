@@ -73,7 +73,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
   }, []);
 
   return (
-    <section id="hero" className="pt-24 sm:pt-28 md:pt-36 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="hero" className="pt-32 sm:pt-28 md:pt-36 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         
         {/* Left Column: Editorial Headline, Subtitle, CTAs & Stats */}
@@ -90,11 +90,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
             Never ignore what your digestive health is telling you. Experience trusted gastro, liver, and endoscopy care with advanced diagnosis and compassionate treatment under <strong>Dr. Chaitanya Gupta</strong> (MD General Medicine, DM Gastroenterology).
           </p>
 
-          {/* Button Row: Solid Black Pill + Underlined Action */}
-          <div className="hero-anime-item flex flex-wrap items-center gap-4 sm:gap-6 pt-1">
+          {/* Button Row: Solid Black Pill + Secondary Action */}
+          <div className="hero-anime-item flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6 pt-1">
             <button
               onClick={onOpenAppointment}
-              className="px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[46px]"
+              className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[46px] text-center justify-center flex items-center"
             >
               BOOK AN APPOINTMENT
             </button>
@@ -107,51 +107,58 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
                 if (lenis) lenis.scrollTo('#doctor', { offset: -70 });
                 else document.getElementById('doctor')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-900 pb-0.5 hover:text-slate-600 hover:border-slate-600 transition-colors inline-flex items-center gap-1.5"
+              className="w-full sm:w-auto text-xs font-bold uppercase tracking-wider text-slate-900 py-3 sm:py-0 border sm:border-0 border-slate-300 rounded-full sm:rounded-none sm:border-b-2 sm:border-slate-900 sm:pb-0.5 hover:text-slate-600 hover:border-slate-600 transition-colors inline-flex items-center justify-center gap-1.5 text-center"
             >
               <span>FIND A DOCTOR</span>
             </a>
           </div>
 
-          {/* Social Proof Stats Row: Butter Yellow Card + Matching Counter */}
-          <div className="hero-anime-item flex flex-wrap items-center gap-4 sm:gap-6 pt-4">
+          {/* Social Proof Stats Row: Balanced 2-Column Cards on Mobile, Wider Equal Cards on Desktop */}
+          <div className="hero-anime-item grid grid-cols-2 gap-3 sm:flex sm:items-center sm:gap-5 pt-3 sm:pt-4">
             
-            {/* Soft Butter Yellow Pill Card */}
-            <div className="bg-[#FEF9C3] border border-amber-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-4.5 flex items-center gap-4 shadow-2xs">
+            {/* Stat Card 1: Soft Butter Yellow */}
+            <div className="bg-[#FEF9C3] border border-amber-200/90 rounded-2xl p-3 sm:py-4 sm:px-5 sm:w-44 sm:min-w-[175px] flex flex-col justify-between shadow-2xs">
               <div>
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 leading-none">
+                <div className="text-xl sm:text-3xl font-black text-slate-900 leading-none">
                   2148
                 </div>
-                <div className="text-[11px] sm:text-xs text-slate-700 font-semibold mt-1 max-w-[150px] leading-tight">
-                  Patients Took a Step Toward Wellness Today
+                <div className="text-[10px] sm:text-xs text-slate-700 font-semibold mt-1 leading-snug">
+                  Patients Cared For
                 </div>
-                
-                {/* Avatar Cluster */}
-                <div className="flex -space-x-2 mt-2">
-                  <img
-                    src="/images/dr_chaitanya_press_conf.jpeg"
-                    alt="Verified Patient"
-                    className="w-6 h-6 rounded-full border-2 border-[#FEF9C3] object-cover"
-                  />
-                  <img
-                    src="/images/medical_team_faculty.jpeg"
-                    alt="Verified Patient"
-                    className="w-6 h-6 rounded-full border-2 border-[#FEF9C3] object-cover"
-                  />
-                  <div className="w-6 h-6 rounded-full border-2 border-[#FEF9C3] bg-amber-400 text-slate-900 text-[10px] font-bold flex items-center justify-center">
-                    ★
-                  </div>
+              </div>
+              
+              {/* Avatar Cluster */}
+              <div className="flex -space-x-1.5 mt-2.5">
+                <img
+                  src="/images/dr_chaitanya_press_conf.jpeg"
+                  alt="Verified Patient"
+                  className="w-5 h-5 rounded-full border-2 border-[#FEF9C3] object-cover"
+                />
+                <img
+                  src="/images/medical_team_faculty.jpeg"
+                  alt="Verified Patient"
+                  className="w-5 h-5 rounded-full border-2 border-[#FEF9C3] object-cover"
+                />
+                <div className="w-5 h-5 rounded-full border-2 border-[#FEF9C3] bg-amber-400 text-slate-900 text-[9px] font-bold flex items-center justify-center">
+                  ★
                 </div>
               </div>
             </div>
 
-            {/* Counter Next to Card */}
-            <div className="flex flex-col pl-2">
-              <div ref={countRef} className="text-2xl sm:text-3xl font-black text-slate-900 leading-none">
-                800+
+            {/* Stat Card 2: Soft Mint Green */}
+            <div className="bg-[#E6F7F5] border border-emerald-200/80 rounded-2xl p-3 sm:py-4 sm:px-5 sm:w-44 sm:min-w-[175px] flex flex-col justify-between shadow-2xs">
+              <div>
+                <div ref={countRef} className="text-xl sm:text-3xl font-black text-slate-900 leading-none">
+                  65+
+                </div>
+                <div className="text-[10px] sm:text-xs text-emerald-950 font-semibold mt-1 leading-snug">
+                  Justdial Reviews
+                </div>
               </div>
-              <div className="text-[11px] sm:text-xs text-slate-500 font-medium mt-1 max-w-[160px] leading-tight">
-                Users Got Matched With a Doctor Today
+
+              <div className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-white/80 px-2 py-0.5 rounded-full border border-emerald-200/60 mt-2.5 self-start shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                <span>4.5/5 Rating</span>
               </div>
             </div>
 
@@ -160,11 +167,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
         </div>
 
         {/* Right Column: Hero Doctor & Patient Image Frame */}
-        <div className="lg:col-span-5 relative flex items-center justify-center pt-4 lg:pt-0">
+        <div className="lg:col-span-5 relative flex items-center justify-center pt-2 lg:pt-0">
           <div className="relative w-full max-w-[420px] lg:max-w-none">
             
             {/* Main Rounded Photo Card */}
-            <div className="hero-doctor-frame relative rounded-[36px] sm:rounded-[44px] overflow-hidden shadow-xl border border-slate-200/80 bg-slate-100 aspect-4/3 sm:aspect-auto sm:h-[480px] lg:h-[530px]">
+            <div className="hero-doctor-frame relative rounded-2xl sm:rounded-[44px] overflow-hidden shadow-xl border border-slate-200/80 bg-slate-100 aspect-4/3 sm:aspect-auto sm:h-[480px] lg:h-[530px]">
               <img
                 src={heroDocImg}
                 alt="Dr. Chaitanya Gupta - DM Gastroenterologist at World IBD Day Press Conference"
@@ -172,7 +179,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
 
-              {/* Top-Left Circular Floating Badge: "Explore Service ↗" */}
+              {/* Top-Left Circular Floating Badge: "Explore Service ↗" (Scaled for Mobile) */}
               <a
                 href="#gastro-care"
                 onClick={(e) => {
@@ -181,28 +188,28 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
                   if (lenis) lenis.scrollTo('#gastro-care', { offset: -70 });
                   else document.getElementById('gastro-care')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="absolute top-4 left-4 sm:top-6 sm:left-6 group cursor-pointer"
+                className="absolute top-3 left-3 sm:top-6 sm:left-6 group cursor-pointer z-10"
                 aria-label="Explore Services"
               >
-                <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-white/95 backdrop-blur-md text-slate-900 border border-slate-200/90 shadow-lg flex flex-col items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-slate-900 group-hover:text-white">
-                  <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-slate-300 leading-none">Explore</span>
-                  <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-slate-300 leading-none mt-0.5">Service</span>
-                  <span className="text-base sm:text-lg font-bold mt-0.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-white/95 backdrop-blur-md text-slate-900 border border-slate-200/90 shadow-lg flex flex-col items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-slate-900 group-hover:text-white">
+                  <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-slate-300 leading-none">Explore</span>
+                  <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-600 group-hover:text-slate-300 leading-none mt-0.5">Service</span>
+                  <span className="text-xs sm:text-lg font-bold mt-0.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
                 </div>
               </a>
 
               {/* Bottom Doctor & Clinic Badge Overlay */}
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 border border-slate-100 shadow-md">
+              <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 border border-slate-100 shadow-md">
                 <div className="flex items-center justify-between gap-2">
-                  <div>
-                    <div className="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight">
+                  <div className="min-w-0">
+                    <div className="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight truncate">
                       Dr. Chaitanya Gupta
                     </div>
-                    <div className="text-[10px] text-teal-800 font-semibold mt-0.5">
+                    <div className="text-[9px] sm:text-[10px] text-teal-800 font-semibold mt-0.5 truncate">
                       MD General Medicine (2018) • DM Gastro
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-[#E6F7F5] text-teal-900 text-[10px] font-bold uppercase whitespace-nowrap">
+                  <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#E6F7F5] text-teal-900 text-[9px] sm:text-[10px] font-bold uppercase whitespace-nowrap shrink-0 border border-emerald-200/60">
                     ₹200 Fee
                   </span>
                 </div>

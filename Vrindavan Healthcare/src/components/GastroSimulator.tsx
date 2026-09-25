@@ -20,6 +20,8 @@ interface ConditionDetail {
   afterImage: string;
   beforeLabel: string;
   afterLabel: string;
+  beforeShort: string;
+  afterShort: string;
   untreatedMetrics: string[];
   treatedMetrics: string[];
 }
@@ -73,6 +75,8 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
       afterImage: '/images/liver_16_9_after.jpg',
       beforeLabel: 'Grade 2 Fatty Liver (Steatosis)',
       afterLabel: 'Healthy, Rejuvenated Liver',
+      beforeShort: 'Fatty Liver',
+      afterShort: 'Healthy Liver',
       untreatedMetrics: [
         'Enlarged liver with yellowish lipid accumulation',
         'Elevated SGOT / SGPT liver enzymes (100+ U/L)',
@@ -99,6 +103,8 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
       afterImage: '/images/gerd_16_9_clean_after.jpg',
       beforeLabel: 'Severe Acid Reflux & Mucosal Erosion',
       afterLabel: 'Tight Sphincter & Protected Barrier',
+      beforeShort: 'Acid Reflux',
+      afterShort: 'Healed Mucosa',
       untreatedMetrics: [
         'Acid surges into food pipe causing intense chest burning',
         'Raw esophageal mucosal erosion, inflammation & ulcers',
@@ -125,6 +131,8 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
       afterImage: '/images/ulcer_16_9_after.jpg',
       beforeLabel: 'Severe Active Bleeding Ulcer',
       afterLabel: '100% Healed Gastric Mucosa',
+      beforeShort: 'Active Ulcer',
+      afterShort: 'Healed Tissue',
       untreatedMetrics: [
         'Deep mucosal crater with inflamed red bleeding margins',
         'Severe retrosternal gnawing pain after eating',
@@ -143,27 +151,27 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
   const current = conditions[activeCondition];
 
   return (
-    <section id="gastro-explorer" className="py-20 sm:py-24 bg-[#FAFAF8] text-slate-900 relative overflow-hidden border-t border-slate-200/80">
+    <section id="gastro-explorer" className="py-10 sm:py-16 lg:py-20 bg-[#FAFAF8] text-slate-900 relative overflow-hidden border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
-            <Sliders className="w-4 h-4 text-slate-900" />
+        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 sm:mb-3 shadow-2xs">
+            <Sliders className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900" />
             <span>Interactive Clinical &amp; Endoscopy Explorer</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+          <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
             See the Real Difference Clinical Gastro Care Makes
           </h2>
           
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Drag the interactive slider below to inspect high-definition endoscopy &amp; organ recovery — comparing untreated gastrointestinal distress against fully restored health under Dr. Chaitanya Gupta.
           </p>
         </div>
 
         {/* Condition Tabs (Pills) */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-10">
           {(Object.keys(conditions) as ConditionType[]).map((condKey) => {
             const item = conditions[condKey];
             const isActive = activeCondition === condKey;
@@ -174,7 +182,7 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
                   setActiveCondition(condKey);
                   setSliderPosition(50);
                 }}
-                className={`px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 min-h-[42px] ${
+                className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 min-h-[38px] sm:min-h-[42px] ${
                   isActive
                     ? 'bg-slate-900 text-white shadow-xs'
                     : 'bg-white text-slate-700 hover:bg-slate-100/80 border border-slate-200/90 shadow-2xs'
@@ -188,10 +196,10 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
         </div>
 
         {/* Main Interactive Comparison Card */}
-        <div className="bg-white border border-slate-200/90 rounded-[32px] sm:rounded-[40px] overflow-hidden shadow-xs p-5 sm:p-8 lg:p-10 mb-8">
+        <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-[40px] overflow-hidden shadow-xs p-4 sm:p-6 lg:p-10 mb-8">
           
           {/* Card Top Title Row */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5 sm:mb-6 pb-5 sm:pb-6 border-b border-slate-100">
             <div>
               <span className={`px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider border ${
                 current.id === 'fatty-liver'
@@ -200,24 +208,24 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
               }`}>
                 {current.badge}
               </span>
-              <h3 className="font-serif text-2xl sm:text-3xl text-slate-900 mt-2 tracking-tight">
+              <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-slate-900 mt-2 tracking-tight leading-snug">
                 {current.title}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium leading-relaxed">
                 {current.tagline}
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="px-3.5 py-1.5 rounded-full bg-[#FEF08A] text-slate-900 font-bold text-xs border border-amber-300 shadow-2xs hidden sm:inline-block">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
+              <span className="px-3.5 py-1.5 rounded-full bg-[#FEF08A] text-slate-900 font-bold text-xs border border-amber-300 shadow-2xs text-center hidden sm:inline-block">
                 OPD Fee: ₹200 only
               </span>
               <button
                 onClick={() => onBookService(current.serviceName)}
-                className="px-5 sm:px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[42px]"
+                className="w-full sm:w-auto justify-center px-5 sm:px-6 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[42px]"
               >
                 <span>Consult for This Condition</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
             </div>
           </div>
@@ -228,25 +236,27 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
-            className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 bg-slate-950 w-full aspect-[16/9] max-h-[520px] select-none shadow-inner group cursor-ew-resize touch-none mx-auto"
+            className="relative rounded-xl sm:rounded-3xl overflow-hidden border border-slate-200/90 bg-slate-950 w-full aspect-[16/9] max-h-[520px] select-none shadow-inner group cursor-ew-resize touch-none mx-auto"
           >
             
-            {/* Top-Left Floating Badge: Before */}
+            {/* Top-Left Floating Badge: Before (Concise on mobile so it NEVER overlaps) */}
             <div
-              className="absolute top-3 sm:top-4 left-3 sm:left-4 z-20 px-3 sm:px-3.5 py-1.5 rounded-full bg-red-600/95 text-white text-[11px] sm:text-xs font-bold shadow-md flex items-center gap-1.5 backdrop-blur-sm pointer-events-none transition-opacity duration-200"
-              style={{ opacity: sliderPosition < 12 ? 0.3 : 1 }}
+              className="absolute top-2.5 sm:top-4 left-2.5 sm:left-4 z-20 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-red-600/95 text-white text-[10px] sm:text-xs font-bold shadow-md flex items-center gap-1.5 backdrop-blur-xs pointer-events-none transition-opacity duration-200 select-none max-w-[45%] sm:max-w-none"
+              style={{ opacity: sliderPosition < 16 ? 0.2 : 1 }}
             >
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span>BEFORE: {current.beforeLabel}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
+              <span className="shrink-0">BEFORE</span>
+              <span className="hidden md:inline font-normal text-red-100 truncate">• {current.beforeShort}</span>
             </div>
 
-            {/* Top-Right Floating Badge: After */}
+            {/* Top-Right Floating Badge: After (Concise on mobile so it NEVER overlaps) */}
             <div
-              className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 px-3 sm:px-3.5 py-1.5 rounded-full bg-emerald-600/95 text-white text-[11px] sm:text-xs font-bold shadow-md flex items-center gap-1.5 backdrop-blur-sm pointer-events-none transition-opacity duration-200"
-              style={{ opacity: sliderPosition > 88 ? 0.3 : 1 }}
+              className="absolute top-2.5 sm:top-4 right-2.5 sm:right-4 z-20 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-emerald-600/95 text-white text-[10px] sm:text-xs font-bold shadow-md flex items-center gap-1.5 backdrop-blur-xs pointer-events-none transition-opacity duration-200 select-none max-w-[45%] sm:max-w-none"
+              style={{ opacity: sliderPosition > 84 ? 0.2 : 1 }}
             >
-              <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-              <span>AFTER: {current.afterLabel}</span>
+              <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
+              <span className="shrink-0">AFTER</span>
+              <span className="hidden md:inline font-normal text-emerald-100 truncate">• {current.afterShort}</span>
             </div>
 
             {/* Layer 1: Left / Before Image State */}
@@ -277,46 +287,56 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
               className="absolute top-0 bottom-0 w-0.5 bg-white shadow-2xl pointer-events-none z-20 flex items-center justify-center -translate-x-1/2"
               style={{ left: `${sliderPosition}%` }}
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-slate-900 shadow-2xl flex items-center justify-center font-bold text-xs sm:text-sm border-2 border-slate-900 group-hover:scale-110 transition-transform">
-                ↔
+              <div className="w-8 h-8 sm:w-10 sm:h-10 aspect-square shrink-0 rounded-full bg-white text-slate-900 shadow-2xl flex items-center justify-center font-bold text-xs sm:text-sm border-2 border-slate-900 select-none transition-transform group-hover:scale-110 active:scale-95">
+                <span className="text-xs sm:text-sm font-black select-none pointer-events-none">↔</span>
               </div>
             </div>
 
-            {/* Invisible Range Input for Keyboard & Drag Accessibility: full 0 to 100 range */}
+            {/* Accessible Range Input for Keyboard Users */}
             <input
               type="range"
               min="0"
               max="100"
               value={sliderPosition}
               onChange={(e) => setSliderPosition(Number(e.target.value))}
-              aria-label="Comparison slider"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30"
+              aria-label="Interactive comparison slider"
+              className="sr-only"
             />
           </div>
 
-          {/* Slider Instruction Prompt */}
-          <div className="flex items-center justify-between mt-3 sm:mt-4 text-xs font-semibold text-slate-500">
-            <span className="text-red-600 font-bold">← Active Disease Distress</span>
-            <span className="text-slate-500 hidden sm:flex items-center gap-1.5 font-medium">
-              <span>Drag slider left / right to inspect tissue recovery</span>
-            </span>
-            <span className="text-emerald-700 font-bold">Restored Mucosal Health →</span>
+          {/* Slider Condition Labels Bar (Guaranteed No Overlap or Overflow) */}
+          <div className="flex items-center justify-between gap-2 mt-3 sm:mt-4 px-1 select-none">
+            <div className="flex items-center gap-1.5 text-red-600 font-bold text-[11px] sm:text-xs min-w-0">
+              <span className="shrink-0 font-bold">←</span>
+              <span className="truncate">{current.beforeShort}</span>
+            </div>
+
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200/80 text-slate-600 text-[10px] sm:text-xs font-semibold shrink-0 shadow-2xs">
+              <Sliders className="w-3 h-3 text-slate-500 shrink-0" />
+              <span className="hidden sm:inline">Drag to Compare</span>
+              <span className="sm:hidden">Drag ↔</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] sm:text-xs min-w-0 justify-end text-right">
+              <span className="truncate">{current.afterShort}</span>
+              <span className="shrink-0 font-bold">→</span>
+            </div>
           </div>
 
-          {/* Side-by-Side Clinical Findings Comparison (Placed cleanly below the image!) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-8">
+          {/* Side-by-Side Clinical Findings Comparison Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
             
             {/* Untreated Findings Card */}
-            <div className="rounded-2xl p-5 sm:p-6 bg-[#FFF5F5] border border-red-200/80 space-y-3">
+            <div className="rounded-2xl p-4 sm:p-6 bg-[#FFF5F5] border border-red-200/80 space-y-3">
               <div className="flex items-center gap-2 text-red-700 font-bold text-xs uppercase tracking-wider">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-600" />
+                <span className="w-2.5 h-2.5 rounded-full bg-red-600 shrink-0" />
                 <span>Untreated Clinical Findings</span>
               </div>
               
               <ul className="space-y-2">
                 {current.untreatedMetrics.map((metric, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-800 font-medium">
-                    <span className="text-red-500 font-bold mt-0.5">•</span>
+                  <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-800 font-medium">
+                    <span className="text-red-500 font-bold shrink-0 mt-0.5">•</span>
                     <span>{metric}</span>
                   </li>
                 ))}
@@ -324,15 +344,15 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
             </div>
 
             {/* Treated Outcomes Card */}
-            <div className="rounded-2xl p-5 sm:p-6 bg-[#E6F7F5] border border-teal-200/80 space-y-3">
+            <div className="rounded-2xl p-4 sm:p-6 bg-[#E6F7F5] border border-teal-200/80 space-y-3">
               <div className="flex items-center gap-2 text-teal-800 font-bold text-xs uppercase tracking-wider">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 shrink-0" />
                 <span>Post-Treatment Healed Tissue</span>
               </div>
 
               <ul className="space-y-2">
                 {current.treatedMetrics.map((metric, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-800 font-medium">
+                  <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-800 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span>{metric}</span>
                   </li>
@@ -343,13 +363,13 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
           </div>
 
           {/* Dr. Gupta's Solution & OPD Banner */}
-          <div className="mt-6 p-5 sm:p-6 rounded-2xl bg-[#FEF9C3] border border-amber-300/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="mt-6 p-4 sm:p-6 rounded-2xl bg-[#FEF9C3] border border-amber-300/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-5">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-amber-900 text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-4 h-4 text-amber-800" />
+                <Sparkles className="w-4 h-4 text-amber-800 shrink-0" />
                 <span>Dr. Chaitanya Gupta's Clinical Protocol</span>
               </div>
-              <h4 className="text-base sm:text-lg font-bold text-slate-900">
+              <h4 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900">
                 {current.solutionTitle}
               </h4>
               <p className="text-xs sm:text-sm text-slate-700 leading-relaxed max-w-2xl font-normal">
@@ -359,10 +379,10 @@ export const GastroSimulator: React.FC<GastroSimulatorProps> = ({ onBookService 
 
             <button
               onClick={() => onBookService(current.serviceName)}
-              className="px-6 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shrink-0 shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2 min-h-[44px]"
+              className="w-full md:w-auto justify-center px-6 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shrink-0 shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2 min-h-[44px]"
             >
               <span>Book Appointment (₹200)</span>
-              <ArrowRight className="w-4 h-4 text-white" />
+              <ArrowRight className="w-4 h-4 text-white shrink-0" />
             </button>
           </div>
 

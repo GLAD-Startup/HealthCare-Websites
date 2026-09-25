@@ -61,7 +61,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-slate-900 font-sans selection:bg-[#CCFBF1] selection:text-[#0F766E] relative pb-16 sm:pb-0">
+    <div className="min-h-screen bg-[#FAFAF8] text-slate-900 font-sans selection:bg-[#CCFBF1] selection:text-[#0F766E] relative pb-20 sm:pb-0">
       {/* 1. Medtrust Minimalist Sticky Navbar */}
       <Navbar onOpenAppointment={() => handleOpenAppointmentModal()} />
 

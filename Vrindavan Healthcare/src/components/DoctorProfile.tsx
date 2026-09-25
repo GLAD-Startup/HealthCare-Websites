@@ -18,33 +18,33 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
   }, []);
 
   return (
-    <section id="doctor" className="py-20 bg-[#FAFAF8] border-t border-slate-200/60">
+    <section id="doctor" className="py-10 sm:py-16 lg:py-20 bg-[#FAFAF8] border-t border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 sm:mb-3 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-slate-900" />
             <UserCheck className="w-4 h-4 text-slate-900" />
             <span>Consultant Profile</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+          <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
             Meet Dr. Chaitanya Gupta
           </h2>
 
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-2 sm:mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Dedicated Liver &amp; Gastro Specialist and Consultant Physician bringing high-definition endoscopic care and ethical medicine to Vrindavan.
           </p>
         </div>
 
         {/* Doctor Main Showcase Card */}
         <div className="doctor-profile-anime bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden max-w-5xl mx-auto hover:shadow-2xl transition-all duration-300">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-5 sm:p-10 lg:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center p-4 sm:p-8 lg:p-12">
             
             {/* Left Col: Photo & Verified Badges */}
             <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="relative w-56 sm:w-72 h-72 sm:h-92 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 group">
+              <div className="relative w-52 sm:w-72 h-64 sm:h-92 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 group">
                 <img
                   src={DOCTOR_CHAITANYA.image}
                   alt={DOCTOR_CHAITANYA.name}
@@ -52,14 +52,14 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
                 
-                <div className="absolute bottom-3 left-3 right-3 p-2 bg-slate-900/75 backdrop-blur-md rounded-xl text-center text-white border border-white/20">
-                  <div className="text-xs font-bold text-amber-300">MD (2018) • DM (Gastroenterology)</div>
+                <div className="absolute bottom-2.5 sm:bottom-3 left-2.5 sm:left-3 right-2.5 sm:right-3 p-2 bg-slate-900/80 backdrop-blur-md rounded-xl text-center text-white border border-white/20">
+                  <div className="text-[11px] sm:text-xs font-bold text-amber-300">MD (2018) • DM (Gastroenterology)</div>
                   <div className="text-[10px] text-slate-300">SRMS IMS Bareilly</div>
                 </div>
               </div>
 
               {/* Justdial & Rating Bar */}
-              <div className="mt-4 flex items-center gap-3 py-2 px-4 rounded-full bg-[#FEF9C3] border border-amber-300/80 shadow-2xs">
+              <div className="mt-3.5 sm:mt-4 flex items-center gap-3 py-1.5 sm:py-2 px-4 rounded-full bg-[#FEF9C3] border border-amber-300/80 shadow-2xs">
                 <div className="flex items-center text-amber-500">
                   <Star className="w-4 h-4 fill-current" />
                   <span className="font-extrabold text-slate-900 text-xs ml-1">4.5 / 5</span>
@@ -70,18 +70,18 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
             </div>
 
             {/* Right Col: Qualifications, Bio & Expertise */}
-            <div className="lg:col-span-7 space-y-6 text-left">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-left">
               <div>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E6F7F5] text-teal-900 border border-teal-200/80 text-xs font-bold uppercase tracking-wider mb-2">
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-[#E6F7F5] text-teal-900 border border-teal-200/80 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2">
                   <Stethoscope className="w-3.5 h-3.5 text-teal-700" />
                   <span>Liver &amp; Gastro Specialist • Physician</span>
                 </div>
 
-                <h3 className="text-3xl sm:text-4xl font-serif text-slate-900 tracking-tight">
+                <h3 className="text-2xl sm:text-4xl font-serif text-slate-900 tracking-tight">
                   {DOCTOR_CHAITANYA.name}
                 </h3>
 
-                <div className="text-teal-800 font-bold text-base sm:text-lg mt-1">
+                <div className="text-teal-800 font-bold text-sm sm:text-lg mt-1">
                   {DOCTOR_CHAITANYA.qualifications}
                 </div>
 
@@ -91,14 +91,14 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
               </div>
 
               {/* Bio Paragraph */}
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
+              <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-normal">
                 {DOCTOR_CHAITANYA.bio}
               </p>
 
               {/* Lybrate Ethical Statement Quote */}
-              <div className="p-4 rounded-2xl bg-[#FEF9C3]/75 border-l-4 border-amber-400 text-xs text-slate-800 space-y-1 shadow-2xs">
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FEF9C3]/75 border-l-4 border-amber-400 text-xs text-slate-800 space-y-1 shadow-2xs">
                 <div className="flex items-center gap-1.5 font-bold text-slate-900">
-                  <HeartHandshake className="w-4 h-4 text-amber-600" />
+                  <HeartHandshake className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>Doctor's Philosophy &amp; Medical Ethics</span>
                 </div>
                 <p className="italic leading-relaxed">
@@ -107,7 +107,7 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
               </div>
 
               {/* Key Clinical Capabilities */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 pt-1">
                 <div className="flex items-center gap-2 text-xs text-slate-800 font-semibold">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Upper GI Endoscopy Diagnostic &amp; Biopsy</span>
@@ -127,21 +127,21 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
               </div>
 
               {/* Clinic Locations Info */}
-              <div className="p-3.5 rounded-2xl bg-[#E6F7F5] border border-teal-200/80 text-xs space-y-1 shadow-2xs">
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-[#E6F7F5] border border-teal-200/80 text-xs space-y-1 shadow-2xs">
                 <div className="font-bold text-teal-900 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-teal-700" />
+                  <MapPin className="w-3.5 h-3.5 text-teal-700 shrink-0" />
                   <span>Practicing at 2 Locations in Vrindavan (PIN 281121):</span>
                 </div>
-                <div className="text-slate-700 pl-5">
+                <div className="text-slate-700 pl-4 sm:pl-5 text-[11px] sm:text-xs">
                   • <strong>Location A:</strong> Bhakti Vedant Marg, Raman Reti (Near ISKCON Temple)
                 </div>
-                <div className="text-slate-700 pl-5">
+                <div className="text-slate-700 pl-4 sm:pl-5 text-[11px] sm:text-xs">
                   • <strong>Location B:</strong> Bankey Bihari Nikunj, Hanuman Bagh (Near Brijwasi Mithai Wala)
                 </div>
               </div>
 
               {/* Bottom Actions */}
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div className="text-xs text-slate-600 font-medium">
                   Consultation Fee: <strong className="text-slate-900 font-bold text-sm">₹200</strong> (Cash, UPI, Cards)
                 </div>
@@ -149,9 +149,9 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <button
                     onClick={() => onBookDoctor(DOCTOR_CHAITANYA.name)}
-                    className="w-full sm:w-auto min-h-[46px] justify-center px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
+                    className="w-full sm:w-auto min-h-[46px] justify-center px-6 sm:px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
                   >
-                    <Calendar className="w-4 h-4 text-white" />
+                    <Calendar className="w-4 h-4 text-white shrink-0" />
                     <span>BOOK APPOINTMENT WITH DR. GUPTA</span>
                   </button>
                 </div>
@@ -163,13 +163,13 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
         </div>
 
         {/* Real Clinical Action Photo Showcase */}
-        <div className="mt-10 max-w-5xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+        <div className="mt-8 sm:mt-12 max-w-5xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span>Clinical Excellence &amp; Community Health in Action</span>
             </h4>
-            <span className="text-xs font-bold text-slate-900 bg-[#FEF08A] px-3.5 py-1 rounded-full border border-amber-300 shadow-2xs">
+            <span className="inline-flex self-start sm:self-auto text-[11px] sm:text-xs font-bold text-slate-900 bg-[#FEF08A] px-3 py-1 rounded-full border border-amber-300 shadow-2xs whitespace-nowrap">
               Verified Vrindavan Practice
             </span>
           </div>
@@ -221,7 +221,7 @@ export const DoctorProfile: React.FC<DoctorProfileProps> = ({ onBookDoctor }) =>
                 <img
                   src="/images/dr_chaitanya_ercp_ot.jpeg"
                   alt="Dr. Chaitanya Gupta doing ERCP CBD stone removal"
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-slate-900/80 text-white text-[10px] font-bold">
                   ERCP &amp; OT

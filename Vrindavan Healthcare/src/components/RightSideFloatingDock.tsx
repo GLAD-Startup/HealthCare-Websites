@@ -125,11 +125,11 @@ export const RightSideFloatingDock: React.FC<RightSideFloatingDockProps> = ({ on
           <button
             type="button"
             onClick={onOpenAppointment}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-slate-900 active:bg-slate-800 text-white text-center min-h-[44px] transition-transform active:scale-95 cursor-pointer"
+            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-gradient-to-b from-amber-300 to-amber-400 active:from-amber-400 active:to-amber-500 text-slate-950 font-black text-center min-h-[44px] transition-transform active:scale-95 cursor-pointer shadow-md border border-amber-200"
             aria-label="Book OPD Consultation"
           >
-            <Calendar className="w-4 h-4 mb-0.5 text-amber-300" />
-            <span className="text-[10px] font-bold">Book (₹200)</span>
+            <Calendar className="w-4 h-4 mb-0.5 text-slate-950 stroke-[2.5]" />
+            <span className="text-[10px] font-black tracking-tight">Book (₹200)</span>
           </button>
 
           {/* 4. Request Callback */}

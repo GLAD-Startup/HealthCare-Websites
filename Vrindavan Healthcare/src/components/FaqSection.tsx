@@ -78,52 +78,52 @@ export const FaqSection: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-20 bg-[#FAFAF8] border-t border-slate-200/80">
+    <section id="faq" className="pt-6 sm:pt-16 pb-12 sm:pb-20 bg-[#FAFAF8] border-t border-slate-200/80">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
-            <HelpCircle className="w-4 h-4 text-slate-900" />
+        <div className="text-center max-w-3xl mx-auto mb-5 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 sm:mb-3 shadow-2xs">
+            <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900" />
             <span>Patient Guidance &amp; Information</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+          <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
             Frequently Asked Questions
           </h2>
           
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-2 sm:mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Find answers regarding Dr. Chaitanya Gupta's qualifications, Upper GI Endoscopy, fatty liver care, ₹200 fee, and Vrindavan clinic locations.
           </p>
         </div>
 
         {/* Search Bar */}
-        <div className="max-w-xl mx-auto mb-8">
+        <div className="max-w-xl mx-auto mb-5 sm:mb-7">
           <div className="relative flex items-center">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-4 shrink-0 pointer-events-none" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search question (e.g. Endoscopy, Fee, Locations, Fatty Liver)..."
-              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 shadow-2xs"
+              placeholder="Search topics (e.g. Fee, Endoscopy)..."
+              className="w-full pl-11 pr-4 py-2.5 sm:py-3 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 shadow-2xs min-h-[44px]"
             />
           </div>
         </div>
 
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10">
+        {/* Category Filter Pills (Mobile horizontal scroll / Desktop wrap) */}
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 sm:flex-wrap sm:justify-center no-scrollbar px-1 mb-6 sm:mb-10">
           {[
-            { id: 'all', label: 'All Questions' },
-            { id: 'doctor', label: 'Dr. Chaitanya Gupta' },
-            { id: 'endoscopy', label: 'Upper GI Endoscopy' },
-            { id: 'liver', label: 'Liver & Acidity' },
-            { id: 'general', label: 'Fee, Timings & Location' },
+            { id: 'all', label: 'All' },
+            { id: 'doctor', label: 'Doctor Profile' },
+            { id: 'endoscopy', label: 'Endoscopy' },
+            { id: 'liver', label: 'Liver Care' },
+            { id: 'general', label: 'Fees & Clinics' },
           ].map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id as any)}
-              className={`px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              className={`shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer min-h-[36px] sm:min-h-[38px] ${
                 activeCategory === cat.id
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90 shadow-2xs'
@@ -135,7 +135,7 @@ export const FaqSection: React.FC = () => {
         </div>
 
         {/* FAQ Accordion List */}
-        <div className="space-y-3.5">
+        <div className="space-y-2.5 sm:space-y-3.5">
           {filteredFaqs.map((faq) => {
             const isOpen = openId === faq.id;
             return (
@@ -149,20 +149,20 @@ export const FaqSection: React.FC = () => {
               >
                 <button
                   onClick={() => toggleFaq(faq.id)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
+                  className="w-full p-3.5 sm:p-5 text-left flex items-start justify-between gap-3 sm:gap-4 cursor-pointer hover:bg-slate-50/50 transition-colors"
                 >
-                  <span className="font-bold text-slate-900 text-sm sm:text-base">
+                  <span className="font-bold text-slate-900 text-xs sm:text-base leading-snug pt-0.5">
                     {faq.question}
                   </span>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                  <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 mt-0.5 ${
                     isOpen ? 'rotate-180 bg-[#FEF08A] text-slate-900 shadow-2xs' : 'bg-slate-100 text-slate-500'
                   }`}>
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal border-t border-slate-100 pt-3.5 bg-[#FAFAF8]/40">
+                  <div className="px-3.5 sm:px-5 pb-3.5 sm:pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal border-t border-slate-100 pt-3 bg-[#FAFAF8]/40">
                     {faq.answer}
                   </div>
                 )}

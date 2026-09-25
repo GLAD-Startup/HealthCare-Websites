@@ -67,27 +67,27 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
   const current = techDetails[activeTech];
 
   return (
-    <section id="technology" className="py-20 bg-[#FAFAF8] text-slate-900 relative overflow-hidden border-t border-slate-200/80">
+    <section id="technology" className="py-10 sm:py-16 lg:py-20 bg-[#FAFAF8] text-slate-900 relative overflow-hidden border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
-            <Cpu className="w-4 h-4 text-slate-900" />
+        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 sm:mb-3 shadow-2xs">
+            <Cpu className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900" />
             <span>Advanced Clinical Facilities</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+          <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
             Diagnostic Technology in Vrindavan
           </h2>
 
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-2 sm:mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Equipped with modern video endoscopy and liver diagnostic protocols under Dr. Chaitanya Gupta (DM Gastroenterology).
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
           <button
             onClick={() => setActiveTech('endoscopy')}
             className={`w-full sm:w-auto min-h-[44px] px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
@@ -126,21 +126,21 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
         </div>
 
         {/* Tab Content Bento Box */}
-        <div className={`tech-tab-content rounded-[32px] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-2xs transition-colors duration-300 ${
+        <div className={`tech-tab-content rounded-3xl sm:rounded-[32px] p-4 sm:p-8 lg:p-12 overflow-hidden shadow-2xs transition-colors duration-300 ${
           activeTech === 'hepatology'
             ? 'bg-[#FEF9C3] border border-amber-300/80'
             : 'bg-[#E6F7F5] border border-teal-200/70'
         }`}>
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
             
             {/* Left: Info */}
-            <div className="lg:col-span-6 space-y-5 text-left">
+            <div className="lg:col-span-6 space-y-4 sm:space-y-5 text-left">
               <div>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <span className="px-3.5 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider">
+                <div className="flex flex-wrap gap-2 mb-2.5 sm:mb-3">
+                  <span className="px-3 py-1 rounded-full bg-slate-900 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                     {current.badge}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-[11px] font-semibold border ${
+                  <span className={`px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold border ${
                     activeTech === 'hepatology'
                       ? 'bg-white/80 text-amber-950 border-amber-300'
                       : 'bg-white/80 text-teal-950 border-teal-200'
@@ -149,11 +149,11 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
                   </span>
                 </div>
 
-                <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-slate-900 tracking-tight leading-tight">
+                <h3 className="font-serif text-xl sm:text-3xl lg:text-4xl text-slate-900 tracking-tight leading-tight">
                   {current.title}
                 </h3>
 
-                <p className="text-slate-700 font-semibold text-xs sm:text-sm mt-1.5">
+                <p className="text-slate-700 font-semibold text-xs sm:text-sm mt-1 sm:mt-1.5">
                   {current.subtitle}
                 </p>
               </div>
@@ -162,9 +162,9 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
                 {current.description}
               </p>
 
-              <div className="space-y-2.5">
+              <div className="space-y-2 sm:space-y-2.5">
                 {current.features.map((feature, i) => (
-                  <div key={i} className="p-3 rounded-2xl bg-white/90 border border-white/60 flex items-start gap-3 text-xs sm:text-sm text-slate-800 font-medium shadow-2xs">
+                  <div key={i} className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/90 border border-white/60 flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm text-slate-800 font-medium shadow-2xs">
                     <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </div>
@@ -174,10 +174,10 @@ export const TechShowcase: React.FC<TechShowcaseProps> = ({ onBookTechService })
               <div className="pt-2">
                 <button
                   onClick={() => onBookTechService(current.serviceName)}
-                  className="w-full sm:w-auto min-h-[46px] justify-center px-7 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
+                  className="w-full sm:w-auto min-h-[46px] justify-center px-6 sm:px-8 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer flex items-center gap-2"
                 >
-                  <span>Book Consultation for {current.title.split(' ')[0]}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Book OPD Consultation (₹200)</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" />
                 </button>
               </div>
             </div>

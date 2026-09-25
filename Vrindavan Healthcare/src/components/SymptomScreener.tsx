@@ -195,28 +195,28 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
   const recommendation = getRecommendation();
 
   return (
-    <section id="screener" className="py-20 bg-[#FAFAF8] border-t border-slate-200/80">
+    <section id="screener" className="py-10 sm:py-16 lg:py-20 bg-[#FAFAF8] border-t border-slate-200/80">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
-            <Stethoscope className="w-4 h-4 text-slate-900" />
+        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-800 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-2.5 sm:mb-3 shadow-2xs">
+            <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-900" />
             <span>Interactive Patient Guidance Tool</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+          <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
             Digestive &amp; Health Symptom Screener
           </h2>
           
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-2 sm:mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
             Select what you are experiencing to receive a personalized clinical recommendation and priority OPD consultation with Dr. Chaitanya Gupta.
           </p>
         </div>
 
-        {/* Category Selector Tabs */}
-        <div className="flex justify-center mb-6 sm:mb-8 w-full">
-          <div className="flex flex-col sm:flex-row w-full sm:w-auto p-1.5 rounded-2xl bg-white border border-slate-200 shadow-2xs gap-1.5">
+        {/* Category Selector Tabs (Segmented 2-tab control on mobile) */}
+        <div className="flex justify-center mb-5 sm:mb-8 w-full">
+          <div className="grid grid-cols-2 w-full max-w-lg p-1 rounded-2xl bg-white border border-slate-200 shadow-2xs gap-1">
             <button
               type="button"
               onClick={() => {
@@ -224,14 +224,14 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                 setSelectedSymptoms([]);
                 setIsSubmitted(false);
               }}
-              className={`w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
+              className={`px-3 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 min-h-[44px] text-center ${
                 category === 'gastro'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <Activity className="w-4 h-4 shrink-0 text-emerald-400" />
-              <span>Liver &amp; Gastro Symptoms</span>
+              <span className="truncate">Liver &amp; Gastro</span>
             </button>
 
             <button
@@ -241,29 +241,29 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                 setSelectedSymptoms([]);
                 setIsSubmitted(false);
               }}
-              className={`w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-2 min-h-[44px] ${
+              className={`px-3 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 min-h-[44px] text-center ${
                 category === 'general'
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <HeartPulse className="w-4 h-4 shrink-0 text-amber-300" />
-              <span>General Physician &amp; Metabolic</span>
+              <span className="truncate">General Medicine</span>
             </button>
           </div>
         </div>
 
         {!isSubmitted ? (
           /* Symptoms Selection Form */
-          <form onSubmit={handleEvaluate} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleEvaluate} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {currentSymptoms.map((symptom) => {
                 const isSelected = selectedSymptoms.includes(symptom.id);
                 return (
                   <div
                     key={symptom.id}
                     onClick={() => toggleSymptom(symptom.id)}
-                    className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer select-none flex items-start gap-4 ${
+                    className={`p-3.5 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer select-none flex items-start gap-3 sm:gap-4 ${
                       isSelected
                         ? category === 'gastro'
                           ? 'bg-[#E6F7F5] border-teal-300 shadow-sm ring-2 ring-teal-400/50'
@@ -271,16 +271,16 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                         : 'bg-white border-slate-200/90 hover:border-slate-300 shadow-2xs hover:shadow-xs'
                     }`}
                   >
-                    <div className="text-2xl shrink-0 mt-0.5">
+                    <div className="text-xl sm:text-2xl shrink-0 mt-0.5">
                       {symptom.icon}
                     </div>
 
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <h4 className="text-base font-bold text-slate-900">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                           {symptom.label}
                         </h4>
-                        <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 border transition-colors ${
+                        <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 border transition-colors mt-0.5 ${
                           isSelected ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-300 bg-white'
                         }`}>
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -297,12 +297,12 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
             </div>
 
             {/* Bottom Actions */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
-              <div className="text-xs text-slate-600 font-medium">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-slate-200">
+              <div className="text-xs text-slate-600 font-medium text-center sm:text-left">
                 {selectedSymptoms.length === 0 ? (
                   <span>Select at least 1 symptom above to generate recommendation</span>
                 ) : (
-                  <span className="text-slate-900 font-bold flex items-center gap-1.5">
+                  <span className="text-slate-900 font-bold flex items-center justify-center sm:justify-start gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                     <span>{selectedSymptoms.length} symptom{selectedSymptoms.length > 1 ? 's' : ''} selected</span>
                   </span>
@@ -312,7 +312,7 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
               <button
                 type="submit"
                 disabled={selectedSymptoms.length === 0}
-                className={`w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                className={`w-full sm:w-auto px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer min-h-[44px] ${
                   selectedSymptoms.length > 0
                     ? 'bg-slate-900 hover:bg-slate-800 text-white hover:scale-102 active:scale-98'
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'

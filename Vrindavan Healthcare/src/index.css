@@ -63,10 +63,13 @@ img, svg, video, canvas, audio, iframe, embed, object {
   height: auto;
 }
 
-/* Prevent automatic iOS zooming on text inputs */
+/* Prevent automatic iOS zooming on text inputs and remove tap gray highlight */
 @media screen and (max-width: 767px) {
   input, select, textarea {
     font-size: 16px !important;
+  }
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 

@@ -8,14 +8,14 @@ interface CtaBannerProps {
 
 export const CtaBanner: React.FC<CtaBannerProps> = ({ onOpenAppointment }) => {
   return (
-    <section className="pt-24 sm:pt-32 pb-12 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="pt-6 sm:pt-20 pb-4 sm:pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Horizontal Pill Banner Card with Warm Yellow & Mint Pastel Gradient */}
-      <div className="rounded-[36px] sm:rounded-[44px] bg-gradient-to-r from-[#FEF9C3] via-[#FFFBEB] to-[#E6F7F5] border border-amber-200/80 p-8 sm:p-12 lg:p-14 relative shadow-xs overflow-visible group">
-        <div className="grid lg:grid-cols-12 gap-8 items-center relative z-10">
+      <div className="rounded-3xl sm:rounded-[44px] bg-gradient-to-r from-[#FEF9C3] via-[#FFFBEB] to-[#E6F7F5] border border-amber-200/80 p-5 sm:p-12 lg:p-14 relative shadow-xs overflow-hidden lg:overflow-visible group">
+        <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
           
           {/* Left Column: Headline, Text & Action Buttons */}
-          <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-left relative z-10">
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.12]">
+          <div className="lg:col-span-7 space-y-3 sm:space-y-6 text-left relative z-10">
+            <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
               Reach out for expert care and support today
             </h2>
 
@@ -23,26 +23,27 @@ export const CtaBanner: React.FC<CtaBannerProps> = ({ onOpenAppointment }) => {
               Contact our dedicated clinical team for appointments, endoscopy inquiries, or guidance — your digestive health and well-being are our highest priority.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6 pt-2">
               <button
                 onClick={onOpenAppointment}
-                className="px-7 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[46px]"
+                className="w-full sm:w-auto justify-center px-7 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all hover:scale-102 active:scale-98 cursor-pointer min-h-[46px] flex items-center gap-2"
               >
-                START YOUR JOURNEY
+                <span>Start Your Journey</span>
               </button>
 
               <a
                 href={`tel:${CLINIC_INFO.phoneRaw}`}
-                className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b-2 border-slate-900 pb-0.5 hover:text-slate-600 hover:border-slate-600 transition-colors"
+                className="text-center sm:text-left text-xs font-bold uppercase tracking-wider text-slate-900 hover:text-slate-600 transition-colors py-1 inline-flex items-center justify-center sm:justify-start gap-1"
               >
-                GET IN TOUCH
+                <span className="border-b-2 border-slate-900 pb-0.5">Get In Touch</span>
+                <span className="text-slate-700 font-semibold">({CLINIC_INFO.phone})</span>
               </a>
             </div>
           </div>
 
-          {/* Mobile/Tablet: In-flow Centered Image with Bottom Negative Margin touching Container Bottom */}
-          <div className="lg:hidden flex justify-center items-end mt-4 sm:mt-6 -mb-8 sm:-mb-12 pointer-events-none">
-            <div className="w-72 sm:w-84 md:w-96 origin-bottom">
+          {/* Mobile/Tablet: In-flow Centered Image with Bottom Flush */}
+          <div className="lg:hidden flex justify-center items-end mt-4 -mb-5 pointer-events-none">
+            <div className="w-52 sm:w-68 origin-bottom">
               <img
                 src={supportRepImg}
                 alt="Vrindavan Healthcare Support Coordinator"
