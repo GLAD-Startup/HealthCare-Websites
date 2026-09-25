@@ -1,7 +1,6 @@
 import React from 'react';
 import { CheckCircle2, X, Calendar, Download, MessageSquare, MapPin, Printer } from 'lucide-react';
 import { CLINIC_INFO } from '../data/clinicData';
-import vrindavanLogo from '../assets/Vrindavan_Healthcare_logo.png';
 
 export interface BookingDetails {
   refNumber: string;
@@ -70,7 +69,7 @@ END:VCALENDAR`;
         <div className="bg-[#0F766E] text-white p-6 text-center space-y-2">
           <div className="relative w-16 h-16 rounded-full bg-white p-1 mx-auto mb-2 shadow-lg flex items-center justify-center border-2 border-white/80">
             <img
-              src={vrindavanLogo}
+              src="/favicon.png"
               alt="Vrindavan Healthcare Official Logo"
               className="w-full h-full object-contain rounded-full"
             />

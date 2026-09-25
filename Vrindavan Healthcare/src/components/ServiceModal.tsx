@@ -1,7 +1,6 @@
 import React from 'react';
 import { X, CheckCircle2, Sparkles, Phone, Calendar } from 'lucide-react';
 import { type ServiceItem, CLINIC_INFO } from '../data/clinicData';
-import vrindavanLogo from '../assets/Vrindavan_Healthcare_logo.png';
 
 interface ServiceModalProps {
   service: ServiceItem | null;
@@ -28,7 +27,7 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, on
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-white shadow-md shrink-0 p-0.5 border border-white/80">
               <img
-                src={vrindavanLogo}
+                src="/favicon.png"
                 alt="Vrindavan Healthcare Official Logo"
                 className="w-full h-full object-contain rounded-full"
               />

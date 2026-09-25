@@ -99,15 +99,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
         }`}
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 w-full">
-          {/* Brand Logo with Medtrust Asterisk Symbol */}
+          {/* Brand Logo */}
           <a
             href="#hero"
             onClick={(e) => handleNavClick(e, '#hero')}
-            className="flex items-center gap-2.5 group shrink-0 min-w-0"
+            className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-lg sm:text-xl shadow-xs group-hover:rotate-45 transition-transform duration-300 shrink-0">
-              ✱
-            </div>
+            <img
+              src="/favicon.png"
+              alt="Vrindavan Healthcare Official Logo"
+              className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 group-hover:scale-105 transition-transform duration-300"
+            />
             <div className="shrink min-w-0">
               <div className="font-sans text-sm sm:text-base font-extrabold text-slate-900 tracking-wider uppercase leading-none">
                 Vrindavan <span className="text-slate-500 font-medium">Healthcare</span>
@@ -181,9 +183,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
             onClick={(e) => handleNavClick(e, '#hero')}
             className="flex items-center gap-2.5"
           >
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-xs">
-              ✱
-            </div>
+            <img
+              src="/favicon.png"
+              alt="Vrindavan Healthcare Official Logo"
+              className="w-8 h-8 object-contain shrink-0"
+            />
             <div>
               <div className="font-sans text-sm font-extrabold text-slate-900 tracking-wider uppercase leading-none">
                 Vrindavan <span className="text-slate-500 font-medium">Healthcare</span>

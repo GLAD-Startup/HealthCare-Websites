@@ -38,12 +38,14 @@ export const Footer: React.FC = () => {
         {/* Top Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
-          {/* Col 1 (Span 4): Asterisk Logo & Intro */}
+          {/* Col 1 (Span 4): Brand Logo & Intro */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-xs">
-                ✱
-              </div>
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <img
+                src="/favicon.png"
+                alt="Vrindavan Healthcare Official Logo"
+                className="w-9 h-9 object-contain shrink-0"
+              />
               <div className="font-sans text-base font-extrabold text-slate-900 tracking-wider uppercase leading-none">
                 Vrindavan <span className="text-slate-500 font-medium">Healthcare</span>
               </div>
