@@ -119,8 +119,8 @@ export const SupportAnytimeSection: React.FC<SupportAnytimeSectionProps> = ({ on
           {/* Top Mint Circle Avatar Card with Descriptive Trust Info */}
           <div className="rounded-2xl sm:rounded-[32px] bg-[#E6F7F5] border border-teal-200/70 p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-2xs py-5 sm:h-[140px]">
             <div className="flex -space-x-2.5 mb-2">
-              <img src="/images/dr_chaitanya_press_conf.jpeg" alt="Doctor" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white object-cover shadow-xs" />
-              <img src="/images/medical_team_faculty.jpeg" alt="Faculty" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white object-cover shadow-xs" />
+              <img src="/images/dr_chaitanya_press_conf.jpeg" alt="Dr. Chaitanya Gupta" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white object-cover shadow-xs" />
+              <img src="/images/Dr.aishwarya-d5rJKJ8t.jpg" alt="Dr. Aishwarya Singhal Gupta" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white object-cover shadow-xs" />
               <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white bg-amber-400 text-slate-900 font-bold flex items-center justify-center shadow-xs text-xs">
                 4.5★
               </div>

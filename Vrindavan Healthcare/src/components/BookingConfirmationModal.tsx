@@ -1,11 +1,12 @@
 import React from 'react';
-import { CheckCircle2, X, Calendar, Download, MessageSquare, MapPin, Printer } from 'lucide-react';
+import { CheckCircle2, X, Calendar, Download, MessageSquare, MapPin, Printer, UserCheck } from 'lucide-react';
 import { CLINIC_INFO } from '../data/clinicData';
 
 export interface BookingDetails {
   refNumber: string;
   patientName: string;
   phone: string;
+  doctor?: string;
   service: string;
   location?: string;
   preferredDate: string;
@@ -21,20 +22,28 @@ interface BookingConfirmationModalProps {
 export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({ booking, onClose }) => {
   if (!booking) return null;
 
+  const displayDoctor = booking.doctor || (
+    booking.service.toLowerCase().includes('aishwarya') ||
+    booking.service.toLowerCase().includes('thyroid') ||
+    booking.service.toLowerCase().includes('sugar')
+      ? 'Dr. Aishwarya Singhal Gupta (MD Gold Medalist)'
+      : 'Dr. Chaitanya Gupta (DM Gastroenterology)'
+  );
+
   const handleWhatsAppSend = () => {
     const text = encodeURIComponent(
-      `Hello Dr. Chaitanya Gupta / Vrindavan Healthcare, I have submitted an OPD booking request.\n\n*Ref ID:* ${booking.refNumber}\n*Patient:* ${booking.patientName}\n*Phone:* ${booking.phone}\n*Service:* ${booking.service}\n*Location:* ${booking.location || 'Vrindavan Clinic'}\n*Date:* ${booking.preferredDate}\n*Time:* ${booking.preferredTime}`
+      `Hello Vrindavan Healthcare, I have submitted an OPD booking request.\n\n*Ref ID:* ${booking.refNumber}\n*Patient:* ${booking.patientName}\n*Phone:* ${booking.phone}\n*Doctor:* ${displayDoctor}\n*Service:* ${booking.service}\n*Location:* ${booking.location || 'Vrindavan Clinic'}\n*Date:* ${booking.preferredDate}\n*Time:* ${booking.preferredTime}`
     );
-    window.open(`https://wa.me/919412281121?text=${text}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://wa.me/919639566111?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleDownloadICS = () => {
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Vrindavan Healthcare//Dr Chaitanya Gupta OPD//EN
+PRODID:-//Vrindavan Healthcare//OPD Consultation//EN
 BEGIN:VEVENT
-SUMMARY:OPD Appointment with Dr. Chaitanya Gupta (${booking.service})
-DESCRIPTION:Appointment Reference: ${booking.refNumber}\\nPatient: ${booking.patientName}\\nService: ${booking.service}\\nDoctor: Dr. Chaitanya Gupta (MBBS, MD, DM Gastroenterology)\\nConsultation Fee: ₹200
+SUMMARY:OPD Appointment - ${displayDoctor} (${booking.service})
+DESCRIPTION:Appointment Reference: ${booking.refNumber}\\nPatient: ${booking.patientName}\\nDoctor: ${displayDoctor}\\nService: ${booking.service}\\nConsultation Fee: ₹200
 LOCATION:${booking.location || CLINIC_INFO.address}
 STATUS:CONFIRMED
 END:VEVENT
@@ -81,7 +90,7 @@ END:VCALENDAR`;
             OPD Appointment Requested!
           </h3>
           <p className="text-xs text-amber-200 font-medium">
-            Thank you, {booking.patientName}. Your appointment with Dr. Chaitanya Gupta is recorded.
+            Thank you, {booking.patientName}. Your appointment request is recorded.
           </p>
         </div>
 
@@ -112,8 +121,11 @@ END:VCALENDAR`;
               <span className="font-bold text-slate-900">{booking.phone}</span>
             </div>
             <div className="flex justify-between border-b border-slate-200/60 pb-2">
-              <span className="text-slate-500 font-medium">Doctor:</span>
-              <span className="font-bold text-slate-900">Dr. Chaitanya Gupta (DM Gastro)</span>
+              <span className="text-slate-500 font-medium flex items-center gap-1">
+                <UserCheck className="w-3.5 h-3.5 text-slate-700" />
+                <span>Doctor:</span>
+              </span>
+              <span className="font-bold text-slate-900 text-right">{displayDoctor}</span>
             </div>
             <div className="flex justify-between border-b border-slate-200/60 pb-2">
               <span className="text-slate-500 font-medium">Requested Service:</span>

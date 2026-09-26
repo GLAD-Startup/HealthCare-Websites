@@ -22,6 +22,12 @@ export const FaqSection: React.FC = () => {
       answer: 'Dr. Chaitanya Gupta holds an MBBS, MD in General Medicine from SRMS Institute of Medical Sciences (Bareilly, completed in 2018), and super-specialty DM training in Gastroenterology. He has over 8 years of clinical and procedural experience treating gastrointestinal, hepatic, and acute internal medicine conditions.'
     },
     {
+      id: 'faq-1b',
+      category: 'doctor',
+      question: 'Who is Dr. Aishwarya Singhal Gupta and what are her clinical specializations?',
+      answer: 'Dr. Aishwarya Singhal Gupta is a Consultant Physician and Academic Gold Medalist in MD (Internal Medicine), holding MCI Regd. No. 9064. Having served as Ex. Resident at Dr. Susheela Tiwari Govt. Hospital Haldwani, she specializes in Diabetes & Blood Sugar (शुगर), Blood Pressure & Hypertension (बी.पी.), and Thyroid disorders (थायरॉइड रोग विशेषज्ञ) alongside comprehensive adult internal medicine.'
+    },
+    {
       id: 'faq-2',
       category: 'endoscopy',
       question: 'Does Dr. Chaitanya Gupta perform Upper GI Endoscopy in Vrindavan?',
@@ -36,14 +42,14 @@ export const FaqSection: React.FC = () => {
     {
       id: 'faq-4',
       category: 'general',
-      question: 'What is the OPD consultation fee for Dr. Chaitanya Gupta?',
-      answer: `Dr. Chaitanya Gupta is deeply committed to ethical, accessible healthcare for all patients with an affordable consultation fee of ${CLINIC_INFO.consultationFee} for both in-clinic visits and teleconsultations.`
+      question: 'What is the OPD consultation fee at Vrindavan Healthcare?',
+      answer: `Both Dr. Chaitanya Gupta and Dr. Aishwarya Singhal Gupta are deeply committed to ethical, accessible healthcare for all patients with an affordable consultation fee of ${CLINIC_INFO.consultationFee} (₹200 only) for in-clinic visits and teleconsultations.`
     },
     {
       id: 'faq-5',
       category: 'general',
       question: 'Where are the two clinic locations situated in Vrindavan?',
-      answer: 'Dr. Gupta consults at two prime locations in Vrindavan (PIN 281121): Location A is on Bhakti Vedant Marg, Raman Reti (near the ISKCON Temple). Location B is at Bankey Bihari Nikunj, Hanuman Bagh (near Brijwasi Mithai Wala).'
+      answer: 'Our doctors consult at two prime locations in Vrindavan (PIN 281121): Location A is on Bhakti Vedant Marg, Raman Reti (near ISKCON Temple / Dhanuka Ashram). Location B is at Bankey Bihari Nikunj, Hanuman Bagh (near Brijwasi Mithai Wala / Federal Bank).'
     },
     {
       id: 'faq-6',
@@ -93,7 +99,7 @@ export const FaqSection: React.FC = () => {
           </h2>
           
           <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-2 sm:mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
-            Find answers regarding Dr. Chaitanya Gupta's qualifications, Upper GI Endoscopy, fatty liver care, ₹200 fee, and Vrindavan clinic locations.
+            Find answers regarding Dr. Chaitanya Gupta and Dr. Aishwarya Singhal Gupta's qualifications, Upper GI Endoscopy, fatty liver, diabetes &amp; thyroid care, ₹200 fee, and Vrindavan clinic locations.
           </p>
         </div>
 

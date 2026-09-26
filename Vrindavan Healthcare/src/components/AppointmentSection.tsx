@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Calendar, Phone, CheckCircle2, MessageSquare, Shield, Clock } from 'lucide-react';
+import { Calendar, Phone, CheckCircle2, MessageSquare, Shield, Clock, UserCheck } from 'lucide-react';
 import { CLINIC_INFO } from '../data/clinicData';
 
 export interface BookingDetailsSubmitted {
   refNumber: string;
   patientName: string;
   phone: string;
+  doctor: string;
   service: string;
   location: string;
   preferredDate: string;
@@ -18,22 +19,39 @@ interface AppointmentSectionProps {
   onBookingComplete?: (details: BookingDetailsSubmitted) => void;
 }
 
+const DOCTOR_OPTIONS = [
+  { value: 'Either Doctor / Next Available Specialist', label: 'Either Specialist / Next Available' },
+  { value: 'Dr. Chaitanya Gupta (Liver & Gastro Specialist)', label: 'Dr. Chaitanya Gupta (Liver & Gastro Specialist)' },
+  { value: 'Dr. Aishwarya Singhal Gupta (Consultant Physician — Gold Medalist)', label: 'Dr. Aishwarya Singhal Gupta (MD Gold Medalist • Sugar, BP & Thyroid)' },
+];
+
 const SERVICES_OPTIONS = [
   { value: 'Upper GI Endoscopy (Diagnostic & Therapeutic)', label: 'Upper GI Endoscopy (Diagnostic)' },
   { value: 'Fatty Liver & Liver Cirrhosis Management', label: 'Fatty Liver & Cirrhosis Care' },
   { value: 'Chronic Acidity, GERD & Peptic Ulcer Care', label: 'Chronic Acidity, GERD & Ulcers' },
+  { value: 'Diabetes & Metabolic Disorder Management (शुगर)', label: 'Diabetes & Sugar Management (शुगर)' },
+  { value: 'Hypertension & Cardiovascular Assessment (बी.पी.)', label: 'Hypertension & BP Care (बी.पी.)' },
+  { value: 'Thyroid Disorders & Hormonal Health (थायरॉइड)', label: 'Thyroid & Hormonal Health (थायरॉइड)' },
   { value: 'IBS, Colitis & Inflammatory Bowel Disease (IBD)', label: 'IBS & Gut Motility Care' },
   { value: 'Pancreatic & Gallbladder Disorders', label: 'Pancreas & Gallbladder Care' },
   { value: 'Colonoscopy & Lower GI Screening', label: 'Colonoscopy & Lower GI Screening' },
-  { value: 'Diabetes & Metabolic Disorder Management', label: 'Diabetes & Metabolic Health' },
-  { value: 'Hypertension & Cardiovascular Assessment', label: 'Hypertension & Heart Care' },
-  { value: 'General Physician & Critical Care Consultation', label: 'General OPD Consultation (₹200)' },
+  { value: 'General Physician & Adult Internal Medicine', label: 'General Physician OPD Consultation (₹200)' },
 ];
 
 const CLINIC_LOCATIONS = [
-  { value: 'Location A — Raman Reti (ISKCON Area)', label: 'Location A: Raman Reti (Near ISKCON)' },
-  { value: 'Location B — Hanuman Bagh (City Centre)', label: 'Location B: Hanuman Bagh (City Centre)' },
+  { value: 'Location A — Raman Reti (ISKCON Area)', label: 'Location A: Raman Reti (Near ISKCON / Dhanuka Ashram)' },
+  { value: 'Location B — Hanuman Bagh (City Centre)', label: 'Location B: Hanuman Bagh (Near Brijwasi / Federal Bank)' },
 ];
+
+const matchDoctorOption = (rawService: string): string => {
+  if (!rawService) return DOCTOR_OPTIONS[0].value;
+  const lower = rawService.toLowerCase();
+  if (lower.includes('aishwarya')) return DOCTOR_OPTIONS[2].value;
+  if (lower.includes('chaitanya')) return DOCTOR_OPTIONS[1].value;
+  if (lower.includes('thyroid') || lower.includes('sugar') || lower.includes('diabet')) return DOCTOR_OPTIONS[2].value;
+  if (lower.includes('endoscop') || lower.includes('liver') || lower.includes('gerd') || lower.includes('ibs')) return DOCTOR_OPTIONS[1].value;
+  return DOCTOR_OPTIONS[0].value;
+};
 
 const matchServiceOption = (rawService: string): string => {
   if (!rawService) return SERVICES_OPTIONS[0].value;
@@ -41,12 +59,13 @@ const matchServiceOption = (rawService: string): string => {
   if (lower.includes('endoscop')) return SERVICES_OPTIONS[0].value;
   if (lower.includes('fatty') || lower.includes('cirrhosis') || lower.includes('liver')) return SERVICES_OPTIONS[1].value;
   if (lower.includes('acid') || lower.includes('gerd') || lower.includes('ulcer') || lower.includes('reflux')) return SERVICES_OPTIONS[2].value;
-  if (lower.includes('ibs') || lower.includes('colitis') || lower.includes('gut') || lower.includes('motility') || lower.includes('bowel')) return SERVICES_OPTIONS[3].value;
-  if (lower.includes('pancrea') || lower.includes('gallbladder')) return SERVICES_OPTIONS[4].value;
-  if (lower.includes('colonoscop')) return SERVICES_OPTIONS[5].value;
-  if (lower.includes('diabet') || lower.includes('metabolic') || lower.includes('sugar')) return SERVICES_OPTIONS[6].value;
-  if (lower.includes('hypertens') || lower.includes('blood pressure') || lower.includes('cardio') || lower.includes('heart')) return SERVICES_OPTIONS[7].value;
-  if (lower.includes('physician') || lower.includes('general') || lower.includes('consultation')) return SERVICES_OPTIONS[8].value;
+  if (lower.includes('diabet') || lower.includes('sugar')) return SERVICES_OPTIONS[3].value;
+  if (lower.includes('hypertens') || lower.includes('blood pressure') || lower.includes('bp')) return SERVICES_OPTIONS[4].value;
+  if (lower.includes('thyroid')) return SERVICES_OPTIONS[5].value;
+  if (lower.includes('ibs') || lower.includes('colitis') || lower.includes('gut') || lower.includes('motility') || lower.includes('bowel')) return SERVICES_OPTIONS[6].value;
+  if (lower.includes('pancrea') || lower.includes('gallbladder')) return SERVICES_OPTIONS[7].value;
+  if (lower.includes('colonoscop')) return SERVICES_OPTIONS[8].value;
+  if (lower.includes('physician') || lower.includes('general') || lower.includes('internal medicine')) return SERVICES_OPTIONS[9].value;
   return rawService;
 };
 
@@ -57,6 +76,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
   const [formData, setFormData] = useState({
     patientName: '',
     phone: '',
+    doctor: matchDoctorOption(preselectedService),
     service: matchServiceOption(preselectedService),
     location: 'Location A — Raman Reti (ISKCON Area)',
     preferredDate: '',
@@ -68,7 +88,11 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
 
   React.useEffect(() => {
     if (preselectedService) {
-      setFormData((prev) => ({ ...prev, service: matchServiceOption(preselectedService) }));
+      setFormData((prev) => ({
+        ...prev,
+        doctor: matchDoctorOption(preselectedService),
+        service: matchServiceOption(preselectedService)
+      }));
     }
   }, [preselectedService]);
 
@@ -81,6 +105,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
         refNumber: refNum,
         patientName: formData.patientName || 'Patient',
         phone: formData.phone,
+        doctor: formData.doctor,
         service: formData.service,
         location: formData.location,
         preferredDate: formData.preferredDate || 'Earliest Available',
@@ -92,9 +117,9 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
 
   const handleWhatsAppBooking = () => {
     const text = encodeURIComponent(
-      `Hello Dr. Chaitanya Gupta / Vrindavan Healthcare,\n\nI would like to book an OPD consultation.\nName: ${formData.patientName || 'Patient'}\nPhone: ${formData.phone || 'Provided'}\nSpecialty / Service: ${formData.service}\nPreferred Clinic: ${formData.location}\nPreferred Date: ${formData.preferredDate || 'Earliest Available'}\nPreferred Time: ${formData.preferredTime}\nNotes: ${formData.notes || 'None'}`
+      `Hello Vrindavan Healthcare,\n\nI would like to book an OPD consultation.\nDoctor Preference: ${formData.doctor}\nPatient Name: ${formData.patientName || 'Patient'}\nPhone: ${formData.phone || 'Provided'}\nSpecialty / Service: ${formData.service}\nPreferred Clinic: ${formData.location}\nPreferred Date: ${formData.preferredDate || 'Earliest Available'}\nPreferred Time: ${formData.preferredTime}\nNotes: ${formData.notes || 'None'}`
     );
-    window.open(`https://wa.me/919412281121?text=${text}`, '_blank');
+    window.open(`https://wa.me/919639566111?text=${text}`, '_blank');
   };
 
   return (
@@ -110,39 +135,54 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
             </div>
 
             <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-[1.15]">
-              Consult Dr. Chaitanya Gupta
+              Consult Our Specialists
             </h2>
 
             <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-normal">
-              Schedule your consultation for Upper GI Endoscopy, fatty liver management, chronic acidity relief, or internal medicine. Fast confirmation via phone or WhatsApp.
+              Schedule your consultation with <strong>Dr. Chaitanya Gupta</strong> (DM Gastroenterology) or <strong>Dr. Aishwarya Singhal Gupta</strong> (MD Internal Medicine Gold Medalist) for endoscopy, liver health, diabetes, BP, thyroid, or internal medicine. Fast confirmation via phone or WhatsApp.
             </p>
 
             <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-[28px] bg-white border border-slate-200 shadow-2xs space-y-3 sm:space-y-4">
               <div className="text-[11px] sm:text-xs font-bold uppercase text-slate-500 tracking-wider">
-                Direct OPD &amp; Emergency Helpline
+                Direct OPD &amp; Emergency Helplines
               </div>
 
-              {/* Responsive Helpline Buttons: Side-by-side on mobile, stacked on sm/lg */}
-              <div className="grid grid-cols-2 sm:grid-cols-1 gap-2 sm:gap-3">
+              {/* Direct Call Helplines */}
+              <div className="space-y-2.5">
                 <a
                   href={`tel:${CLINIC_INFO.phoneRaw}`}
-                  className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-sm group min-h-[44px]"
+                  className="flex items-center justify-start gap-3 p-3 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-sm group min-h-[44px]"
                 >
-                  <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/15 flex items-center justify-center text-amber-300 group-hover:scale-105 transition-transform shrink-0">
-                    <Phone className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+                  <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-amber-300 group-hover:scale-105 transition-transform shrink-0">
+                    <Phone className="w-4 h-4" />
                   </div>
                   <div className="min-w-0 text-left">
-                    <div className="text-[10px] sm:text-xs text-white/80 font-medium">Tap to Call</div>
-                    <div className="text-xs sm:text-xl font-bold font-mono tracking-tight truncate">{CLINIC_INFO.phone}</div>
+                    <div className="text-[10px] text-white/80 font-medium">Primary Desk / Dr. Chaitanya Gupta</div>
+                    <div className="text-xs sm:text-base font-bold font-mono tracking-tight truncate">{CLINIC_INFO.phone}</div>
                   </div>
                 </a>
 
+                {CLINIC_INFO.phone2 && (
+                  <a
+                    href={`tel:${CLINIC_INFO.phone2Raw}`}
+                    className="flex items-center justify-start gap-3 p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700 transition-all shadow-sm group min-h-[44px]"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-emerald-300 group-hover:scale-105 transition-transform shrink-0">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 text-left">
+                      <div className="text-[10px] text-white/80 font-medium">Secondary Desk / Dr. Aishwarya Singhal Gupta</div>
+                      <div className="text-xs sm:text-base font-bold font-mono tracking-tight truncate">{CLINIC_INFO.phone2}</div>
+                    </div>
+                  </a>
+                )}
+
                 <button
                   onClick={handleWhatsAppBooking}
-                  className="w-full py-2.5 sm:py-3.5 px-3 sm:px-4 rounded-xl sm:rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer min-h-[44px]"
+                  className="w-full py-3 px-4 rounded-xl sm:rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer min-h-[44px]"
                 >
                   <MessageSquare className="w-4 h-4 fill-white shrink-0" />
-                  <span className="truncate">WhatsApp OPD</span>
+                  <span className="truncate">WhatsApp OPD Desk</span>
                 </button>
               </div>
 
@@ -182,7 +222,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                     Appointment Requested!
                   </h4>
                   <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto font-normal leading-relaxed">
-                    Thank you, <strong>{formData.patientName || 'Patient'}</strong>. We have registered your request for <strong>{formData.service}</strong> at <strong>{formData.location}</strong>.
+                    Thank you, <strong>{formData.patientName || 'Patient'}</strong>. We have registered your request for <strong>{formData.service}</strong> with <strong>{formData.doctor}</strong> at <strong>{formData.location}</strong>.
                   </p>
                   <div className="pt-2">
                     <button
@@ -222,6 +262,27 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                         placeholder="e.g. 9876543210"
                         className="w-full min-h-[44px] px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 bg-white"
                       />
+                    </div>
+                  </div>
+
+                  {/* Doctor Preference Selection */}
+                  <div>
+                    <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                      <UserCheck className="w-3.5 h-3.5 text-slate-900" />
+                      <span>Doctor Preference *</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={formData.doctor}
+                        onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
+                        className="w-full min-h-[44px] px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 bg-white text-slate-900 truncate"
+                      >
+                        {DOCTOR_OPTIONS.map((doc) => (
+                          <option key={doc.value} value={doc.value}>
+                            {doc.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -305,7 +366,7 @@ export const AppointmentSection: React.FC<AppointmentSectionProps> = ({
                       rows={2}
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                      placeholder="Briefly describe your symptoms or existing reports..."
+                      placeholder="Briefly describe your symptoms or existing medical reports..."
                       className="w-full min-h-[56px] px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-800 bg-white"
                     />
                   </div>

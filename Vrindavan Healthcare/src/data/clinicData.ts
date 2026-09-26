@@ -11,6 +11,7 @@ export interface ServiceItem {
 }
 
 export interface DoctorInfo {
+  id: string;
   name: string;
   title: string;
   qualifications: string;
@@ -18,13 +19,19 @@ export interface DoctorInfo {
   graduationYear: number;
   experienceYears: number;
   specialization: string;
+  hindiSpecialization?: string;
   bio: string;
   image: string;
+  cardImage?: string;
+  registrationNo?: string;
   confidenceNote?: string;
   consultationFee: string;
   rating: number;
   totalReviews: number;
+  phone?: string;
+  email?: string;
   locations: string[];
+  capabilities?: string[];
 }
 
 export interface Testimonial {
@@ -108,18 +115,21 @@ export const CLINIC_LOCATIONS: ClinicLocation[] = [
 export const CLINIC_INFO = {
   name: "Vrindavan Healthcare",
   altName: "Chaitanya Health Care",
-  doctorName: "Dr. Chaitanya Gupta",
-  doctorCredentials: "MBBS, MD (General Medicine), DM (Gastroenterology)",
+  doctorName: "Dr. Chaitanya Gupta & Dr. Aishwarya Singhal Gupta",
+  doctorCredentials: "DM Gastroenterology & MD Internal Medicine (Gold Medalist)",
   tagline: "Advanced Liver, Gastro & Comprehensive Medical Care in Vrindavan",
   consultationFee: "₹200",
   feeNote: "Affordable & transparent OPD fee (In-clinic & Teleconsultation)",
-  rating: 4.5,
-  ratingReviewsCount: 65,
-  ratingSource: "Justdial Verified Reviews",
+  rating: 4.8,
+  ratingReviewsCount: 110,
+  ratingSource: "Verified Patient Reviews",
   paymentModes: ["UPI (GPay / PhonePe / Paytm)", "Cash", "Visa", "MasterCard", "RuPay"],
   phone: "+91 96395 66111",
   phoneRaw: "+919639566111",
-  whatsapp: "https://wa.me/919639566111?text=Hello%20Dr.%20Chaitanya%20Gupta,%20I%20would%20like%20to%20book%20a%20Gastro/Liver%20consultation%20at%20Vrindavan%20Healthcare.",
+  phone2: "+91 94107 40382",
+  phone2Raw: "+919410740382",
+  email: "dr.aishwaryasinghalgupta@gmail.com",
+  whatsapp: "https://wa.me/919639566111?text=Hello%20Vrindavan%20Healthcare,%20I%20would%20like%20to%20book%20an%20OPD%20consultation%20with%20your%20specialists.",
   address: "Opp. Chandra Shekhar Dhanuka Ashram, Parikrama Marg, Raman Reti, Vrindavan, UP 281121",
   city: "Vrindavan, Mathura District, UP",
   googleMapEmbedUrl: "https://maps.google.com/maps?q=27.572217,77.678634&t=&z=16&ie=UTF8&iwloc=&output=embed",
@@ -321,10 +331,26 @@ export const GENERAL_MEDICINE_SERVICES: ServiceItem[] = [
       "Gout prevention through dietary purine counseling",
       "Holistic rheumatologic disease management"
     ]
+  },
+  {
+    id: "thyroid-endocrine-care",
+    name: "Thyroid Disorders & Hormonal Health (थायरॉइड रोग विशेषज्ञ)",
+    category: "general",
+    shortDesc: "Targeted clinical protocols for Hypothyroidism, Hyperthyroidism, Hashimoto's, goiter, and metabolic balance.",
+    fullDesc: "Specialized clinical diagnosis and endocrine management of thyroid hormone imbalances (TSH, Free T3/T4), unexplained fatigue, sudden weight changes, and cold/heat intolerance by Consultant Physician Dr. Aishwarya Singhal Gupta (MD Internal Medicine Gold Medalist).",
+    iconName: "Activity",
+    isPopular: true,
+    benefits: [
+      "Precise TSH, FT3, FT4 hormone panel evaluation",
+      "Individualized dosage titration for levothyroxine / antithyroid medications",
+      "Management of autoimmune thyroiditis and metabolic vitality",
+      "Comprehensive symptom relief for fatigue and weight changes"
+    ]
   }
 ];
 
 export const DOCTOR_CHAITANYA: DoctorInfo = {
+  id: "chaitanya",
   name: "Dr. Chaitanya Gupta",
   title: "Liver & Gastro Specialist | Consultant Physician",
   qualifications: "MBBS, MD (General Medicine - SRMS IMS Bareilly), DM (Gastroenterology)",
@@ -338,15 +364,64 @@ export const DOCTOR_CHAITANYA: DoctorInfo = {
   consultationFee: "₹200",
   rating: 4.5,
   totalReviews: 65,
+  phone: "+91 96395 66111",
   locations: [
     "Location A: Bhakti Vedant Marg, Raman Reti (Near ISKCON Temple), Vrindavan 281121",
     "Location B: Bankey Bihari Nikunj, Hanuman Bagh (Near Brijwasi Mithai Wala), Vrindavan 281121"
+  ],
+  capabilities: [
+    "Upper GI Endoscopy Diagnostic & Biopsy",
+    "Fatty Liver & Cirrhosis Reversal Protocols",
+    "Severe Acidity, GERD & Peptic Ulcers",
+    "Emergency & Critical Internal Medicine"
   ]
 };
 
-export const DOCTORS_LIST: DoctorInfo[] = [DOCTOR_CHAITANYA];
+export const DOCTOR_AISHWARYA: DoctorInfo = {
+  id: "aishwarya",
+  name: "Dr. Aishwarya Singhal Gupta",
+  title: "Consultant Physician | Sugar, BP & Thyroid Specialist",
+  qualifications: "M.B.B.S., M.D. (Internal Medicine) — Gold Medalist",
+  institution: "Ex. Resident Dr. Susheela Tiwari Govt. Hospital, Haldwani",
+  registrationNo: "MCI Regd. No. 9064",
+  graduationYear: 2018,
+  experienceYears: 7,
+  specialization: "Diabetes (Sugar), Hypertension (BP), Thyroid Disorders, Infectious Fevers & Adult Internal Medicine",
+  hindiSpecialization: "शुगर, बी.पी. एवं थायरॉइड रोग विशेषज्ञ",
+  bio: "Dr. Aishwarya Singhal Gupta is an acclaimed Consultant Physician and Academic Gold Medalist in MD (Internal Medicine). With distinguished clinical training and experience as Ex. Resident at Dr. Susheela Tiwari Govt. Hospital Haldwani (MCI Regd. No. 9064), Dr. Aishwarya specializes in evidence-based care for Diabetes (शुगर), Blood Pressure (बी.पी.), and Thyroid conditions (थायरॉइड रोग). Known for her empathetic listening, thorough clinical diagnostics, and patient-centered treatment plans, she provides accessible, ethical healthcare across both Vrindavan Healthcare clinic locations.",
+  image: "/images/Dr.aishwarya-d5rJKJ8t.jpg",
+  cardImage: "/images/dr_aishwarya_visiting_card.jpg",
+  confidenceNote: "Academic Gold Medalist in MD Internal Medicine • MCI Regd. No. 9064 • Ex. Resident Dr. Susheela Tiwari Govt. Hospital Haldwani",
+  consultationFee: "₹200",
+  rating: 4.9,
+  totalReviews: 48,
+  phone: "+91 96395 66111, +91 94107 40382",
+  email: "dr.aishwaryasinghalgupta@gmail.com",
+  locations: [
+    "Clinic 1: Shri Hanuman Bagh, Ramanreti Marg, opp. Federal Bank, Vrindavan 281121",
+    "Clinic 2: Chandrashekhar, Infront of Dhanuka Ashram, Parikrama Marg, Ramanreti, Vrindavan 281121"
+  ],
+  capabilities: [
+    "Diabetes Mellitus (Sugar) Control & HbA1c Stabilization",
+    "Hypertension (Blood Pressure) & Heart Health Assessment",
+    "Thyroid Disorders (Hypothyroidism/Hyperthyroidism)",
+    "Adult Internal Medicine, PUO / Viral Fevers & Critical Care"
+  ]
+};
+
+export const DOCTORS_LIST: DoctorInfo[] = [DOCTOR_CHAITANYA, DOCTOR_AISHWARYA];
 
 export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "t0",
+    patientName: "Meenakshi Saraswat",
+    serviceReceived: "Diabetes & Thyroid Management (शुगर व थायरॉइड)",
+    rating: 5,
+    comment: "Dr. Aishwarya Singhal Gupta is wonderful! She carefully balanced my thyroid medication dosage and brought my fluctuating blood sugar under control without unnecessary medicines. Her gold medal expertise in MD Internal Medicine truly shows in how thoroughly she explains every health report.",
+    date: "August 2026",
+    source: "Verified Patient Review",
+    location: "Hanuman Bagh, Vrindavan"
+  },
   {
     id: "t1",
     patientName: "Manoj Agarwal",

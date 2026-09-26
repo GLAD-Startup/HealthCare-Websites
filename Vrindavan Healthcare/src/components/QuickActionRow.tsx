@@ -84,7 +84,7 @@ export const QuickActionRow: React.FC<QuickActionRowProps> = ({ onOpenAppointmen
             <div className="flex items-center gap-2">
               <div className="flex -space-x-1.5">
                 <img src="/images/dr_chaitanya_press_conf.jpeg" alt="Reviewer" className="w-5 h-5 rounded-full border border-white object-cover" />
-                <img src="/images/medical_team_faculty.jpeg" alt="Reviewer" className="w-5 h-5 rounded-full border border-white object-cover" />
+                <img src="/images/Dr.aishwarya-d5rJKJ8t.jpg" alt="Reviewer" className="w-5 h-5 rounded-full border border-white object-cover" />
               </div>
               <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">Reviews (4.5★)</span>
             </div>

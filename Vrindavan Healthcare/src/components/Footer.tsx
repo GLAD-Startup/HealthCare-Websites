@@ -93,7 +93,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="text-[11px] font-bold text-slate-500 flex items-center gap-1 mt-0.5">
                 <UserCheck className="w-3 h-3 text-teal-700 shrink-0" />
-                <span className="truncate">Dr. Chaitanya Gupta • DM Gastro</span>
+                <span className="truncate">Dr. Chaitanya Gupta &amp; Dr. Aishwarya S. Gupta</span>
               </div>
             </div>
           </div>
@@ -470,7 +470,7 @@ export const Footer: React.FC = () => {
             Vrindavan Healthcare Mobile App • Build v2.5.0
           </div>
           <div className="text-[10px] text-slate-500">
-            © {new Date().getFullYear()} Vrindavan Healthcare • Dr. Chaitanya Gupta. All Rights Reserved.
+            © {new Date().getFullYear()} Vrindavan Healthcare • Dr. Chaitanya Gupta &amp; Dr. Aishwarya Singhal Gupta. All Rights Reserved.
           </div>
         </div>
 
@@ -496,13 +496,13 @@ export const Footer: React.FC = () => {
                     Vrindavan <span className="text-slate-500 font-medium">Healthcare</span>
                   </div>
                   <div className="text-[11px] font-bold text-slate-500 mt-1 uppercase tracking-wider">
-                    Dr. Chaitanya Gupta • DM Gastro
+                    Dr. Chaitanya Gupta &amp; Dr. Aishwarya S. Gupta
                   </div>
                 </div>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed max-w-sm">
-                Providing trusted, evidence-based gastrointestinal, liver, and comprehensive medical care for the pilgrimage city of Vrindavan and Mathura district.
+                Providing trusted, evidence-based gastrointestinal, liver, and comprehensive medical care under Dr. Chaitanya Gupta (DM Gastro) and Dr. Aishwarya Singhal Gupta (MD Gold Medalist).
               </p>
 
               {/* Feature Pills */}
@@ -517,7 +517,7 @@ export const Footer: React.FC = () => {
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-slate-600 border border-slate-200 text-[11px] font-medium shadow-2xs">
                   <ShieldCheck className="w-3 h-3 text-slate-500" />
-                  <span>DM Certified Specialist</span>
+                  <span>DM Gastro &amp; MD Gold Medalist</span>
                 </div>
               </div>
             </div>
