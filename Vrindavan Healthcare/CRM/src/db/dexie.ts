@@ -75,10 +75,9 @@ export const DEFAULT_SETTINGS: ClinicSettings = {
   phone: '+919876543210',
   email: 'care@vrindavanhealthcare.in',
   address: 'Vrindavan Healthcare Clinic, Main Medical Road, Mathura / Vrindavan, UP',
-  supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
-  supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
-  whatsappPhoneId: import.meta.env.VITE_WHATSAPP_PHONE_NUMBER_ID || '',
-  whatsappToken: import.meta.env.VITE_WHATSAPP_ACCESS_TOKEN || '',
+  apiUrl: (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api',
+  whatsappPhoneId: (import.meta as any).env?.VITE_WHATSAPP_PHONE_NUMBER_ID || '',
+  whatsappToken: (import.meta as any).env?.VITE_WHATSAPP_ACCESS_TOKEN || '',
 };
 
 // Initialize database with clean state (no hardcoded patients)

@@ -486,7 +486,7 @@ export const SyncView: React.FC<SyncViewProps> = ({
                 </div>
                 <div className="p-2 bg-[#F8FAFC] rounded border border-[#E2E8F0]">
                   <p className="text-[#067647]">4. PostgreSQL</p>
-                  <p className="text-[11px] text-[#64748B] font-normal mt-0.5">Cloud Supabase DB</p>
+                  <p className="text-[11px] text-[#64748B] font-normal mt-0.5">Local Server DB</p>
                 </div>
               </div>
             </div>
@@ -494,12 +494,12 @@ export const SyncView: React.FC<SyncViewProps> = ({
             {/* Database & Table Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="bg-white p-3 rounded-lg border border-[#E2E8F0]">
-                <p className="text-[#64748B]">Local database</p>
+                <p className="text-[#64748B]">Local store</p>
                 <p className="font-semibold text-[#0F172A] mt-0.5">vrindavan_healthcare_crm</p>
               </div>
               <div className="bg-white p-3 rounded-lg border border-[#E2E8F0]">
-                <p className="text-[#64748B]">Cloud database</p>
-                <p className="font-semibold text-[#0F172A] mt-0.5">PostgreSQL (Supabase)</p>
+                <p className="text-[#64748B]">Primary database</p>
+                <p className="font-semibold text-[#0F172A] mt-0.5">PostgreSQL (Local Server)</p>
               </div>
               <div className="bg-white p-3 rounded-lg border border-[#E2E8F0]">
                 <p className="text-[#64748B]">Sync policy</p>

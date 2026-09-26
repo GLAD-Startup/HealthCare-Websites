@@ -550,7 +550,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Settings className="w-5 h-5 text-[#475569]" />
                 <div>
                   <div className="text-sm font-medium">Clinic Settings & Database</div>
-                  <div className="text-xs text-[#64748B]">Doctor info, Supabase credentials & SQL tools</div>
+                  <div className="text-xs text-[#64748B]">Doctor info, PostgreSQL connection & tools</div>
                 </div>
               </button>
 

@@ -46,11 +46,24 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
   const todayList = counts.dueTodayTasks;
   const upcomingList = counts.upcomingTasks;
   const completedList = counts.completedTasks;
+  const allList = counts.allTasks;
 
-  // Default to Overdue if it has items, else Today (or initialTab if passed)
+  const userSelectedTabRef = useRef(false);
+
+  // Default to initialTab, else saved subtab, else Overdue, else Today, else Upcoming
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     if (initialTab) return initialTab;
-    return overdueList.length > 0 ? 'overdue' : 'today';
+    try {
+      const saved = sessionStorage.getItem('vh_crm_followups_subtab') as TabType;
+      if (['overdue', 'today', 'upcoming', 'completed', 'all'].includes(saved)) {
+        userSelectedTabRef.current = true;
+        return saved;
+      }
+    } catch {}
+    if (overdueList.length > 0) return 'overdue';
+    if (todayList.length > 0) return 'today';
+    if (upcomingList.length > 0) return 'upcoming';
+    return 'today';
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -70,8 +83,33 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
   useEffect(() => {
     if (initialTab) {
       setActiveTab(initialTab);
+      userSelectedTabRef.current = true;
+      try {
+        sessionStorage.setItem('vh_crm_followups_subtab', initialTab);
+      } catch {}
     }
   }, [initialTab]);
+
+  // If user hasn't explicitly selected a tab yet and activeTab is 'today' with 0 items,
+  // adapt once counts become available (e.g. Dexie finishes async query)
+  useEffect(() => {
+    if (userSelectedTabRef.current || initialTab) return;
+    if (activeTab === 'today' && todayList.length === 0) {
+      if (overdueList.length > 0) {
+        setActiveTab('overdue');
+      } else if (upcomingList.length > 0) {
+        setActiveTab('upcoming');
+      }
+    }
+  }, [overdueList.length, todayList.length, upcomingList.length, activeTab, initialTab]);
+
+  const handleTabClick = (tabId: TabType) => {
+    userSelectedTabRef.current = true;
+    setActiveTab(tabId);
+    try {
+      sessionStorage.setItem('vh_crm_followups_subtab', tabId);
+    } catch {}
+  };
 
   // Click outside listener for reschedule menu
   useEffect(() => {
@@ -92,7 +130,7 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
     else if (activeTab === 'today') list = todayList;
     else if (activeTab === 'upcoming') list = upcomingList;
     else if (activeTab === 'completed') list = completedList;
-    else list = followups;
+    else list = allList;
 
     if (!searchTerm.trim()) return list;
 
@@ -105,7 +143,7 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
         (rawDigits && f.customerPhone.replace(/\D/g, '').includes(rawDigits)) ||
         (f.notes && f.notes.toLowerCase().includes(query))
     );
-  }, [activeTab, overdueList, todayList, upcomingList, completedList, followups, searchTerm]);
+  }, [activeTab, overdueList, todayList, upcomingList, completedList, allList, searchTerm]);
 
   // Quick Reschedule helper
   const handleReschedule = async (followupId: string, daysToAdd: number) => {
@@ -184,7 +222,7 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
     {
       id: 'all' as TabType,
       label: 'All follow-ups',
-      count: followups.length,
+      count: allList.length,
       isAlert: false,
     },
   ];
@@ -222,7 +260,7 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabClick(tab.id)}
                 className={`py-3 text-sm font-medium border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] ${
                   isActive
                     ? 'border-[#0F766E] text-[#0F766E]'
@@ -306,11 +344,26 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
             <>
               <CheckCircle2 className="w-8 h-8 text-[#067647] mx-auto mb-2" />
               <h3 className="text-base font-semibold text-[#0F172A]">No follow-ups due today</h3>
-              <p className="text-xs text-[#64748B] mt-1">Consultation follow-ups scheduled for today are all clear.</p>
-              <button onClick={onOpenNewFollowUp} className="btn-primary text-xs mt-3.5 min-h-[36px]">
-                <Plus className="w-3.5 h-3.5 mr-1" />
-                <span>Schedule follow-up</span>
-              </button>
+              <p className="text-xs text-[#64748B] mt-1">
+                {upcomingList.length > 0
+                  ? `You have ${upcomingList.length} upcoming follow-up${upcomingList.length === 1 ? '' : 's'} scheduled.`
+                  : 'Consultation follow-ups scheduled for today are all clear.'}
+              </p>
+              <div className="flex items-center justify-center gap-2 mt-3.5 flex-wrap">
+                {upcomingList.length > 0 && (
+                  <button
+                    onClick={() => handleTabClick('upcoming')}
+                    className="btn-secondary text-xs min-h-[36px]"
+                  >
+                    <CalendarClock className="w-3.5 h-3.5 mr-1 text-[#0F766E]" />
+                    <span>View upcoming ({upcomingList.length})</span>
+                  </button>
+                )}
+                <button onClick={onOpenNewFollowUp} className="btn-primary text-xs min-h-[36px]">
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  <span>Schedule follow-up</span>
+                </button>
+              </div>
             </>
           ) : activeTab === 'upcoming' ? (
             <>

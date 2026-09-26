@@ -7,10 +7,13 @@ import {
   CheckCircle2, 
   Send
 } from 'lucide-react';
-import type { Customer, FollowUp, WhatsAppLog } from '../types/index.ts';
+import type { Customer, FollowUp, WhatsAppLog, FollowUpStatus } from '../types/index.ts';
 import { WhatsAppGlyph } from './WhatsAppGlyph.tsx';
 import { DueBadge } from './DueBadge.tsx';
 import { StatusBadge } from './StatusBadge.tsx';
+import { StatusDropdown } from './StatusDropdown.tsx';
+import { db } from '../db/dexie.ts';
+import { syncEngine } from '../services/syncEngine.ts';
 import { formatPhone, cleanPhoneForLink, formatDate, formatTime, formatPatientDisplayId } from '../utils/formatters.ts';
 
 interface PatientDetailsDrawerProps {
@@ -22,6 +25,7 @@ interface PatientDetailsDrawerProps {
   onSendWhatsApp: (patient: Customer) => void;
   onAddFollowUp: (patient: Customer, date: string, notes: string) => Promise<void>;
   onMarkFollowUpComplete: (followupId: string) => Promise<void>;
+  onUpdateStatus?: (patient: Customer, newStatus: FollowUpStatus) => Promise<void> | void;
 }
 
 export const PatientDetailsDrawer: React.FC<PatientDetailsDrawerProps> = ({
@@ -33,6 +37,7 @@ export const PatientDetailsDrawer: React.FC<PatientDetailsDrawerProps> = ({
   onSendWhatsApp,
   onAddFollowUp,
   onMarkFollowUpComplete,
+  onUpdateStatus,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'followups' | 'whatsapp'>('overview');
   const [newFollowUpDate, setNewFollowUpDate] = useState('');
@@ -190,10 +195,25 @@ export const PatientDetailsDrawer: React.FC<PatientDetailsDrawerProps> = ({
                     <span className="font-medium text-[#0F172A]">{patient.doctorAssigned || 'Dr. Vrindavan'}</span>
                   </div>
                   <div>
-                    <span className="text-[#64748B] block">Follow-up status</span>
-                    <div className="mt-0.5">
-                      <StatusBadge status={patient.followUpStatus} />
-                    </div>
+                    <span className="text-[#64748B] block mb-1">Follow-up status</span>
+                    <StatusDropdown
+                      status={patient.followUpStatus}
+                      onChange={async (newStatus) => {
+                        if (onUpdateStatus) {
+                          await onUpdateStatus(patient, newStatus);
+                        } else {
+                          const now = new Date().toISOString();
+                          const updated = {
+                            ...patient,
+                            followUpStatus: newStatus,
+                            updatedAt: now,
+                            syncStatus: 'pending' as const,
+                          };
+                          await db.customers.put(updated);
+                          await syncEngine.queueChange('customer', updated.id, 'UPDATE', updated);
+                        }
+                      }}
+                    />
                   </div>
                   <div>
                     <span className="text-[#64748B] block">Next follow-up</span>

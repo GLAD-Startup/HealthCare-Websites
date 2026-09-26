@@ -75,13 +75,37 @@ export function getTodayStrIST(date: Date = new Date()): string {
   }).format(date);
 }
 
+/**
+ * Convert any date input (ISO timestamp, YYYY-MM-DD, or Date object)
+ * into a normalized YYYY-MM-DD string in Asia/Kolkata timezone.
+ */
+export function getDateStrIST(input: string | Date | null | undefined): string {
+  if (!input) return '';
+  if (typeof input === 'string') {
+    const trimmed = input.trim();
+    // If it's already a clean YYYY-MM-DD without time/timezone, keep it
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      return trimmed;
+    }
+  }
+  const date = typeof input === 'string' ? new Date(input) : input;
+  if (isNaN(date.getTime())) {
+    return typeof input === 'string' ? input.split('T')[0] : '';
+  }
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+}
+
 export function getDueUrgency(input: string | Date | null | undefined): DueUrgency {
   if (!input) {
     return { urgency: 'none', label: 'Not scheduled', diffDays: 0, isoDate: null };
   }
 
-  const rawStr = typeof input === 'string' ? input : input.toISOString();
-  const targetDateOnly = rawStr.split('T')[0];
+  const targetDateOnly = getDateStrIST(input);
   const targetParts = targetDateOnly.split('-').map(Number);
   if (targetParts.length !== 3 || isNaN(targetParts[0])) {
     return { urgency: 'none', label: 'Not scheduled', diffDays: 0, isoDate: null };

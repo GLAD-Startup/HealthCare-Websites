@@ -4,17 +4,23 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -k -n \"UI,API\" -c \"cyan.bold,green.bold\" \"vite\" \"tsx server/index.ts\"",
+    "dev:ui": "vite",
+    "server": "tsx server/index.ts",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.2",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
+    "concurrently": "^10.0.5",
+    "cors": "^2.8.6",
     "dexie": "^4.4.6",
     "dexie-react-hooks": "^4.4.0",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
     "lucide-react": "^1.48.0",
+    "pg": "^8.23.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwind-merge": "^3.7.0"
@@ -22,11 +28,15 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^26.6.3",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.1"
   }

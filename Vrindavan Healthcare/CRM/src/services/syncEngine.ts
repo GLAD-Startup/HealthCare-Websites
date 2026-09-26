@@ -1,5 +1,5 @@
 import { db } from '../db/dexie.ts';
-import { getSupabaseClient } from './supabaseClient.ts';
+import { syncWithBackend } from './apiClient.ts';
 import type { Customer, FollowUp, OperationType, SyncEntity, SyncQueueItem } from '../types/index.ts';
 
 type SyncListener = (state: SyncEngineState) => void;
@@ -100,7 +100,7 @@ class SyncEngine {
     }
   }
 
-  // Sync dispatcher: process queued changes & pull remote changes
+  // Sync dispatcher: process queued changes & pull remote changes from local PostgreSQL
   public async syncNow(): Promise<{ success: boolean; syncedCount: number; message: string }> {
     if (this.state.isSyncing) {
       return { success: false, syncedCount: 0, message: 'Sync is already in progress.' };
@@ -111,75 +111,86 @@ class SyncEngine {
       return { success: false, syncedCount: 0, message: 'Device is offline. Changes remain safely stored locally.' };
     }
 
-    const supabase = await getSupabaseClient();
-    if (!supabase) {
-      await this.refreshPendingCount();
-      return {
-        success: false,
-        syncedCount: 0,
-        message: 'Supabase credentials not configured yet. Set them in Settings to enable cloud synchronization.',
-      };
-    }
-
     this.updateState({ isSyncing: true, lastError: null });
 
-    let processedCount = 0;
-
     try {
-      // 1. Process Pending Sync Queue Items
+      // 1. Collect pending items
       const pendingItems = await db.syncQueue
         .where('status')
         .anyOf(['pending', 'failed'])
         .toArray();
 
+      // 2. Dispatch batch sync to backend
+      const res = await syncWithBackend(pendingItems);
+
+      if (!res.success) {
+        this.updateState({
+          isSyncing: false,
+          lastError: res.message,
+        });
+        await this.refreshPendingCount();
+        return { success: false, syncedCount: 0, message: res.message };
+      }
+
+      // 3. Mark all successfully dispatched queue items as synced
       for (const item of pendingItems) {
-        try {
-          await db.syncQueue.update(item.id, { status: 'syncing' });
+        await db.syncQueue.update(item.id, {
+          status: 'synced',
+          errorMessage: undefined,
+        });
 
-          const tableName = item.entity === 'customer' ? 'customers' : 'followups';
-
-          if (item.operation === 'CREATE') {
-            const remotePayload = this.preparePayloadForSupabase(item.entity, item.payload);
-            const { error } = await supabase.from(tableName).upsert(remotePayload as any);
-            if (error) throw error;
-          } else if (item.operation === 'UPDATE') {
-            const remotePayload = this.preparePayloadForSupabase(item.entity, item.payload);
-            const { error } = await supabase
-              .from(tableName)
-              .update(remotePayload as any)
-              .eq('id', item.entityId);
-            if (error) throw error;
-          } else if (item.operation === 'DELETE') {
-            const { error } = await supabase.from(tableName).delete().eq('id', item.entityId);
-            if (error) throw error;
-          }
-
-          // Mark queue item as synced
-          await db.syncQueue.update(item.id, {
-            status: 'synced',
-            errorMessage: undefined,
-          });
-
-          // Update local entity syncStatus to 'synced'
-          if (item.entity === 'customer' && item.operation !== 'DELETE') {
-            await db.customers.update(item.entityId, { syncStatus: 'synced' });
-          } else if (item.entity === 'followup' && item.operation !== 'DELETE') {
-            await db.followups.update(item.entityId, { syncStatus: 'synced' });
-          }
-
-          processedCount++;
-        } catch (itemError: any) {
-          console.warn(`Sync failed for item ${item.id}:`, itemError);
-          await db.syncQueue.update(item.id, {
-            status: 'failed',
-            retryCount: item.retryCount + 1,
-            errorMessage: itemError?.message || 'Network error',
-          });
+        if (item.entity === 'customer' && item.operation !== 'DELETE') {
+          await db.customers.update(item.entityId, { syncStatus: 'synced' });
+        } else if (item.entity === 'followup' && item.operation !== 'DELETE') {
+          await db.followups.update(item.entityId, { syncStatus: 'synced' });
         }
       }
 
-      // 2. Pull remote changes from Supabase (Two-way synchronization)
-      await this.pullRemoteChanges(supabase);
+      // 4. Merge remote changes down from PostgreSQL (Two-way sync)
+      if (Array.isArray(res.remoteCustomers)) {
+        for (const rc of res.remoteCustomers) {
+          const local = await db.customers.get(rc.id);
+          if (!local || new Date(rc.updatedAt) > new Date(local.updatedAt)) {
+            await db.customers.put({
+              id: rc.id,
+              name: rc.name,
+              phone: rc.phone,
+              email: rc.email || undefined,
+              category: rc.category || undefined,
+              doctorAssigned: rc.doctorAssigned || undefined,
+              lastContact: rc.lastContact,
+              nextFollowUp: rc.nextFollowUp,
+              followUpStatus: rc.followUpStatus || 'pending',
+              notes: rc.notes || '',
+              whatsappStatus: rc.whatsappStatus || 'none',
+              syncStatus: 'synced',
+              createdAt: rc.createdAt,
+              updatedAt: rc.updatedAt,
+            });
+          }
+        }
+      }
+
+      if (Array.isArray(res.remoteFollowups)) {
+        for (const rf of res.remoteFollowups) {
+          const localF = await db.followups.get(rf.id);
+          if (!localF || new Date(rf.updatedAt) > new Date(localF.updatedAt)) {
+            await db.followups.put({
+              id: rf.id,
+              customerId: rf.customerId,
+              customerName: rf.customerName,
+              customerPhone: rf.customerPhone,
+              date: rf.date,
+              status: rf.status,
+              notes: rf.notes || '',
+              reminderSent: rf.reminderSent,
+              syncStatus: 'synced',
+              createdAt: rf.createdAt,
+              updatedAt: rf.updatedAt,
+            });
+          }
+        }
+      }
 
       const now = new Date().toISOString();
       const settings = await db.settings.get('clinic-settings');
@@ -196,8 +207,8 @@ class SyncEngine {
 
       return {
         success: true,
-        syncedCount: processedCount,
-        message: `Successfully synchronized ${processedCount} pending changes with PostgreSQL.`,
+        syncedCount: res.processedCount,
+        message: `Successfully synchronized ${res.processedCount} changes with local PostgreSQL database.`,
       };
     } catch (err: any) {
       console.error('Fatal sync error:', err);
@@ -207,107 +218,7 @@ class SyncEngine {
         lastError: errMsg,
       });
       await this.refreshPendingCount();
-      return { success: false, syncedCount: processedCount, message: errMsg };
-    }
-  }
-
-  // Convert snake_case Supabase columns to camelCase for local Dexie
-  private preparePayloadForSupabase(entity: SyncEntity, payload: any) {
-    if (entity === 'customer') {
-      const c = payload as Customer;
-      return {
-        id: c.id,
-        name: c.name,
-        phone: c.phone,
-        email: c.email || null,
-        category: c.category || 'General Consultation',
-        doctor_assigned: c.doctorAssigned || 'Dr. Vrindavan Healthcare',
-        last_contact: c.lastContact || null,
-        next_follow_up: c.nextFollowUp || null,
-        follow_up_status: c.followUpStatus || 'pending',
-        notes: c.notes || '',
-        whatsapp_status: c.whatsappStatus || 'none',
-        sync_status: 'synced',
-        created_at: c.createdAt,
-        updated_at: c.updatedAt,
-      };
-    } else {
-      const f = payload as FollowUp;
-      return {
-        id: f.id,
-        customer_id: f.customerId,
-        customer_name: f.customerName,
-        customer_phone: f.customerPhone,
-        date: f.date,
-        status: f.status,
-        notes: f.notes || '',
-        reminder_sent: f.reminderSent,
-        sync_status: 'synced',
-        created_at: f.createdAt,
-        updated_at: f.updatedAt,
-      };
-    }
-  }
-
-  private async pullRemoteChanges(supabase: any) {
-    try {
-      const { data: remoteCustomers, error: cErr } = await supabase
-        .from('customers')
-        .select('*')
-        .limit(100);
-
-      if (!cErr && Array.isArray(remoteCustomers)) {
-        for (const rc of remoteCustomers) {
-          const local = await db.customers.get(rc.id);
-          // Last Updated Wins
-          if (!local || new Date(rc.updated_at) > new Date(local.updatedAt)) {
-            await db.customers.put({
-              id: rc.id,
-              name: rc.name,
-              phone: rc.phone,
-              email: rc.email || undefined,
-              category: rc.category || undefined,
-              doctorAssigned: rc.doctor_assigned || undefined,
-              lastContact: rc.last_contact,
-              nextFollowUp: rc.next_follow_up,
-              followUpStatus: rc.follow_up_status || 'pending',
-              notes: rc.notes || '',
-              whatsappStatus: rc.whatsapp_status || 'none',
-              syncStatus: 'synced',
-              createdAt: rc.created_at,
-              updatedAt: rc.updated_at,
-            });
-          }
-        }
-      }
-
-      const { data: remoteFollowups, error: fErr } = await supabase
-        .from('followups')
-        .select('*')
-        .limit(100);
-
-      if (!fErr && Array.isArray(remoteFollowups)) {
-        for (const rf of remoteFollowups) {
-          const localF = await db.followups.get(rf.id);
-          if (!localF || new Date(rf.updated_at) > new Date(localF.updatedAt)) {
-            await db.followups.put({
-              id: rf.id,
-              customerId: rf.customer_id,
-              customerName: rf.customer_name,
-              customerPhone: rf.customer_phone,
-              date: rf.date,
-              status: rf.status,
-              notes: rf.notes || '',
-              reminderSent: rf.reminder_sent,
-              syncStatus: 'synced',
-              createdAt: rf.created_at,
-              updatedAt: rf.updated_at,
-            });
-          }
-        }
-      }
-    } catch (e) {
-      console.warn('Error during pullRemoteChanges:', e);
+      return { success: false, syncedCount: 0, message: errMsg };
     }
   }
 }

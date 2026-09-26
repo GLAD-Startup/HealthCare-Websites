@@ -11,7 +11,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { db } from '../db/dexie.ts';
-import { testSupabaseConnection } from '../services/supabaseClient.ts';
+import { testPostgresConnection } from '../services/apiClient.ts';
 import { exportDatabaseBackupJSON, importDatabaseBackupJSON } from '../services/exportImport.ts';
 import type { ClinicSettings } from '../types/index.ts';
 
@@ -34,8 +34,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [supabaseUrl, setSupabaseUrl] = useState('');
-  const [supabaseAnonKey, setSupabaseAnonKey] = useState('');
+  const [apiUrl, setApiUrl] = useState('http://localhost:5000/api');
   const [whatsappPhoneId, setWhatsappPhoneId] = useState('');
   const [whatsappToken, setWhatsappToken] = useState('');
 
@@ -63,12 +62,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const s = await db.settings.get('clinic-settings');
     if (s) {
       setClinicName(s.clinicName || 'Vrindavan Healthcare');
-      setDoctorName(s.doctorName || 'Dr. Vrindavan');
+      setDoctorName(s.doctorName || 'Dr. Vrindavan Healthcare Team');
       setPhone(s.phone || '+91 9876543210');
       setEmail(s.email || 'care@vrindavanhealthcare.in');
-      setAddress(s.address || 'Vrindavan Healthcare Clinic, Mathura / Vrindavan');
-      setSupabaseUrl(s.supabaseUrl || '');
-      setSupabaseAnonKey(s.supabaseAnonKey || '');
+      setAddress(s.address || 'Vrindavan Healthcare Clinic, Mathura / Vrindavan, UP');
+      setApiUrl(s.apiUrl || (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api');
       setWhatsappPhoneId(s.whatsappPhoneId || '');
       setWhatsappToken(s.whatsappToken || '');
     }
@@ -87,8 +85,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         phone: phone.trim(),
         email: email.trim(),
         address: address.trim(),
-        supabaseUrl: supabaseUrl.trim(),
-        supabaseAnonKey: supabaseAnonKey.trim(),
+        apiUrl: apiUrl.trim(),
         whatsappPhoneId: whatsappPhoneId.trim(),
         whatsappToken: whatsappToken.trim(),
       };
@@ -104,16 +101,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const handleTestConnection = async () => {
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!apiUrl) {
       setTestResult({
         success: false,
-        message: 'Please enter both Supabase URL and Anon Key.',
+        message: 'Please enter the backend API URL (e.g. http://localhost:5000/api).',
       });
       return;
     }
     setIsTesting(true);
     setTestResult(null);
-    const res = await testSupabaseConnection(supabaseUrl, supabaseAnonKey);
+    const res = await testPostgresConnection(apiUrl);
     setTestResult(res);
     setIsTesting(false);
   };
@@ -252,7 +249,7 @@ CREATE POLICY "Allow public anon access for Logs" ON public.whatsapp_logs FOR AL
                 : 'border-transparent text-[#64748B] hover:text-[#0F172A]'
             }`}
           >
-            Cloud credentials
+            PostgreSQL Database
           </button>
           <button
             onClick={() => setActiveTab('backup')}
@@ -349,33 +346,39 @@ CREATE POLICY "Allow public anon access for Logs" ON public.whatsapp_logs FOR AL
           {activeTab === 'database' && (
             <div className="space-y-4">
               <div className="bg-[#F0FDFA] border border-[#0F766E]/20 p-3 rounded-lg text-xs text-[#0F766E] leading-relaxed">
-                Connect the CRM to your Supabase PostgreSQL instance. All offline writes in IndexedDB sync automatically with this database.
+                Connect the CRM to your local PostgreSQL backend server. All offline writes in IndexedDB sync automatically with your local PostgreSQL database.
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-[#475569] uppercase tracking-wider mb-1.5">
-                  Supabase project URL
+                  PostgreSQL Backend API URL
                 </label>
                 <input
                   type="text"
-                  placeholder="https://xyzcompany.supabase.co"
-                  value={supabaseUrl}
-                  onChange={(e) => setSupabaseUrl(e.target.value)}
+                  placeholder="http://localhost:5000/api"
+                  value={apiUrl}
+                  onChange={(e) => setApiUrl(e.target.value)}
                   className="clinical-input w-full tabular-nums text-xs"
                 />
+                <p className="text-[11px] text-[#64748B] mt-1">
+                  Default local server: <code className="bg-[#F1F5F9] px-1.5 py-0.5 rounded text-[#0F172A]">http://localhost:5000/api</code>
+                </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-[#475569] uppercase tracking-wider mb-1.5">
-                  Supabase anon public key
-                </label>
-                <input
-                  type="password"
-                  placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  value={supabaseAnonKey}
-                  onChange={(e) => setSupabaseAnonKey(e.target.value)}
-                  className="clinical-input w-full tabular-nums text-xs"
-                />
+              <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#475569] space-y-1.5">
+                <div className="font-semibold text-[#0F172A]">Local Server Quick Guide:</div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E2E8F0] text-[#0F172A] font-bold text-[10px] inline-flex items-center justify-center">1</span>
+                  <span>Initialize database: <code className="bg-white border px-1 py-0.5 rounded text-[11px]">psql -U postgres -d vrindavan_crm -f CRM/db/schema_all_in_one.sql</code></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E2E8F0] text-[#0F172A] font-bold text-[10px] inline-flex items-center justify-center">2</span>
+                  <span>Start local server: <code className="bg-white border px-1 py-0.5 rounded text-[11px]">npm run server</code></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E2E8F0] text-[#0F172A] font-bold text-[10px] inline-flex items-center justify-center">3</span>
+                  <span>Click "Test connection" below to verify live PostgreSQL status.</span>
+                </div>
               </div>
 
               {/* Test Button & Result */}
@@ -541,8 +544,8 @@ CREATE POLICY "Allow public anon access for Logs" ON public.whatsapp_logs FOR AL
                 </pre>
               </div>
 
-              <div className="p-3 bg-[#FEF3F2] border border-[#B42318]/20 rounded-lg text-xs text-[#B42318] leading-relaxed">
-                <strong>Admin Notice:</strong> Execute the schema above once in your Supabase SQL Editor prior to enabling cloud synchronization.
+              <div className="p-3 bg-[#F0FDFA] border border-[#0F766E]/20 rounded-lg text-xs text-[#0F766E] leading-relaxed">
+                <strong>Local PostgreSQL Schema:</strong> All SQL scripts are located in <code className="bg-white px-1.5 py-0.5 rounded border border-[#0F766E]/30 font-mono text-[11px]">CRM/db/schema_all_in_one.sql</code>. Run it once in your local psql terminal or database tool to create your local tables.
               </div>
             </div>
           )}

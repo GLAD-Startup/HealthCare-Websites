@@ -20,11 +20,14 @@ import {
   AlertTriangle,
   Users
 } from 'lucide-react';
-import type { Customer } from '../types/index.ts';
+import type { Customer, FollowUpStatus } from '../types/index.ts';
+import { db } from '../db/dexie.ts';
+import { syncEngine } from '../services/syncEngine.ts';
 import { exportCustomersToCSV } from '../services/exportImport.ts';
 import { WhatsAppGlyph } from './WhatsAppGlyph.tsx';
 import { DueBadge } from './DueBadge.tsx';
 import { StatusBadge } from './StatusBadge.tsx';
+import { StatusDropdown } from './StatusDropdown.tsx';
 import { 
   formatPhone, 
   cleanPhoneForLink, 
@@ -43,6 +46,7 @@ interface PatientsViewProps {
   onDeletePatient: (patientId: string) => void;
   onSendWhatsApp: (patient: Customer) => void;
   onScheduleFollowUp: (patient: Customer) => void;
+  onUpdatePatientStatus?: (patient: Customer, newStatus: FollowUpStatus) => Promise<void> | void;
 }
 
 export const PatientsView: React.FC<PatientsViewProps> = ({
@@ -54,6 +58,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
   onDeletePatient,
   onSendWhatsApp,
   onScheduleFollowUp,
+  onUpdatePatientStatus,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -78,6 +83,28 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
     () => customers.find((c) => c.id === activeMenuId) || null,
     [customers, activeMenuId]
   );
+
+  const handleStatusChange = async (patient: Customer, newStatus: FollowUpStatus) => {
+    if (patient.followUpStatus === newStatus) return;
+
+    if (onUpdatePatientStatus) {
+      await onUpdatePatientStatus(patient, newStatus);
+    } else {
+      const now = new Date().toISOString();
+      const updated: Customer = {
+        ...patient,
+        followUpStatus: newStatus,
+        updatedAt: now,
+        syncStatus: 'pending',
+      };
+      await db.customers.put(updated);
+      await syncEngine.queueChange('customer', updated.id, 'UPDATE', updated);
+    }
+
+    if (newStatus === 'scheduled' && !patient.nextFollowUp) {
+      onScheduleFollowUp(patient);
+    }
+  };
 
   const handleToggleMenu = (patientId: string, buttonEl: HTMLElement, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -591,15 +618,29 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                       </span>
                     </div>
                   </div>
-                  <div className="shrink-0 pt-0.5">
+                  <div 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onScheduleFollowUp(c);
+                    }}
+                    className="shrink-0 pt-0.5 cursor-pointer"
+                    title="Schedule / change follow-up"
+                  >
                     <DueBadge date={c.nextFollowUp} />
                   </div>
                 </div>
 
-                {/* Row 2: Condition / Reason & Status Badge */}
-                <div className="flex items-center justify-between text-xs text-[#475569] gap-2">
+                {/* Row 2: Condition / Reason & Status Dropdown */}
+                <div 
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center justify-between text-xs text-[#475569] gap-2"
+                >
                   <span className="truncate">{c.category || 'General consultation'}</span>
-                  <StatusBadge status={c.followUpStatus} />
+                  <StatusDropdown
+                    size="sm"
+                    status={c.followUpStatus}
+                    onChange={(newStatus) => handleStatusChange(c, newStatus)}
+                  />
                 </div>
 
                 {c.notes && (
@@ -794,22 +835,41 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                         </span>
                       </td>
 
-                      {/* Column 4: Status (StatusBadge) */}
-                      <td className="py-2.5 px-4 whitespace-nowrap">
-                        <StatusBadge status={c.followUpStatus} />
+                      {/* Column 4: Status (Interactive StatusDropdown) */}
+                      <td 
+                        onClick={(e) => e.stopPropagation()} 
+                        className="py-2.5 px-4 whitespace-nowrap"
+                      >
+                        <StatusDropdown
+                          status={c.followUpStatus}
+                          onChange={(newStatus) => handleStatusChange(c, newStatus)}
+                        />
                       </td>
 
-                      {/* Column 5: Next follow-up (formatted date + DueBadge) */}
-                      <td className="py-2.5 px-4 text-xs whitespace-nowrap">
+                      {/* Column 5: Next follow-up (formatted date + DueBadge, clickable to schedule) */}
+                      <td 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onScheduleFollowUp(c);
+                        }}
+                        className="py-2.5 px-4 text-xs whitespace-nowrap cursor-pointer group"
+                        title={c.nextFollowUp ? `Change follow-up for ${c.name}` : `Schedule follow-up for ${c.name}`}
+                      >
                         {c.nextFollowUp ? (
-                          <div className="flex items-center gap-2">
-                            <span className="tabular-nums text-[#0F172A] font-medium">
+                          <div className="flex items-center gap-2 group-hover:opacity-85 transition-opacity">
+                            <span className="tabular-nums text-[#0F172A] font-medium group-hover:underline underline-offset-2">
                               {formatDate(c.nextFollowUp)}
                             </span>
                             <DueBadge date={c.nextFollowUp} />
                           </div>
                         ) : (
-                          <DueBadge date={null} />
+                          <div className="flex items-center gap-1.5 group-hover:opacity-85 transition-opacity">
+                            <DueBadge date={null} />
+                            <span className="text-[11px] text-[#0F766E] font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                              <CalendarClock className="w-3 h-3" />
+                              <span>Set date</span>
+                            </span>
+                          </div>
                         )}
                       </td>
 
@@ -974,9 +1034,25 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                   </div>
 
                   {/* Status & Next follow-up */}
-                  <div className="flex items-center justify-between pt-2 border-t border-[#E2E8F0] text-xs">
-                    <StatusBadge status={c.followUpStatus} />
-                    <DueBadge date={c.nextFollowUp} />
+                  <div 
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center justify-between pt-2 border-t border-[#E2E8F0] text-xs"
+                  >
+                    <StatusDropdown
+                      size="sm"
+                      status={c.followUpStatus}
+                      onChange={(newStatus) => handleStatusChange(c, newStatus)}
+                    />
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onScheduleFollowUp(c);
+                      }}
+                      className="cursor-pointer hover:opacity-85 transition-opacity"
+                      title="Schedule / change follow-up"
+                    >
+                      <DueBadge date={c.nextFollowUp} />
+                    </div>
                   </div>
 
                   {/* Action row with min 44px touch targets on mobile */}

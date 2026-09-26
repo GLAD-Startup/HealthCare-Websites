@@ -75,8 +75,10 @@ export interface ClinicSettings {
   phone: string;
   email: string;
   address: string;
-  supabaseUrl: string;
-  supabaseAnonKey: string;
+  apiUrl?: string;
+  databaseUrl?: string;
+  supabaseUrl?: string;
+  supabaseAnonKey?: string;
   whatsappPhoneId?: string;
   whatsappToken?: string;
   lastSyncTimestamp?: string;

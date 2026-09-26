@@ -113,7 +113,7 @@ export async function sendWhatsAppMessage({
 
     await db.customers.update(customer.id, updatedCustomer);
 
-    // Queue update for Supabase sync
+    // Queue update for PostgreSQL sync
     await syncEngine.queueChange('customer', customer.id, 'UPDATE', {
       ...customer,
       ...updatedCustomer,

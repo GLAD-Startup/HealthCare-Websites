@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, Phone, Mail, Calendar, Stethoscope, CheckCircle2 } from 'lucide-react';
 import type { Customer, FollowUpStatus } from '../types/index.ts';
+import { getDateStrIST } from '../utils/formatters.ts';
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -45,7 +46,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       setCategory(patientToEdit.category || CATEGORIES[0]);
       setDoctorAssigned(patientToEdit.doctorAssigned || 'Dr. Vrindavan');
       setFollowUpStatus(patientToEdit.followUpStatus || 'pending');
-      setNextFollowUp(patientToEdit.nextFollowUp || '');
+      setNextFollowUp(getDateStrIST(patientToEdit.nextFollowUp));
       setNotes(patientToEdit.notes || '');
     } else {
       setName('');

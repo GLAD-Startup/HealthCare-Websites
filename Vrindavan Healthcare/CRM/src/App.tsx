@@ -6,7 +6,7 @@ import { db, initializeDatabase } from './db/dexie.ts';
 import { syncEngine } from './services/syncEngine.ts';
 import { sendWhatsAppMessage } from './services/whatsappService.ts';
 
-import type { Customer, FollowUp, WhatsAppTemplate, WhatsAppLog } from './types/index.ts';
+import type { Customer, FollowUp, WhatsAppTemplate, WhatsAppLog, FollowUpStatus } from './types/index.ts';
 
 import { Header } from './components/Header.tsx';
 import { Sidebar, type NavTab } from './components/Sidebar.tsx';
@@ -22,10 +22,30 @@ import { SyncView } from './components/SyncView.tsx';
 import { SettingsModal } from './components/SettingsModal.tsx';
 import { ToastContainer, type ToastMessage } from './components/Toast.tsx';
 import { useClinicalCounts } from './hooks/useClinicalCounts.ts';
-import { formatDate } from './utils/formatters.ts';
+import { formatDate, getTodayStrIST } from './utils/formatters.ts';
+
+const VALID_TABS: NavTab[] = ['dashboard', 'patients', 'followups', 'whatsapp', 'sync'];
+
+function getInitialTab(): NavTab {
+  if (typeof window !== 'undefined') {
+    // 1. Check URL hash first (e.g. #patients, #followups, #whatsapp, #sync, #dashboard)
+    const hash = window.location.hash.replace(/^#\/?/, '').split('?')[0].toLowerCase() as NavTab;
+    if (VALID_TABS.includes(hash)) {
+      return hash;
+    }
+    // 2. Check localStorage
+    try {
+      const saved = localStorage.getItem('vh_crm_current_tab') as NavTab;
+      if (VALID_TABS.includes(saved)) {
+        return saved;
+      }
+    } catch {}
+  }
+  return 'dashboard';
+}
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
+  const [currentTab, setCurrentTab] = useState<NavTab>(getInitialTab);
   const [selectedPatient, setSelectedPatient] = useState<Customer | null>(null);
   const [patientToEdit, setPatientToEdit] = useState<Customer | null>(null);
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
@@ -34,8 +54,32 @@ export function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSyncDrawerOpen, setIsSyncDrawerOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [followUpsInitialTab, setFollowUpsInitialTab] = useState<'today' | 'overdue' | 'upcoming' | 'completed' | 'all'>('today');
+  const [followUpsInitialTab, setFollowUpsInitialTab] = useState<'today' | 'overdue' | 'upcoming' | 'completed' | 'all' | undefined>(undefined);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  // Keep URL hash and localStorage in sync whenever tab changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('vh_crm_current_tab', currentTab);
+      const currentHash = window.location.hash.replace(/^#\/?/, '').split('?')[0].toLowerCase();
+      if (currentHash !== currentTab) {
+        window.history.replaceState(null, '', `#${currentTab}`);
+      }
+    } catch {}
+  }, [currentTab]);
+
+  // Sync state if user navigates using browser Back / Forward buttons
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace(/^#\/?/, '').split('?')[0].toLowerCase() as NavTab;
+      if (VALID_TABS.includes(hash) && hash !== currentTab) {
+        setCurrentTab(hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [currentTab]);
 
   // Sidebar collapsed state: persists to localStorage, defaults to collapsed on tablet (1024-1279px)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
@@ -74,10 +118,11 @@ export function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Initialize Dexie local database with seed data if needed
+  // Initialize Dexie local database and auto-sync with PostgreSQL
   useEffect(() => {
-    initializeDatabase().then(() => {
-      syncEngine.refreshPendingCount();
+    initializeDatabase().then(async () => {
+      await syncEngine.refreshPendingCount();
+      syncEngine.syncNow().catch((err) => console.warn('Initial background sync note:', err));
     });
   }, []);
 
@@ -95,6 +140,69 @@ export function App() {
   const followUpsBadgeCount = clinicalCounts.needsAttentionCount;
   const hasOverdueFollowUps = clinicalCounts.hasOverdue;
   const pendingSyncCount = syncQueue.filter((q) => q.status === 'pending' || q.status === 'failed').length;
+
+  // Auto-reconcile customer.nextFollowUp with db.followups
+  // Guarantees any patient with status scheduled/pending or with a follow-up date has a matching pending FollowUp record
+  useEffect(() => {
+    if (!customers || customers.length === 0) return;
+
+    const reconcileCustomerFollowUps = async () => {
+      const now = new Date().toISOString();
+      const tomorrowStr = getTodayStrIST(new Date(Date.now() + 86400000));
+
+      for (const customer of customers) {
+        const isScheduledOrPending =
+          customer.followUpStatus === 'scheduled' || customer.followUpStatus === 'pending';
+        const hasDate = Boolean(customer.nextFollowUp);
+
+        if (
+          (isScheduledOrPending || hasDate) &&
+          customer.followUpStatus !== 'completed' &&
+          customer.followUpStatus !== 'cancelled'
+        ) {
+          const effectiveDate = customer.nextFollowUp || tomorrowStr;
+
+          // If patient status is scheduled or pending but date is missing, auto-populate the date
+          if (!customer.nextFollowUp && isScheduledOrPending) {
+            const updatedCust: Customer = {
+              ...customer,
+              nextFollowUp: effectiveDate,
+              updatedAt: now,
+              syncStatus: 'pending',
+            };
+            await db.customers.put(updatedCust);
+            await syncEngine.queueChange('customer', updatedCust.id, 'UPDATE', updatedCust);
+          }
+
+          const existing = await db.followups
+            .where('customerId')
+            .equals(customer.id)
+            .filter((f) => f.status === 'pending')
+            .first();
+
+          if (!existing) {
+            const newFol: FollowUp = {
+              id: 'fol-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 5),
+              customerId: customer.id,
+              customerName: customer.name,
+              customerPhone: customer.phone,
+              date: effectiveDate,
+              status: 'pending',
+              notes: customer.notes || 'Routine consultation follow-up',
+              reminderSent: false,
+              createdAt: now,
+              updatedAt: now,
+              syncStatus: 'pending',
+            };
+            await db.followups.add(newFol);
+            await syncEngine.queueChange('followup', newFol.id, 'CREATE', newFol);
+          }
+        }
+      }
+    };
+
+    reconcileCustomerFollowUps();
+  }, [customers]);
 
   // Unified Toast Helper with Undo Action Support
   const showToast = useCallback((
@@ -142,6 +250,45 @@ export function App() {
 
       if (selectedPatient?.id === updatedCustomer.id) {
         setSelectedPatient(updatedCustomer);
+      }
+
+      // Synchronize follow-up record if nextFollowUp was set, changed, or cleared
+      if (updatedCustomer.nextFollowUp) {
+        const existingFollowup = await db.followups
+          .where('customerId')
+          .equals(updatedCustomer.id)
+          .filter((f) => f.status === 'pending')
+          .first();
+
+        if (existingFollowup) {
+          const updatedFol: FollowUp = {
+            ...existingFollowup,
+            customerName: updatedCustomer.name,
+            customerPhone: updatedCustomer.phone,
+            date: updatedCustomer.nextFollowUp,
+            notes: updatedCustomer.notes || existingFollowup.notes || 'Routine consultation follow-up',
+            updatedAt: now,
+            syncStatus: 'pending',
+          };
+          await db.followups.put(updatedFol);
+          await syncEngine.queueChange('followup', updatedFol.id, 'UPDATE', updatedFol);
+        } else {
+          const newFollowUp: FollowUp = {
+            id: 'fol-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 5),
+            customerId: updatedCustomer.id,
+            customerName: updatedCustomer.name,
+            customerPhone: updatedCustomer.phone,
+            date: updatedCustomer.nextFollowUp,
+            status: 'pending',
+            notes: updatedCustomer.notes || 'Routine consultation follow-up',
+            reminderSent: false,
+            createdAt: now,
+            updatedAt: now,
+            syncStatus: 'pending',
+          };
+          await db.followups.add(newFollowUp);
+          await syncEngine.queueChange('followup', newFollowUp.id, 'CREATE', newFollowUp);
+        }
       }
 
       showToast(`Updated profile for ${updatedCustomer.name}.`, 'success');
@@ -207,6 +354,93 @@ export function App() {
     }
   };
 
+  // Quick Update Patient Status
+  const handleUpdatePatientStatus = async (patient: Customer, newStatus: FollowUpStatus) => {
+    if (patient.followUpStatus === newStatus) return;
+
+    const now = new Date().toISOString();
+    const tomorrowStr = getTodayStrIST(new Date(Date.now() + 86400000));
+    // If setting to scheduled or pending, ensure a follow-up date exists (defaulting to tomorrow)
+    const effectiveDate = patient.nextFollowUp || ((newStatus === 'scheduled' || newStatus === 'pending') ? tomorrowStr : null);
+
+    const updatedCustomer: Customer = {
+      ...patient,
+      followUpStatus: newStatus,
+      nextFollowUp: effectiveDate,
+      updatedAt: now,
+      syncStatus: 'pending',
+    };
+
+    await db.customers.put(updatedCustomer);
+    await syncEngine.queueChange('customer', updatedCustomer.id, 'UPDATE', updatedCustomer);
+
+    if (selectedPatient?.id === updatedCustomer.id) {
+      setSelectedPatient(updatedCustomer);
+    }
+
+    // If marked completed, also mark any pending followups as completed
+    if (newStatus === 'completed') {
+      const pendingFollowups = await db.followups
+        .where('customerId')
+        .equals(patient.id)
+        .filter((f) => f.status === 'pending')
+        .toArray();
+
+      for (const pf of pendingFollowups) {
+        const updatedF: FollowUp = {
+          ...pf,
+          status: 'completed',
+          updatedAt: now,
+          syncStatus: 'pending',
+        };
+        await db.followups.put(updatedF);
+        await syncEngine.queueChange('followup', updatedF.id, 'UPDATE', updatedF);
+      }
+    } else if (newStatus === 'scheduled' || newStatus === 'pending') {
+      // If customer is scheduled/pending, ensure an active follow-up exists with effectiveDate
+      const existing = await db.followups
+        .where('customerId')
+        .equals(patient.id)
+        .filter((f) => f.status === 'pending')
+        .first();
+
+      if (!existing && effectiveDate) {
+        const newFol: FollowUp = {
+          id: 'fol-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 5),
+          customerId: patient.id,
+          customerName: patient.name,
+          customerPhone: patient.phone,
+          date: effectiveDate,
+          status: 'pending',
+          notes: patient.notes || 'Routine consultation follow-up',
+          reminderSent: false,
+          createdAt: now,
+          updatedAt: now,
+          syncStatus: 'pending',
+        };
+        await db.followups.add(newFol);
+        await syncEngine.queueChange('followup', newFol.id, 'CREATE', newFol);
+      }
+    }
+
+    const formattedLabel = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+    if ((newStatus === 'scheduled' || newStatus === 'pending') && effectiveDate) {
+      showToast(
+        `Scheduled follow-up for ${patient.name} on ${formatDate(effectiveDate)}.`,
+        'success',
+        {
+          label: 'Change date',
+          onClick: () => {
+            setFollowUpPreselectedCustomer(updatedCustomer);
+            setIsFollowUpModalOpen(true);
+          },
+        }
+      );
+    } else {
+      showToast(`Updated ${patient.name}'s status to ${formattedLabel}.`, 'info');
+    }
+  };
+
   // Schedule Follow-up
   const handleSaveFollowUp = async (customerId: string, date: string, notes: string) => {
     const customer = customers.find((c) => c.id === customerId);
@@ -250,11 +484,36 @@ export function App() {
 
   // Mark Follow-up Complete with Undo Toast
   const handleMarkFollowUpComplete = async (followupId: string) => {
-    const followup = followups.find((f) => f.id === followupId);
+    let followup = followups.find((f) => f.id === followupId);
+    let customer: Customer | undefined;
+
+    if (!followup && followupId.startsWith('fol-synced-')) {
+      const custId = followupId.replace('fol-synced-', '');
+      customer = customers.find((c) => c.id === custId);
+      if (customer) {
+        followup = {
+          id: 'fol-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 5),
+          customerId: customer.id,
+          customerName: customer.name,
+          customerPhone: customer.phone,
+          date: customer.nextFollowUp || new Date().toISOString().split('T')[0],
+          status: 'pending',
+          notes: customer.notes || 'Routine consultation follow-up',
+          reminderSent: false,
+          createdAt: customer.createdAt,
+          updatedAt: new Date().toISOString(),
+          syncStatus: 'pending',
+        };
+      }
+    }
+
     if (!followup) return;
 
+    if (!customer) {
+      customer = customers.find((c) => c.id === followup.customerId);
+    }
+
     const prevFollowUp = { ...followup };
-    const customer = customers.find((c) => c.id === followup.customerId);
     const prevCustomerStatus = customer ? customer.followUpStatus : undefined;
 
     const now = new Date().toISOString();
@@ -322,11 +581,36 @@ export function App() {
 
   // Reschedule Follow-up with Undo Toast
   const handleRescheduleFollowUp = async (followupId: string, newDate: string) => {
-    const followup = followups.find((f) => f.id === followupId);
+    let followup = followups.find((f) => f.id === followupId);
+    let customer: Customer | undefined;
+
+    if (!followup && followupId.startsWith('fol-synced-')) {
+      const custId = followupId.replace('fol-synced-', '');
+      customer = customers.find((c) => c.id === custId);
+      if (customer) {
+        followup = {
+          id: 'fol-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 5),
+          customerId: customer.id,
+          customerName: customer.name,
+          customerPhone: customer.phone,
+          date: customer.nextFollowUp || new Date().toISOString().split('T')[0],
+          status: 'pending',
+          notes: customer.notes || 'Routine consultation follow-up',
+          reminderSent: false,
+          createdAt: customer.createdAt,
+          updatedAt: new Date().toISOString(),
+          syncStatus: 'pending',
+        };
+      }
+    }
+
     if (!followup) return;
 
+    if (!customer) {
+      customer = customers.find((c) => c.id === followup.customerId);
+    }
+
     const previousDate = followup.date;
-    const customer = customers.find((c) => c.id === followup.customerId);
     const prevNextFollowUp = customer?.nextFollowUp;
 
     const now = new Date().toISOString();
@@ -453,7 +737,12 @@ export function App() {
       {/* Pinned Left-Edge Full-Height Sidebar (248px / 72px collapsed) */}
       <Sidebar
         currentTab={currentTab}
-        onSelectTab={setCurrentTab}
+        onSelectTab={(tab) => {
+          if (tab === 'followups') {
+            setFollowUpsInitialTab(undefined);
+          }
+          setCurrentTab(tab);
+        }}
         followUpsBadgeCount={followUpsBadgeCount}
         hasOverdueFollowUps={hasOverdueFollowUps}
         isMobileOpen={isMobileMenuOpen}
@@ -509,6 +798,8 @@ export function App() {
                 onNavigateToTab={(tab, filter) => {
                   if (filter) {
                     setFollowUpsInitialTab(filter as any);
+                  } else {
+                    setFollowUpsInitialTab(undefined);
                   }
                   setCurrentTab(tab as NavTab);
                 }}
@@ -537,6 +828,7 @@ export function App() {
                   setFollowUpPreselectedCustomer(p);
                   setIsFollowUpModalOpen(true);
                 }}
+                onUpdatePatientStatus={handleUpdatePatientStatus}
               />
             )}
 
@@ -596,6 +888,7 @@ export function App() {
           await handleSaveFollowUp(patient.id, date, notes);
         }}
         onMarkFollowUpComplete={handleMarkFollowUpComplete}
+        onUpdateStatus={handleUpdatePatientStatus}
       />
 
       {/* Patient Add / Edit Modal */}
