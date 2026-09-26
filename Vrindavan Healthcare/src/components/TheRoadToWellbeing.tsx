@@ -39,8 +39,8 @@ export const TheRoadToWellbeing: React.FC<TheRoadToWellbeingProps> = ({
       id: 'general-medicine',
       title: 'Internal Medicine',
       subtitle: 'Managing Hypertension, Diabetes & Critical Adult Health',
-      tags: ['Physician', 'MD SRMS 2018'],
-      image: '/images/endoscopy_suite.jpg',
+      tags: ['Physician', 'Gold Medalist & MD'],
+      image: '/images/Dr.aishwarya-d5rJKJ8t.jpg',
       actionName: 'Diabetes Mellitus & Metabolic Disorder Management'
     }
   ];

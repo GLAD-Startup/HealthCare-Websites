@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stethoscope, Check, ArrowRight, RotateCcw, Sparkles, Activity, HeartPulse } from 'lucide-react';
-import { DOCTOR_CHAITANYA } from '../data/clinicData';
+import { DOCTOR_CHAITANYA, DOCTOR_AISHWARYA } from '../data/clinicData';
 
 interface SymptomScreenerProps {
   onBookRecommendation: (serviceName: string, doctorName: string) => void;
@@ -101,6 +101,13 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
       icon: '⚖️'
     },
     {
+      id: 'thyroid-fatigue',
+      category: 'general',
+      label: 'Thyroid Symptoms, Cold Sensitivity & Mood/Weight Shifts',
+      description: 'Abnormal TSH levels, chronic exhaustion, neck fullness, or sudden weight shifts (थायरॉइड रोग).',
+      icon: '🦋'
+    },
+    {
       id: 'allergy-cough',
       category: 'general',
       label: 'Seasonal Allergy, Wheezing & Chronic Cough',
@@ -139,12 +146,15 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
     const hasDiabetes = selectedSymptoms.includes('diabetes-thirst');
     const hasHypertension = selectedSymptoms.includes('hypertension-headache');
 
+    const hasThyroid = selectedSymptoms.includes('thyroid-fatigue');
+
     if (hasBleed || hasSwallow) {
       return {
         priority: 'Urgent / Priority Clinical Evaluation',
         service: 'Upper GI Endoscopy (Diagnostic & Therapeutic)',
         description: 'Symptoms indicate potential gastric mucosal bleeding or esophageal obstruction. Direct high-definition endoscopic evaluation by Dr. Chaitanya Gupta is strongly recommended.',
-        doctor: DOCTOR_CHAITANYA.name
+        doctor: DOCTOR_CHAITANYA.name,
+        doctorObj: DOCTOR_CHAITANYA
       };
     }
 
@@ -153,7 +163,8 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
         priority: 'Super-Specialty Hepatology Evaluation',
         service: 'Fatty Liver & Liver Cirrhosis Management',
         description: 'Signs suggest hepatic steatosis or liver enzyme elevation. Ultrasound staging and liver function panel under Dr. Chaitanya Gupta will safeguard your liver health.',
-        doctor: DOCTOR_CHAITANYA.name
+        doctor: DOCTOR_CHAITANYA.name,
+        doctorObj: DOCTOR_CHAITANYA
       };
     }
 
@@ -162,7 +173,8 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
         priority: 'Comprehensive Acidity & GERD Protocol',
         service: 'Chronic Acidity, GERD & Peptic Ulcer Care',
         description: 'Symptoms correlate with acid peptic disease or H. pylori gastritis. Dr. Chaitanya Gupta can evaluate whether an Upper GI Endoscopy or targeted mucosal healing protocol is best.',
-        doctor: DOCTOR_CHAITANYA.name
+        doctor: DOCTOR_CHAITANYA.name,
+        doctorObj: DOCTOR_CHAITANYA
       };
     }
 
@@ -171,24 +183,27 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
         priority: 'Digestive Motility & Gut Health Care',
         service: 'IBS, Colitis & Inflammatory Bowel Disease (IBD)',
         description: 'Presentation matches irritable bowel syndrome or intestinal motility irregularity. Customized dietary low-FODMAP protocol and gut motility regulation recommended.',
-        doctor: DOCTOR_CHAITANYA.name
+        doctor: DOCTOR_CHAITANYA.name,
+        doctorObj: DOCTOR_CHAITANYA
       };
     }
 
-    if (hasDiabetes || hasHypertension) {
+    if (hasDiabetes || hasHypertension || hasThyroid) {
       return {
-        priority: 'Metabolic & Cardiovascular Physician Evaluation',
-        service: 'Diabetes & Metabolic Disorder Management',
-        description: 'Comprehensive physician workup for glycemic stabilization, blood pressure titration, and prevention of vascular complications by Dr. Chaitanya Gupta.',
-        doctor: DOCTOR_CHAITANYA.name
+        priority: 'Consultant Physician & Metabolic Care',
+        service: 'Diabetes, BP & Thyroid Physician Care (शुगर, बी.पी. व थायरॉइड)',
+        description: 'Specialized clinical assessment with Dr. Aishwarya Singhal Gupta (MD Internal Medicine Gold Medalist, MCI Regd. No. 9064). Tailored glycemic control, BP stabilization, thyroid hormone titration, and metabolic health.',
+        doctor: DOCTOR_AISHWARYA.name,
+        doctorObj: DOCTOR_AISHWARYA
       };
     }
 
     return {
       priority: 'General Medical OPD Consultation',
-      service: 'Comprehensive Gastro & Physician OPD Consultation',
-      description: 'Consult Dr. Chaitanya Gupta at either Raman Reti (near ISKCON) or Hanuman Bagh clinic for complete clinical examination at an accessible ₹200 fee.',
-      doctor: DOCTOR_CHAITANYA.name
+      service: 'Comprehensive Physician & Gastro Consultation',
+      description: 'Consult our senior specialists at either Raman Reti (near ISKCON) or Hanuman Bagh clinic for complete clinical examination at an accessible ₹200 fee.',
+      doctor: DOCTOR_CHAITANYA.name,
+      doctorObj: DOCTOR_CHAITANYA
     };
   };
 
@@ -210,7 +225,7 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
           </h2>
           
           <p className="text-slate-600 text-xs sm:text-base lg:text-lg mt-2 sm:mt-3 font-normal max-w-2xl mx-auto leading-relaxed">
-            Select what you are experiencing to receive a personalized clinical recommendation and priority OPD consultation with Dr. Chaitanya Gupta.
+            Select what you are experiencing to receive a personalized clinical recommendation and priority OPD consultation with our specialists Dr. Chaitanya Gupta &amp; Dr. Aishwarya Singhal Gupta.
           </p>
         </div>
 
@@ -358,9 +373,9 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
               <div className="p-4 sm:p-5 rounded-2xl bg-[#E6F7F5] border border-teal-200/80 flex items-center gap-4">
                 <div className="w-14 h-14 rounded-xl overflow-hidden shadow-sm shrink-0 border-2 border-white bg-white">
                   <img
-                    src={DOCTOR_CHAITANYA.image}
-                    alt={DOCTOR_CHAITANYA.name}
-                    className="w-full h-full object-cover"
+                    src={recommendation.doctorObj.image}
+                    alt={recommendation.doctorObj.name}
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
                 <div>
@@ -368,10 +383,10 @@ export const SymptomScreener: React.FC<SymptomScreenerProps> = ({ onBookRecommen
                     Recommended Specialist
                   </div>
                   <div className="text-base sm:text-lg font-extrabold text-slate-900">
-                    {DOCTOR_CHAITANYA.name}
+                    {recommendation.doctorObj.name}
                   </div>
                   <div className="text-xs text-teal-800 font-medium">
-                    {DOCTOR_CHAITANYA.title} • {DOCTOR_CHAITANYA.qualifications}
+                    {recommendation.doctorObj.title} • {recommendation.doctorObj.qualifications}
                   </div>
                 </div>
               </div>

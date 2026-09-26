@@ -57,7 +57,7 @@ export const GeneralMedicineServices: React.FC<GeneralMedicineServicesProps> = (
           </h2>
           
           <p className="text-slate-600 text-base sm:text-lg mt-3 font-medium">
-            Backed by MD General Medicine (SRMS IMS Bareilly 2018) &amp; emergency care experience, Dr. Chaitanya Gupta manages acute and chronic adult health conditions.
+            Led by Dr. Chaitanya Gupta (MD General Medicine, DM Gastro) &amp; Dr. Aishwarya Singhal Gupta (MD Internal Medicine Gold Medalist — Sugar, BP &amp; Thyroid Specialist), delivering compassionate, evidence-based adult medical care.
           </p>
         </div>
 

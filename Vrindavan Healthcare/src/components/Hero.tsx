@@ -87,7 +87,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
 
           {/* Subtitle */}
           <p className="hero-anime-item text-sm sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
-            Never ignore what your digestive health is telling you. Experience trusted gastro, liver, and endoscopy care with advanced diagnosis and compassionate treatment under <strong>Dr. Chaitanya Gupta</strong> (MD General Medicine, DM Gastroenterology).
+            Never ignore what your digestive health is telling you. Experience trusted gastro, liver, endoscopy, and internal medicine care under <strong>Dr. Chaitanya Gupta</strong> (DM Gastroenterology) and <strong>Dr. Aishwarya Singhal Gupta</strong> (MD Internal Medicine Gold Medalist).
           </p>
 
           {/* Button Row: Solid Black Pill + Secondary Action */}
@@ -135,8 +135,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
                   className="w-5 h-5 rounded-full border-2 border-[#FEF9C3] object-cover"
                 />
                 <img
-                  src="/images/medical_team_faculty.jpeg"
-                  alt="Verified Patient"
+                  src="/images/Dr.aishwarya-d5rJKJ8t.jpg"
+                  alt="Dr. Aishwarya Singhal Gupta"
                   className="w-5 h-5 rounded-full border-2 border-[#FEF9C3] object-cover"
                 />
                 <div className="w-5 h-5 rounded-full border-2 border-[#FEF9C3] bg-amber-400 text-slate-900 text-[9px] font-bold flex items-center justify-center">
@@ -203,10 +203,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenAppointment }) => {
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <div className="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight truncate">
-                      Dr. Chaitanya Gupta
+                      Dr. Chaitanya Gupta &amp; Dr. Aishwarya S. Gupta
                     </div>
                     <div className="text-[9px] sm:text-[10px] text-teal-800 font-semibold mt-0.5 truncate">
-                      MD General Medicine (2018) • DM Gastro
+                      DM Gastro &amp; MD Internal Medicine (Gold Medalist)
                     </div>
                   </div>
                   <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-[#E6F7F5] text-teal-900 text-[9px] sm:text-[10px] font-bold uppercase whitespace-nowrap shrink-0 border border-emerald-200/60">

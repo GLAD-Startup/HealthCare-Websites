@@ -48,8 +48,8 @@ export const PatientInfoBento: React.FC<PatientInfoBentoProps> = ({ onOpenAppoin
               </div>
 
               <div className="flex -space-x-2 shrink-0">
-                <img src="/images/dr_chaitanya_press_conf.jpeg" alt="Patient" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white object-cover" />
-                <img src="/images/medical_team_faculty.jpeg" alt="Patient" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white object-cover" />
+                <img src="/images/dr_chaitanya_press_conf.jpeg" alt="Dr. Chaitanya Gupta" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white object-cover" />
+                <img src="/images/Dr.aishwarya-d5rJKJ8t.jpg" alt="Dr. Aishwarya Singhal Gupta" className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white object-cover" />
                 <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-amber-400 text-slate-900 text-[9px] sm:text-[10px] font-bold flex items-center justify-center">
                   ★
                 </div>

@@ -71,13 +71,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
 
   const mobileNavLinks = [
     { name: 'Home', href: '#hero' },
-    { name: 'About Doctor', href: '#about-us' },
+    { name: 'About Doctors', href: '#doctor' },
     { name: 'Liver & Gastro Care', href: '#gastro-care' },
     { name: 'General Medicine', href: '#general-medicine' },
     { name: 'Endoscopy Tech & OT', href: '#technology' },
     { name: 'Symptom Checker', href: '#screener' },
     { name: 'Gastro Explorer', href: '#gastro-explorer' },
-    { name: 'Dr. Profile & Credentials', href: '#doctor' },
+    { name: 'Doctor Profiles & Credentials', href: '#doctor' },
     { name: 'Treatment Outcomes', href: '#results-gallery' },
     { name: '2 Clinics & Locations', href: '#location' },
     { name: 'Frequently Asked Questions', href: '#faq' },
@@ -119,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse sm:hidden" title="OPD Active" />
               </div>
               <div className="text-[8px] sm:text-[9px] text-slate-500 sm:text-slate-400 font-semibold tracking-wider uppercase mt-0.5 sm:mt-1 truncate">
-                Dr. Chaitanya Gupta • DM Gastro
+                Dr. Chaitanya Gupta &amp; Dr. Aishwarya S. Gupta
               </div>
             </div>
           </a>
@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
           <nav className="hidden lg:flex items-center justify-center gap-1 xl:gap-2">
             {[
               { name: 'Home', href: '#hero' },
-              { name: 'About Doctor', href: '#about-us' },
+              { name: 'Our Doctors', href: '#doctor' },
               { name: 'Services', href: '#gastro-care' },
               { name: 'Endoscopy OT', href: '#technology' },
               { name: 'Symptom Checker', href: '#screener' },
@@ -197,7 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAppointment }) => {
                 Vrindavan <span className="text-slate-500 font-medium">Healthcare</span>
               </div>
               <div className="text-[9px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">
-                Dr. Chaitanya Gupta • DM Gastro
+                Dr. Chaitanya Gupta &amp; Dr. Aishwarya S. Gupta
               </div>
             </div>
           </a>
