@@ -8,10 +8,9 @@ import {
   Upload, 
   Copy, 
   RefreshCw, 
-  Trash2, 
-  Sparkles
+  Trash2
 } from 'lucide-react';
-import { db, DEFAULT_PATIENTS, DEFAULT_FOLLOWUPS } from '../db/dexie.ts';
+import { db } from '../db/dexie.ts';
 import { testSupabaseConnection } from '../services/supabaseClient.ts';
 import { exportDatabaseBackupJSON, importDatabaseBackupJSON } from '../services/exportImport.ts';
 import type { ClinicSettings } from '../types/index.ts';
@@ -180,14 +179,7 @@ CREATE POLICY "Allow public anon access for Logs" ON public.whatsapp_logs FOR AL
     onShowToast('PostgreSQL schema copied to clipboard.', 'success');
   };
 
-  const handleSeedSampleData = async () => {
-    if (confirm('Load sample patient records into local database?')) {
-      await db.customers.bulkPut(DEFAULT_PATIENTS);
-      await db.followups.bulkPut(DEFAULT_FOLLOWUPS);
-      onShowToast('Sample clinical patients loaded.', 'success');
-      onSettingsSaved();
-    }
-  };
+
 
   const handleResetDatabase = async () => {
     if (confirm('CAUTION: Are you sure you want to clear all local records? Make sure to download a backup first.')) {
@@ -457,16 +449,7 @@ CREATE POLICY "Allow public anon access for Logs" ON public.whatsapp_logs FOR AL
                 </label>
               </div>
 
-              <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={handleSeedSampleData}
-                  className="btn-ghost text-xs text-[#0F766E] hover:text-[#115E59]"
-                >
-                  <Sparkles className="w-3.5 h-3.5 mr-1 text-[#0F766E]" />
-                  <span>Load sample records</span>
-                </button>
-
+              <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-end">
                 <button
                   type="button"
                   onClick={handleResetDatabase}

@@ -12,7 +12,7 @@ import {
 import type { Customer, FollowUp } from '../types/index.ts';
 import { WhatsAppGlyph } from './WhatsAppGlyph.tsx';
 import { DueBadge } from './DueBadge.tsx';
-import { formatPhone, cleanPhoneForLink, formatDate } from '../utils/formatters.ts';
+import { formatPhone, cleanPhoneForLink, formatDate, getDueUrgency } from '../utils/formatters.ts';
 import { useClinicalCounts } from '../hooks/useClinicalCounts.ts';
 import { ListRowSkeleton } from './SkeletonLoader.tsx';
 
@@ -232,8 +232,10 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
                 <span>{tab.label}</span>
                 <span
                   className={`tabular-nums text-xs px-2 py-0.5 rounded-full ${
-                    tab.isAlert
-                      ? 'bg-[#FEF3F2] text-[#B42318] font-semibold'
+                    tab.id === 'overdue' && tab.count > 0
+                      ? 'bg-[#FFF1F2] text-[#9F1239] border border-[#FECDD3] font-semibold'
+                      : tab.id === 'today' && tab.count > 0
+                      ? 'bg-[#FEF9C3] text-[#854D0E] border border-[#FDE047] font-semibold'
                       : isActive
                       ? 'bg-[#F0FDFA] text-[#0F766E]'
                       : 'bg-[#F1F5F9] text-[#64748B]'
@@ -248,13 +250,13 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
 
         {/* Search below the tabs */}
         <div className="relative">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search follow-ups by patient name, phone, notes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="clinical-input w-full pl-9 h-9 text-sm"
+            className="clinical-input w-full pl-10 h-9 text-sm"
           />
         </div>
       </div>
@@ -344,16 +346,25 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
       ) : (
         
         /* Single-column divided list */
-        <div className="clinical-card p-0 overflow-hidden bg-white border border-[#E2E8F0] rounded-xl shadow-xs divide-y divide-[#E2E8F0]">
+        <div className="clinical-card p-0 overflow-visible bg-white border border-[#E2E8F0] rounded-xl shadow-xs divide-y divide-[#E2E8F0]">
           {displayedList.map((f) => {
             const customer = customers.find((c) => c.id === f.customerId);
             const isRescheduleOpen = openRescheduleId === f.id;
             const isDatePickerOpen = customDatePickerId === f.id;
+            const { urgency } = getDueUrgency(f.date);
+            const isOverdue = f.status !== 'completed' && urgency === 'overdue';
+            const isToday = f.status !== 'completed' && urgency === 'due-today';
 
             return (
               <div
                 key={f.id}
-                className="p-4 sm:px-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#F8FAFC] transition-colors"
+                className={`p-4 sm:px-5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors ${
+                  isOverdue
+                    ? 'border-l-[3px] border-l-[#E11D48] bg-[#FFF5F7]/30 hover:bg-[#FFF5F7]/80'
+                    : isToday
+                    ? 'border-l-[3px] border-l-[#D97706] bg-[#FEFCE8]/30 hover:bg-[#FEFCE8]/80'
+                    : 'hover:bg-[#F8FAFC]'
+                }`}
               >
                 {/* Left: Patient name, formatted phone (muted), DueBadge */}
                 <div className="min-w-[220px] max-w-[260px] space-y-1">

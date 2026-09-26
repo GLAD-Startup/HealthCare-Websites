@@ -146,14 +146,14 @@ export const PatientModal: React.FC<PatientModalProps> = ({
               Full name *
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <User className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 required
                 placeholder="e.g. Ramesh Kumar"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="clinical-input w-full pl-9"
+                className="clinical-input w-full pl-10"
               />
             </div>
           </div>
@@ -165,14 +165,14 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                 Phone number (WhatsApp) *
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Phone className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="tel"
                   required
                   placeholder="+91 9876543210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="clinical-input w-full pl-9 tabular-nums"
+                  className="clinical-input w-full pl-10 tabular-nums"
                 />
               </div>
             </div>
@@ -183,13 +183,13 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                 Email address (optional)
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Mail className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   placeholder="ramesh@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="clinical-input w-full pl-9"
+                  className="clinical-input w-full pl-10"
                 />
               </div>
             </div>
@@ -220,12 +220,12 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                 Attending doctor
               </label>
               <div className="relative">
-                <Stethoscope className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Stethoscope className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={doctorAssigned}
                   onChange={(e) => setDoctorAssigned(e.target.value)}
-                  className="clinical-input w-full pl-9"
+                  className="clinical-input w-full pl-10"
                 />
               </div>
             </div>
@@ -255,12 +255,12 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                 Next follow-up date
               </label>
               <div className="relative">
-                <Calendar className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Calendar className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="date"
                   value={nextFollowUp}
                   onChange={(e) => setNextFollowUp(e.target.value)}
-                  className="clinical-input w-full pl-9 tabular-nums"
+                  className="clinical-input w-full pl-10 tabular-nums"
                 />
               </div>
             </div>

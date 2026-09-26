@@ -18,7 +18,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
   preselectedCustomer,
   onSave,
 }) => {
-  const [selectedCustomerId, setSelectedCustomerId] = useState(
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>(
     preselectedCustomer ? preselectedCustomer.id : customers[0]?.id || ''
   );
   const [date, setDate] = useState(() => {
@@ -28,6 +28,28 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Synchronize customer selection whenever modal opens or customer list / preselected customer changes
+  useEffect(() => {
+    if (isOpen) {
+      setError('');
+      if (preselectedCustomer && customers.some((c) => c.id === preselectedCustomer.id)) {
+        setSelectedCustomerId(preselectedCustomer.id);
+      } else if (selectedCustomerId && customers.some((c) => c.id === selectedCustomerId)) {
+        // Keep current valid selection
+      } else if (customers.length > 0) {
+        setSelectedCustomerId(customers[0].id);
+      } else {
+        setSelectedCustomerId('');
+      }
+
+      // Default date to tomorrow if not set
+      if (!date) {
+        const tomorrow = new Date(Date.now() + 86400000);
+        setDate(getTodayStrIST(tomorrow));
+      }
+    }
+  }, [isOpen, preselectedCustomer, customers]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -44,7 +66,18 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCustomerId) {
+
+    // Resolve target customer ID: use state, or fallback to preselected or first available customer
+    let effectiveCustomerId = selectedCustomerId;
+    if (!effectiveCustomerId) {
+      if (preselectedCustomer?.id) {
+        effectiveCustomerId = preselectedCustomer.id;
+      } else if (customers.length > 0) {
+        effectiveCustomerId = customers[0].id;
+      }
+    }
+
+    if (!effectiveCustomerId) {
       setError('Please select a patient.');
       return;
     }
@@ -56,7 +89,8 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
     try {
       setIsSubmitting(true);
       setError('');
-      await onSave(selectedCustomerId, date, notes.trim());
+      await onSave(effectiveCustomerId, date, notes.trim());
+      setNotes('');
       onClose();
     } catch (err: any) {
       setError(err?.message || 'Failed to schedule follow-up.');
@@ -102,20 +136,34 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
               Select patient *
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <User className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <select
                 required
-                value={selectedCustomerId}
-                onChange={(e) => setSelectedCustomerId(e.target.value)}
-                className="clinical-input w-full pl-9"
+                value={selectedCustomerId || (customers[0]?.id ?? '')}
+                onChange={(e) => {
+                  setSelectedCustomerId(e.target.value);
+                  if (error) setError('');
+                }}
+                className="clinical-input w-full pl-10"
               >
-                {customers.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} ({formatPhone(c.phone)})
+                {customers.length === 0 ? (
+                  <option value="" disabled>
+                    No patients registered yet
                   </option>
-                ))}
+                ) : (
+                  customers.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} ({formatPhone(c.phone)})
+                    </option>
+                  ))
+                )}
               </select>
             </div>
+            {customers.length === 0 && (
+              <p className="text-xs text-[#DC2626] mt-1.5">
+                No patients found. Please add a patient first before scheduling a follow-up.
+              </p>
+            )}
           </div>
 
           {/* Date */}
@@ -124,13 +172,13 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
               Follow-up date *
             </label>
             <div className="relative">
-              <Calendar className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Calendar className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="date"
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="clinical-input w-full pl-9 tabular-nums"
+                className="clinical-input w-full pl-10 tabular-nums"
               />
             </div>
           </div>

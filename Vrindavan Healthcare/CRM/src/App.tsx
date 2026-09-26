@@ -37,6 +37,43 @@ export function App() {
   const [followUpsInitialTab, setFollowUpsInitialTab] = useState<'today' | 'overdue' | 'upcoming' | 'completed' | 'all'>('today');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
+  // Sidebar collapsed state: persists to localStorage, defaults to collapsed on tablet (1024-1279px)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('vh_crm_sidebar_collapsed');
+      if (saved !== null) return saved === 'true';
+      if (typeof window !== 'undefined') {
+        return window.innerWidth >= 1024 && window.innerWidth <= 1279;
+      }
+    } catch {}
+    return false;
+  });
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('vh_crm_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const saved = localStorage.getItem('vh_crm_sidebar_collapsed');
+      if (saved === null && typeof window !== 'undefined') {
+        if (window.innerWidth >= 1024 && window.innerWidth <= 1279) {
+          setIsSidebarCollapsed(true);
+        } else if (window.innerWidth >= 1280) {
+          setIsSidebarCollapsed(false);
+        }
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Initialize Dexie local database with seed data if needed
   useEffect(() => {
     initializeDatabase().then(() => {
@@ -423,6 +460,8 @@ export function App() {
         onCloseMobile={() => setIsMobileMenuOpen(false)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenSyncDrawer={() => setIsSyncDrawerOpen(true)}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapsed={toggleSidebar}
       />
 
       {/* Main Column Filling The Rest (no left gutter) */}
@@ -431,6 +470,8 @@ export function App() {
         {/* Top Bar (64px, white, bottom border) */}
         <Header
           pageTitle={getPageTitle()}
+          isCollapsed={isSidebarCollapsed}
+          onToggleSidebar={toggleSidebar}
           customers={customers}
           onSelectPatient={(p) => setSelectedPatient(p)}
           onOpenNewPatient={() => {
@@ -446,7 +487,6 @@ export function App() {
           }}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenSyncDrawer={() => setIsSyncDrawerOpen(true)}
-          onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           onTriggerSync={handleTriggerSync}
         />
 

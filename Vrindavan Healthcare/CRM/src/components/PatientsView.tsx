@@ -29,7 +29,8 @@ import {
   formatPhone, 
   cleanPhoneForLink, 
   formatDate, 
-  formatPatientDisplayId 
+  formatPatientDisplayId,
+  getDueUrgency 
 } from '../utils/formatters.ts';
 import { TableRowSkeleton, CardSkeleton } from './SkeletonLoader.tsx';
 
@@ -57,6 +58,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [urgencyFilter, setUrgencyFilter] = useState<'all' | 'overdue' | 'due-today'>('all');
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
 
   // Sorting: 'name' or 'nextFollowUp'
@@ -67,20 +69,75 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 25;
 
-  // Active action menu row ID
+  // Active action menu row ID and coordinates
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
-  const menuContainerRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const menuDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close action menu on click outside
+  const activePatient = useMemo(
+    () => customers.find((c) => c.id === activeMenuId) || null,
+    [customers, activeMenuId]
+  );
+
+  const handleToggleMenu = (patientId: string, buttonEl: HTMLElement, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (activeMenuId === patientId) {
+      setActiveMenuId(null);
+      setMenuPosition(null);
+    } else {
+      const rect = buttonEl.getBoundingClientRect();
+      const menuWidth = 192; // 12rem (w-48)
+      const menuHeight = 145; // ~140px
+
+      // Check if dropdown would extend past bottom of viewport
+      const wouldOverflowBottom = rect.bottom + menuHeight + 12 > window.innerHeight;
+      const top = wouldOverflowBottom
+        ? Math.max(12, rect.top - menuHeight - 4)
+        : rect.bottom + 4;
+
+      // Align right of menu with right of button, keeping within window boundaries
+      const left = Math.max(12, Math.min(window.innerWidth - menuWidth - 12, rect.right - menuWidth));
+
+      setActiveMenuId(patientId);
+      setMenuPosition({ top, left });
+    }
+  };
+
+  // Close action menu on click outside, scroll, resize, or Escape
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (menuContainerRef.current && !menuContainerRef.current.contains(e.target as Node)) {
+      if (menuDropdownRef.current && !menuDropdownRef.current.contains(e.target as Node)) {
         setActiveMenuId(null);
+        setMenuPosition(null);
       }
     };
+
+    const handleScrollOrResize = () => {
+      if (activeMenuId) {
+        setActiveMenuId(null);
+        setMenuPosition(null);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveMenuId(null);
+        setMenuPosition(null);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    window.addEventListener('scroll', handleScrollOrResize, true);
+    window.addEventListener('resize', handleScrollOrResize);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeMenuId]);
 
   // Distinct specialties list
   const categories = useMemo(() => {
@@ -90,6 +147,16 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
     });
     return Array.from(set);
   }, [customers]);
+
+  // Urgency counts for quick filters
+  const overdueCount = useMemo(
+    () => customers.filter((c) => getDueUrgency(c.nextFollowUp).urgency === 'overdue').length,
+    [customers]
+  );
+  const dueTodayCount = useMemo(
+    () => customers.filter((c) => getDueUrgency(c.nextFollowUp).urgency === 'due-today').length,
+    [customers]
+  );
 
   // Filtered patients
   const filteredCustomers = useMemo(() => {
@@ -107,10 +174,12 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 
       const matchStatus = statusFilter === 'all' || c.followUpStatus === statusFilter;
       const matchCategory = categoryFilter === 'all' || c.category === categoryFilter;
+      const urgencyMatch =
+        urgencyFilter === 'all' || getDueUrgency(c.nextFollowUp).urgency === urgencyFilter;
 
-      return matchSearch && matchStatus && matchCategory;
+      return matchSearch && matchStatus && matchCategory && urgencyMatch;
     });
-  }, [customers, searchTerm, statusFilter, categoryFilter]);
+  }, [customers, searchTerm, statusFilter, categoryFilter, urgencyFilter]);
 
   // Sorted patients
   const sortedCustomers = useMemo(() => {
@@ -134,7 +203,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
   // Reset page when filters or sorting change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, statusFilter, categoryFilter, sortField, sortDirection]);
+  }, [searchTerm, statusFilter, categoryFilter, urgencyFilter, sortField, sortDirection]);
 
   // Paginated patients (25 per page)
   const totalPages = Math.max(1, Math.ceil(sortedCustomers.length / pageSize));
@@ -162,9 +231,14 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
     setSearchTerm('');
     setStatusFilter('all');
     setCategoryFilter('all');
+    setUrgencyFilter('all');
   };
 
-  const hasActiveFilters = searchTerm.trim() !== '' || statusFilter !== 'all' || categoryFilter !== 'all';
+  const hasActiveFilters =
+    searchTerm.trim() !== '' ||
+    statusFilter !== 'all' ||
+    categoryFilter !== 'all' ||
+    urgencyFilter !== 'all';
 
   const handleDeleteWithConfirm = (patient: Customer, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -188,7 +262,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
   };
 
   return (
-    <div className="space-y-4" ref={menuContainerRef}>
+    <div className="space-y-4">
       
       {/* Toolbar: Single row on desktop */}
       <div className="clinical-card p-3 sm:p-4 space-y-3">
@@ -196,13 +270,13 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
           
           {/* Search (grows) */}
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Search by name, phone (+91...), email, notes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="clinical-input w-full pl-9 h-9 text-sm"
+              className="clinical-input w-full pl-10 h-9 text-sm"
             />
           </div>
 
@@ -290,10 +364,10 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 
         </div>
 
-        {/* Sub-toolbar: Results count + Active removable filter chips */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[#F1F5F9] text-xs text-[#64748B]">
+        {/* Sub-toolbar: Results count + Quick Urgency Pills + Active removable filter chips */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-[#F1F5F9] text-xs text-[#64748B]">
           
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3">
             <span>
               Showing <strong className="font-semibold text-[#0F172A] tabular-nums">
                 {sortedCustomers.length === 0
@@ -307,6 +381,49 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                 <span className="ml-1 text-[#64748B]">({customers.length} total)</span>
               )}
             </span>
+
+            {/* Quick Urgency Filter Pills (Butter Yellow & Soft Pink like website) */}
+            <div className="flex items-center gap-1.5 pl-2 sm:border-l sm:border-[#E2E8F0]">
+              <button
+                type="button"
+                onClick={() => setUrgencyFilter('all')}
+                className={`px-2.5 py-0.5 rounded-full text-xs font-medium transition-all ${
+                  urgencyFilter === 'all'
+                    ? 'bg-[#0F766E] text-white shadow-xs'
+                    : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
+                }`}
+              >
+                All
+              </button>
+              {overdueCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setUrgencyFilter(urgencyFilter === 'overdue' ? 'all' : 'overdue')}
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-medium transition-all border ${
+                    urgencyFilter === 'overdue'
+                      ? 'bg-[#E11D48] text-white border-[#E11D48] shadow-xs'
+                      : 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3] hover:bg-[#FFE4E6]'
+                  }`}
+                  title="Filter overdue follow-ups"
+                >
+                  Overdue ({overdueCount})
+                </button>
+              )}
+              {dueTodayCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setUrgencyFilter(urgencyFilter === 'due-today' ? 'all' : 'due-today')}
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-medium transition-all border ${
+                    urgencyFilter === 'due-today'
+                      ? 'bg-[#D97706] text-white border-[#D97706] shadow-xs'
+                      : 'bg-[#FEF9C3] text-[#854D0E] border-[#FDE047] hover:bg-[#FEF08A]'
+                  }`}
+                  title="Filter follow-ups due today"
+                >
+                  Due today ({dueTodayCount})
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Active filter chips */}
@@ -318,6 +435,25 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                   <button
                     onClick={() => setSearchTerm('')}
                     className="hover:text-[#B42318] p-0.5"
+                    title="Remove filter"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              {urgencyFilter !== 'all' && (
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${
+                    urgencyFilter === 'overdue'
+                      ? 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3]'
+                      : 'bg-[#FEF9C3] text-[#854D0E] border-[#FDE047]'
+                  }`}
+                >
+                  <span>Urgency: {urgencyFilter === 'due-today' ? 'Due today' : 'Overdue'}</span>
+                  <button
+                    onClick={() => setUrgencyFilter('all')}
+                    className="hover:opacity-70 p-0.5"
                     title="Remove filter"
                   >
                     <X className="w-3 h-3" />
@@ -423,12 +559,23 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
         <div className="space-y-4">
           {/* MOBILE STACKED CARDS (<md, touch targets min 44px, tap-to-call) */}
           <div className="md:hidden divide-y divide-[#E2E8F0] bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-xs">
-            {paginatedCustomers.map((c) => (
-              <div
-                key={c.id}
-                onClick={() => onSelectPatient(c)}
-                className="p-4 space-y-3 hover:bg-[#F8FAFC] transition-colors cursor-pointer active:bg-slate-50"
-              >
+            {paginatedCustomers.map((c) => {
+              const { urgency } = getDueUrgency(c.nextFollowUp);
+              const isOverdue = urgency === 'overdue';
+              const isToday = urgency === 'due-today';
+
+              return (
+                <div
+                  key={c.id}
+                  onClick={() => onSelectPatient(c)}
+                  className={`p-4 space-y-3 transition-colors cursor-pointer active:bg-slate-50 ${
+                    isOverdue
+                      ? 'border-l-[3px] border-l-[#E11D48] bg-[#FFF5F7]/20 hover:bg-[#FFF5F7]/70'
+                      : isToday
+                      ? 'border-l-[3px] border-l-[#D97706] bg-[#FEFCE8]/20 hover:bg-[#FEFCE8]/70'
+                      : 'hover:bg-[#F8FAFC]'
+                  }`}
+                >
                 {/* Row 1: Name + DueBadge */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -510,8 +657,9 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
           {/* DESKTOP TABLE VIEW (hidden on mobile, visible on >=md) */}
           <div className="hidden md:block clinical-card p-0 overflow-hidden bg-white">
@@ -577,12 +725,21 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
               <tbody className="divide-y divide-[#E2E8F0] bg-white">
                 {paginatedCustomers.map((c) => {
                   const isMenuOpen = activeMenuId === c.id;
+                  const { urgency } = getDueUrgency(c.nextFollowUp);
+                  const isOverdue = urgency === 'overdue';
+                  const isToday = urgency === 'due-today';
 
                   return (
                     <tr
                       key={c.id}
                       onClick={() => onSelectPatient(c)}
-                      className="hover:bg-[#F8FAFC] transition-colors cursor-pointer group h-[60px]"
+                      className={`transition-colors cursor-pointer group h-[60px] ${
+                        isOverdue
+                          ? 'border-l-[3px] border-l-[#E11D48] bg-[#FFF5F7]/20 hover:bg-[#FFF5F7]/70'
+                          : isToday
+                          ? 'border-l-[3px] border-l-[#D97706] bg-[#FEFCE8]/20 hover:bg-[#FEFCE8]/70'
+                          : 'hover:bg-[#F8FAFC]'
+                      }`}
                     >
                       {/* Column 1: Patient (32px initials avatar + full name on one line + Patient ID muted below + unsynced icon) */}
                       <td className="py-2.5 px-4 whitespace-nowrap">
@@ -684,53 +841,16 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                           </a>
 
                           {/* Visible Action 3: "⋯" More Menu */}
-                          <div className="relative">
-                            <button
-                              onClick={() => setActiveMenuId(isMenuOpen ? null : c.id)}
-                              className="btn-icon w-8 h-8"
-                              title="More options"
-                              aria-label="More options"
-                            >
-                              <MoreHorizontal className="w-4 h-4 text-[#475569]" />
-                            </button>
-
-                            {/* Dropdown Menu */}
-                            {isMenuOpen && (
-                              <div className="absolute right-0 top-full mt-1.5 w-48 bg-white border border-[#E2E8F0] rounded-xl shadow-lg z-50 py-1 text-left animate-in fade-in">
-                                <button
-                                  onClick={() => {
-                                    setActiveMenuId(null);
-                                    onScheduleFollowUp(c);
-                                  }}
-                                  className="w-full px-3 py-2 text-xs text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-2 transition-colors"
-                                >
-                                  <CalendarClock className="w-3.5 h-3.5 text-[#0F766E]" />
-                                  <span>Schedule follow-up</span>
-                                </button>
-
-                                <button
-                                  onClick={() => {
-                                    setActiveMenuId(null);
-                                    onEditPatient(c);
-                                  }}
-                                  className="w-full px-3 py-2 text-xs text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-2 transition-colors"
-                                >
-                                  <Edit2 className="w-3.5 h-3.5 text-[#475569]" />
-                                  <span>Edit patient</span>
-                                </button>
-
-                                <div className="border-t border-[#F1F5F9] my-1" />
-
-                                <button
-                                  onClick={(e) => handleDeleteWithConfirm(c, e)}
-                                  className="w-full px-3 py-2 text-xs text-[#B42318] hover:bg-[#FEF3F2] flex items-center gap-2 transition-colors"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5 text-[#B42318]" />
-                                  <span>Delete patient</span>
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <button
+                            onClick={(e) => handleToggleMenu(c.id, e.currentTarget, e)}
+                            className={`btn-icon w-8 h-8 transition-colors ${
+                              activeMenuId === c.id ? 'bg-[#F0FDFA] text-[#0F766E] border-[#0F766E]/40 shadow-xs' : ''
+                            }`}
+                            title="More options"
+                            aria-label={`More options for ${c.name}`}
+                          >
+                            <MoreHorizontal className="w-4 h-4 text-[#475569]" />
+                          </button>
 
                         </div>
                       </td>
@@ -782,12 +902,21 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {paginatedCustomers.map((c) => {
               const isMenuOpen = activeMenuId === c.id;
+              const { urgency } = getDueUrgency(c.nextFollowUp);
+              const isOverdue = urgency === 'overdue';
+              const isToday = urgency === 'due-today';
 
               return (
                 <div
                   key={c.id}
                   onClick={() => onSelectPatient(c)}
-                  className="clinical-card p-5 space-y-3 hover:border-[#CBD5E1] transition-all cursor-pointer relative bg-white"
+                  className={`clinical-card p-5 space-y-3 transition-all cursor-pointer relative bg-white ${
+                    isOverdue
+                      ? 'border-l-[3px] border-l-[#E11D48] hover:border-[#FDA4AF] shadow-xs'
+                      : isToday
+                      ? 'border-l-[3px] border-l-[#D97706] hover:border-[#FDE047] shadow-xs'
+                      : 'hover:border-[#CBD5E1]'
+                  }`}
                 >
                   {/* Top: Avatar + Name + ID + More Menu */}
                   <div className="flex items-start justify-between gap-2">
@@ -820,47 +949,17 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                       </div>
                     </div>
 
-                    <div onClick={(e) => e.stopPropagation()} className="relative">
+                    <div onClick={(e) => e.stopPropagation()}>
                       <button
-                        onClick={() => setActiveMenuId(isMenuOpen ? null : c.id)}
-                        className="btn-icon min-h-[44px] min-w-[44px] w-10 h-10"
+                        onClick={(e) => handleToggleMenu(c.id, e.currentTarget, e)}
+                        className={`btn-icon min-h-[44px] min-w-[44px] w-10 h-10 transition-colors ${
+                          activeMenuId === c.id ? 'bg-[#F0FDFA] text-[#0F766E] border-[#0F766E]/40 shadow-xs' : ''
+                        }`}
                         title="Options"
-                        aria-label="Options"
+                        aria-label={`Options for ${c.name}`}
                       >
                         <MoreHorizontal className="w-4 h-4 text-[#64748B]" />
                       </button>
-
-                      {isMenuOpen && (
-                        <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-[#E2E8F0] rounded-xl shadow-lg z-50 py-1 text-left animate-in fade-in">
-                          <button
-                            onClick={() => {
-                              setActiveMenuId(null);
-                              onScheduleFollowUp(c);
-                            }}
-                            className="w-full px-3 py-1.5 text-xs text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-2"
-                          >
-                            <CalendarClock className="w-3 h-3 text-[#0F766E]" />
-                            <span>Schedule follow-up</span>
-                          </button>
-                          <button
-                            onClick={() => {
-                              setActiveMenuId(null);
-                              onEditPatient(c);
-                            }}
-                            className="w-full px-3 py-1.5 text-xs text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-2"
-                          >
-                            <Edit2 className="w-3 h-3 text-[#475569]" />
-                            <span>Edit patient</span>
-                          </button>
-                          <button
-                            onClick={(e) => handleDeleteWithConfirm(c, e)}
-                            className="w-full px-3 py-1.5 text-xs text-[#B42318] hover:bg-[#FEF3F2] flex items-center gap-2 border-t border-[#F1F5F9] mt-1"
-                          >
-                            <Trash2 className="w-3 h-3 text-[#B42318]" />
-                            <span>Delete</span>
-                          </button>
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -931,6 +1030,59 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Global Floating Action Menu (Fixed, on top of EVERYTHING, never clipped) */}
+      {activePatient && menuPosition && (
+        <div
+          ref={menuDropdownRef}
+          style={{
+            position: 'fixed',
+            top: `${menuPosition.top}px`,
+            left: `${menuPosition.left}px`,
+            zIndex: 99999,
+          }}
+          className="w-48 bg-white border border-[#CBD5E1] rounded-xl shadow-2xl py-1 text-left animate-in fade-in zoom-in-95 duration-100 ring-1 ring-black/5"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => {
+              setActiveMenuId(null);
+              setMenuPosition(null);
+              onScheduleFollowUp(activePatient);
+            }}
+            className="w-full px-3.5 py-2 text-xs font-medium text-[#0F172A] hover:bg-[#F0FDFA] hover:text-[#0F766E] flex items-center gap-2.5 transition-colors cursor-pointer"
+          >
+            <CalendarClock className="w-4 h-4 text-[#0F766E]" />
+            <span>Schedule follow-up</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveMenuId(null);
+              setMenuPosition(null);
+              onEditPatient(activePatient);
+            }}
+            className="w-full px-3.5 py-2 text-xs font-medium text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-2.5 transition-colors cursor-pointer"
+          >
+            <Edit2 className="w-4 h-4 text-[#475569]" />
+            <span>Edit patient</span>
+          </button>
+
+          <div className="border-t border-[#F1F5F9] my-1" />
+
+          <button
+            onClick={(e) => {
+              setActiveMenuId(null);
+              setMenuPosition(null);
+              handleDeleteWithConfirm(activePatient, e);
+            }}
+            className="w-full px-3.5 py-2 text-xs font-medium text-[#B42318] hover:bg-[#FEF3F2] flex items-center gap-2.5 transition-colors cursor-pointer"
+          >
+            <Trash2 className="w-4 h-4 text-[#B42318]" />
+            <span>Delete patient</span>
+          </button>
         </div>
       )}
 

@@ -79,13 +79,15 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
   const [isCopied, setIsCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<'compose' | 'preview'>('compose');
 
-  // Sync preselected customer
+  // Sync preselected customer or fallback to first customer when loaded
   useEffect(() => {
     if (preselectedCustomer) {
       setSelectedCustomerId(preselectedCustomer.id);
       setPatientSearch('');
+    } else if (!selectedCustomerId && customers.length > 0) {
+      setSelectedCustomerId(customers[0].id);
     }
-  }, [preselectedCustomer]);
+  }, [preselectedCustomer, customers, selectedCustomerId]);
 
   // Click outside listener for patient picker
   useEffect(() => {
@@ -222,6 +224,20 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
     }
   };
 
+  const getCategoryBadgeClass = (category: string) => {
+    switch (category) {
+      case 'greeting':
+        return 'bg-[#FEF9C3] text-[#854D0E] border-[#FDE047]';
+      case 'reminder':
+      case 'followup':
+        return 'bg-[#FFF1F2] text-[#9F1239] border-[#FECDD3]';
+      case 'reports':
+        return 'bg-[#F0FDFA] text-[#0F766E] border-[#CCFBF1]';
+      default:
+        return 'bg-[#F1F5F9] text-[#475569] border-[#E2E8F0]';
+    }
+  };
+
   return (
     <div className="space-y-6">
       
@@ -284,7 +300,7 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
 
             {/* Combobox Input */}
             <div className="relative">
-              <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={patientSearch}
@@ -298,7 +314,7 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
                     ? `${selectedCustomer.name} — ${formatPhone(selectedCustomer.phone)}`
                     : 'Search patient by name or phone…'
                 }
-                className="clinical-input w-full pl-9 pr-8 text-sm"
+                className="clinical-input w-full pl-10 pr-8 text-sm"
               />
               {patientSearch && (
                 <button
@@ -356,7 +372,7 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
             </div>
 
             {/* Selected Patient Compact Summary Row */}
-            {selectedCustomer && (
+            {selectedCustomer ? (
               <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-3">
                   <div>
@@ -373,12 +389,21 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
                   <DueBadge date={selectedCustomer.nextFollowUp} />
                 </div>
               </div>
+            ) : (
+              <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg text-xs text-[#64748B] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-[#64748B] shrink-0" />
+                <span>
+                  {customers.length === 0 
+                    ? 'No patient records exist yet. Register a patient first to send WhatsApp messages.' 
+                    : 'Select a patient above to address this message.'}
+                </span>
+              </div>
             )}
 
             {/* WhatsApp Consent Warning (if not explicitly opted in) */}
             {selectedCustomer && selectedCustomer.whatsappStatus === 'none' && (
-              <div className="p-3 bg-[#FFFAEB] border border-[#FEDF89] rounded-lg text-xs text-[#B54708] flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-[#B54708]" />
+              <div className="p-3 bg-[#FEFCE8] border border-[#FEF08A] rounded-lg text-xs text-[#854D0E] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#854D0E]" />
                 <span>
                   <strong>Notice:</strong> This patient has not confirmed formal WhatsApp opt-in. Message will be dispatched via direct WhatsApp link.
                 </span>
@@ -482,7 +507,7 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
                         </span>
                       </div>
 
-                      <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]">
+                      <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full border ${getCategoryBadgeClass(tmpl.category)}`}>
                         {getCategoryLabel(tmpl.category)}
                       </span>
                     </div>

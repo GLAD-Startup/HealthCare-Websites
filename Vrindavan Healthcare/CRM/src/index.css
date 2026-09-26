@@ -15,14 +15,24 @@
     --color-brand-hover: #115E59;
     --color-brand-tint: #F0FDFA;
 
-    /* Semantic */
-    --color-danger-text: #B42318;
-    --color-danger-bg: #FEF3F2;
-    --color-danger-border: #FECDCA;
+    /* Semantic & Website Signature Accents (Butter Yellow & Soft Rose Pink) */
+    --color-danger-text: #9F1239;
+    --color-danger-bg: #FFF1F2;
+    --color-danger-border: #FECDD3;
 
-    --color-warning-text: #B54708;
-    --color-warning-bg: #FFFAEB;
-    --color-warning-border: #FEDF89;
+    --color-warning-text: #854D0E;
+    --color-warning-bg: #FEF9C3;
+    --color-warning-border: #FDE047;
+
+    --color-butter-bg: #FEF9C3;
+    --color-butter-card: #FEFCE8;
+    --color-butter-border: #FDE047;
+    --color-butter-text: #854D0E;
+
+    --color-pink-bg: #FFF1F2;
+    --color-pink-card: #FFF5F7;
+    --color-pink-border: #FECDD3;
+    --color-pink-text: #9F1239;
 
     --color-info-text: #175CD3;
     --color-info-bg: #EFF8FF;
@@ -211,10 +221,10 @@
   box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #0F766E;
 }
 
-/* Form Inputs Foundation (8px radius, height 36px) */
+/* Form Inputs Foundation (8px radius, height 38px, proper icon clearance) */
 .clinical-input {
-  height: 36px;
-  padding: 0 0.75rem;
+  height: 38px;
+  padding: 0 0.875rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   color: #0F172A;
@@ -229,6 +239,30 @@
   box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #0F766E;
 }
 
+/* Leading Icon Input Clearance: guarantees generous 42px clearance so text/placeholders NEVER overlap the 16px icon */
+.clinical-input.pl-9,
+.clinical-input.pl-10,
+.clinical-input.pl-11,
+.clinical-input[class*="pl-"],
+.relative > svg ~ .clinical-input,
+.relative > svg ~ select.clinical-input {
+  padding-left: 2.625rem !important; /* 42px: 12px position + 16px icon + 14px comfortable breathing room */
+}
+
+/* Trailing action/icon input clearance */
+.clinical-input.pr-8,
+.clinical-input.pr-9,
+.clinical-input.pr-10,
+.clinical-input[class*="pr-"] {
+  padding-right: 2.5rem !important;
+}
+
+/* Native date input adjustments */
+input[type="date"].clinical-input {
+  display: inline-flex;
+  align-items: center;
+}
+
 /* Standard Badges (Pill shape, 12px medium, sentence case) */
 .badge-danger {
   display: inline-flex;
@@ -239,9 +273,9 @@
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1rem;
-  background-color: #FEF3F2;
-  color: #B42318;
-  border: 1px solid #FECDCA;
+  background-color: #FFF1F2;
+  color: #9F1239;
+  border: 1px solid #FECDD3;
 }
 
 .badge-warning {
@@ -253,9 +287,51 @@
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1rem;
-  background-color: #FFFAEB;
-  color: #B54708;
-  border: 1px solid #FEDF89;
+  background-color: #FEF9C3;
+  color: #854D0E;
+  border: 1px solid #FDE047;
+}
+
+.badge-butter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  background-color: #FEF9C3;
+  color: #854D0E;
+  border: 1px solid #FDE68A;
+}
+
+.badge-pink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1rem;
+  background-color: #FFF1F2;
+  color: #9F1239;
+  border: 1px solid #FECDD3;
+}
+
+.clinical-card-butter {
+  background-color: #FEFCE8;
+  border: 1px solid #FEF08A;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 0.05);
+}
+
+.clinical-card-pink {
+  background-color: #FFF5F7;
+  border: 1px solid #FECDD3;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(16 24 40 / 0.05);
 }
 
 .badge-info {

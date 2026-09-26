@@ -88,9 +88,19 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Compact Header: Greeting + date on left; Add patient (Secondary) & Schedule follow-up (Primary) on right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h2 className="text-2xl font-semibold leading-8 text-[#0F172A]">
-            {getGreeting()}, Dr. Vrindavan
-          </h2>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h2 className="text-2xl font-semibold leading-8 text-[#0F172A]">
+              {getGreeting()}, Dr. Vrindavan
+            </h2>
+            <span className="badge-butter font-semibold text-[11px]">
+              ★ Clinic OPD Active
+            </span>
+            {overdueFollowUps.length > 0 && (
+              <span className="badge-pink font-semibold text-[11px]">
+                {overdueFollowUps.length} Urgent follow-up{overdueFollowUps.length > 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
           <p className="text-sm font-normal text-[#64748B] leading-5 mt-0.5">
             {formattedTodayDate} · Vrindavan Healthcare Clinic
           </p>
@@ -151,60 +161,68 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <p className="text-xs text-[#64748B] mt-1 truncate">Active clinical records</p>
         </div>
 
-        {/* Due Today: Amber accent only when > 0 */}
+        {/* Due Today: Butter yellow accent when > 0 (Matching Website Bento) */}
         <div 
           onClick={() => onNavigateToTab('followups', 'today')}
-          className={`clinical-card cursor-pointer transition-all p-5 bg-white ${
+          className={`clinical-card cursor-pointer transition-all p-5 ${
             todayFollowUps.length > 0 
-              ? 'border-[#FEDF89] hover:border-[#FDB022]' 
-              : 'hover:border-[#CBD5E1]'
+              ? 'bg-[#FEFCE8] border-[#FEF08A] hover:border-[#FDE047] shadow-xs' 
+              : 'bg-white hover:border-[#CBD5E1]'
           }`}
           role="button"
           tabIndex={0}
           aria-label="View due today follow-ups"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#64748B]">
+            <span className={`text-xs font-medium ${todayFollowUps.length > 0 ? 'text-[#854D0E]' : 'text-[#64748B]'}`}>
               Due today
             </span>
-            <CalendarClock className={`w-4 h-4 ${todayFollowUps.length > 0 ? 'text-[#B54708]' : 'text-[#64748B]'}`} />
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${todayFollowUps.length > 0 ? 'bg-[#FEF9C3] text-[#854D0E]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
+              <CalendarClock className="w-4 h-4" />
+            </div>
           </div>
           <div className="mt-2.5">
             <span className={`text-2xl sm:text-3xl font-semibold tabular-nums ${
-              todayFollowUps.length > 0 ? 'text-[#B54708]' : 'text-[#0F172A]'
+              todayFollowUps.length > 0 ? 'text-[#854D0E]' : 'text-[#0F172A]'
             }`}>
-              {todayFollowUps.length}
+              {dueTodayCount}
             </span>
           </div>
-          <p className="text-xs text-[#64748B] mt-1 truncate">Scheduled for contact today</p>
+          <p className={`text-xs mt-1 truncate ${todayFollowUps.length > 0 ? 'text-[#A16207]' : 'text-[#64748B]'}`}>
+            {todayFollowUps.length > 0 ? 'Requires attention today' : 'No tasks due today'}
+          </p>
         </div>
 
-        {/* Overdue: Red accent only when > 0 */}
+        {/* Overdue: Soft Light Pink accent when > 0 (Matching Website Emergency Style) */}
         <div 
           onClick={() => onNavigateToTab('followups', 'overdue')}
-          className={`clinical-card cursor-pointer transition-all p-5 bg-white ${
+          className={`clinical-card cursor-pointer transition-all p-5 ${
             overdueFollowUps.length > 0 
-              ? 'border-[#FECDCA] hover:border-[#FDA29B]' 
-              : 'hover:border-[#CBD5E1]'
+              ? 'bg-[#FFF5F7] border-[#FECDD3] hover:border-[#FDA4AF] shadow-xs' 
+              : 'bg-white hover:border-[#CBD5E1]'
           }`}
           role="button"
           tabIndex={0}
           aria-label="View overdue follow-ups"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#64748B]">
+            <span className={`text-xs font-medium ${overdueFollowUps.length > 0 ? 'text-[#9F1239]' : 'text-[#64748B]'}`}>
               Overdue
             </span>
-            <AlertTriangle className={`w-4 h-4 ${overdueFollowUps.length > 0 ? 'text-[#B42318]' : 'text-[#64748B]'}`} />
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${overdueFollowUps.length > 0 ? 'bg-[#FFE4E6] text-[#9F1239]' : 'bg-[#F8FAFC] text-[#64748B]'}`}>
+              <AlertTriangle className="w-4 h-4" />
+            </div>
           </div>
           <div className="mt-2.5">
             <span className={`text-2xl sm:text-3xl font-semibold tabular-nums ${
-              overdueFollowUps.length > 0 ? 'text-[#B42318]' : 'text-[#0F172A]'
+              overdueFollowUps.length > 0 ? 'text-[#9F1239]' : 'text-[#0F172A]'
             }`}>
-              {overdueFollowUps.length}
+              {overdueCount}
             </span>
           </div>
-          <p className="text-xs text-[#64748B] mt-1 truncate">Past scheduled follow-up date</p>
+          <p className={`text-xs mt-1 truncate ${overdueFollowUps.length > 0 ? 'text-[#BE123C]' : 'text-[#64748B]'}`}>
+            {overdueFollowUps.length > 0 ? 'Urgent attention needed' : 'All on schedule'}
+          </p>
         </div>
 
         {/* Completed Tasks */}
@@ -294,10 +312,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 return (
                   <div
                     key={f.id}
-                    className={`p-3.5 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#F8FAFC] transition-colors ${
+                    className={`p-3.5 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors ${
                       isOverdue
-                        ? 'border-l-[3px] border-[#B42318]'
-                        : 'border-l-[3px] border-[#B54708]'
+                        ? 'border-l-[3px] border-[#E11D48] bg-[#FFF5F7]/30 hover:bg-[#FFF5F7]/80'
+                        : 'border-l-[3px] border-[#D97706] bg-[#FEFCE8]/30 hover:bg-[#FEFCE8]/80'
                     }`}
                   >
                     {/* Left: Name, DueBadge, reason */}
@@ -474,7 +492,27 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0] bg-white">
-              {customers.slice(0, 6).map((c) => (
+              {customers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-10 text-center">
+                    <div className="max-w-xs mx-auto space-y-2">
+                      <Users className="w-8 h-8 text-[#94A3B8] mx-auto" />
+                      <div>
+                        <p className="text-sm font-semibold text-[#0F172A]">No patient records yet</p>
+                        <p className="text-xs text-[#64748B] mt-0.5">Start by registering your first patient consultation.</p>
+                      </div>
+                      <button
+                        onClick={onOpenNewPatient}
+                        className="btn-primary text-xs min-h-[34px] mx-auto"
+                      >
+                        <Plus className="w-3.5 h-3.5 mr-1" />
+                        <span>Add patient</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                customers.slice(0, 6).map((c) => (
                 <tr
                   key={c.id}
                   onClick={() => onSelectPatient(c)}
@@ -520,7 +558,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#0F766E] transition-colors ml-auto" />
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

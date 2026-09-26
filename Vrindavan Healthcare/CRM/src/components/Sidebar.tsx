@@ -27,6 +27,8 @@ interface SidebarProps {
   onCloseMobile: () => void;
   onOpenSettings: () => void;
   onOpenSyncDrawer: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapsed?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -38,9 +40,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
   onOpenSettings,
   onOpenSyncDrawer,
+  isCollapsed: controlledCollapsed,
+  onToggleCollapsed: controlledToggle,
 }) => {
   // Tablet (1024-1279px): defaults to collapsed icon rail unless user chose otherwise
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+  const [internalCollapsed, setInternalCollapsed] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('vh_crm_sidebar_collapsed');
       if (saved !== null) return saved === 'true';
@@ -51,6 +55,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return false;
   });
 
+  const isCollapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
+  const toggleCollapsed = controlledToggle || (() => {
+    setInternalCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('vh_crm_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  });
+
   const [isMoreSheetOpen, setIsMoreSheetOpen] = useState(false);
   const [syncState, setSyncState] = useState<SyncEngineState>(syncEngine.getState());
 
@@ -59,31 +74,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return unsub;
   }, []);
 
-  // Auto-adapt to tablet width on window resize if no explicit preference stored
-  useEffect(() => {
-    const handleResize = () => {
-      const saved = localStorage.getItem('vh_crm_sidebar_collapsed');
-      if (saved === null && typeof window !== 'undefined') {
-        if (window.innerWidth >= 1024 && window.innerWidth <= 1279) {
-          setIsCollapsed(true);
-        } else if (window.innerWidth >= 1280) {
-          setIsCollapsed(false);
-        }
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const toggleCollapsed = () => {
-    setIsCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem('vh_crm_sidebar_collapsed', String(next));
-      } catch {}
-      return next;
-    });
-  };
 
   const mainNavItems = [
     {
@@ -147,14 +137,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex flex-col h-full overflow-hidden">
           
           {/* Top of sidebar: Logo mark + Vrindavan Healthcare (16px semibold) + Clinic CRM */}
-          <div className="h-16 px-4 border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
+          <div className={`h-16 border-b border-[#E2E8F0] flex items-center shrink-0 ${
+            isCollapsed ? 'justify-center px-0' : 'justify-between px-4'
+          }`}>
             <div className="flex items-center gap-3 overflow-hidden">
-              <div
-                className="w-8 h-8 rounded-lg bg-[#0F766E] flex items-center justify-center text-white shrink-0"
-                title="Vrindavan Healthcare"
+              <button
+                onClick={() => onSelectTab('dashboard')}
+                className="w-9 h-9 rounded-xl bg-[#0F766E] flex items-center justify-center text-white shrink-0 hover:bg-[#115E59] transition-all shadow-xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E]"
+                title="Vrindavan Healthcare – Go to Dashboard"
+                aria-label="Vrindavan Healthcare"
               >
-                <Activity className="w-4 h-4" />
-              </div>
+                <Activity className="w-5 h-5" />
+              </button>
               {!isCollapsed && (
                 <div className="min-w-0">
                   <h1 className="text-base font-semibold leading-5 text-[#0F172A] truncate">
@@ -166,20 +160,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               )}
             </div>
-
-            {/* Desktop collapse toggle */}
-            <button
-              onClick={toggleCollapsed}
-              className="hidden md:flex btn-icon w-7 h-7 text-[#64748B] hover:text-[#0F172A]"
-              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
-            </button>
           </div>
 
           {/* Navigation Menu */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-5">
+          <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'p-2 space-y-3' : 'p-3 space-y-5'}`}>
             {/* Main Navigation Group */}
             <div className="space-y-1">
               {mainNavItems.map((item) => {
@@ -192,18 +176,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onSelectTab(item.id);
                       onCloseMobile();
                     }}
-                    title={isCollapsed ? item.label : undefined}
+                    title={isCollapsed ? `${item.label}${item.badge ? ` (${item.badge})` : ''}` : undefined}
                     aria-label={item.label}
-                    className={`w-full h-9 flex items-center rounded-lg text-sm transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1 ${
-                      isCollapsed ? 'justify-center px-0' : 'justify-between px-3'
-                    } ${
-                      isActive
-                        ? 'bg-[#F0FDFA] text-[#0F766E] font-medium border-l-[3px] border-[#0F766E]'
-                        : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-normal'
+                    className={`transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1 ${
+                      isCollapsed
+                        ? `w-11 h-11 mx-auto rounded-xl flex items-center justify-center ${
+                            isActive
+                              ? 'bg-[#F0FDFA] text-[#0F766E] shadow-xs border border-[#CCFBF1]'
+                              : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                          }`
+                        : `w-full h-9 flex items-center rounded-lg text-sm justify-between px-3 ${
+                            isActive
+                              ? 'bg-[#F0FDFA] text-[#0F766E] font-medium border-l-[3px] border-[#0F766E]'
+                              : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-normal'
+                          }`
                     }`}
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0F766E]' : 'text-[#64748B]'}`} />
+                    <div className={`flex items-center min-w-0 ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+                      <div className="relative flex items-center justify-center">
+                        <Icon className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} shrink-0 ${isActive ? 'text-[#0F766E]' : 'text-[#64748B]'}`} />
+                        
+                        {/* Dot / Pill badge on collapsed icon */}
+                        {isCollapsed && item.badge !== null && (
+                          <span
+                            className={`absolute -top-1.5 -right-2 min-w-[17px] h-[17px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center tabular-nums shadow-xs ring-2 ring-white ${
+                              item.id === 'followups' && hasOverdueFollowUps
+                                ? 'bg-[#E11D48] text-white'
+                                : 'bg-[#FEF9C3] text-[#854D0E] border border-[#FDE047]'
+                            }`}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
                       {!isCollapsed && <span className="truncate">{item.label}</span>}
                     </div>
 
@@ -212,19 +217,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         {item.badge}
                       </span>
                     )}
-
-                    {/* Dot on collapsed badge */}
-                    {isCollapsed && item.badge !== null && (
-                      <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-[#B42318]" />
-                    )}
                   </button>
                 );
               })}
             </div>
 
             {/* Small "System" Group */}
-            <div className="space-y-1 pt-3 border-t border-[#E2E8F0]">
-              {!isCollapsed && (
+            <div className={isCollapsed ? 'space-y-1' : 'space-y-1 pt-3 border-t border-[#E2E8F0]'}>
+              {isCollapsed ? (
+                <div className="w-8 h-px bg-[#E2E8F0] mx-auto my-2" />
+              ) : (
                 <p className="px-3 text-[11px] font-medium text-[#64748B] tracking-wider uppercase mb-1">
                   System
                 </p>
@@ -239,18 +241,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       onSelectTab(item.id);
                       onCloseMobile();
                     }}
-                    title={isCollapsed ? item.label : undefined}
+                    title={isCollapsed ? `${item.label}${item.badge ? ` (${item.badge})` : ''}` : undefined}
                     aria-label={item.label}
-                    className={`w-full h-9 flex items-center rounded-lg text-sm transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1 ${
-                      isCollapsed ? 'justify-center px-0' : 'justify-between px-3'
-                    } ${
-                      isActive
-                        ? 'bg-[#F0FDFA] text-[#0F766E] font-medium border-l-[3px] border-[#0F766E]'
-                        : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-normal'
+                    className={`transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1 ${
+                      isCollapsed
+                        ? `w-11 h-11 mx-auto rounded-xl flex items-center justify-center ${
+                            isActive
+                              ? 'bg-[#F0FDFA] text-[#0F766E] shadow-xs border border-[#CCFBF1]'
+                              : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                          }`
+                        : `w-full h-9 flex items-center rounded-lg text-sm justify-between px-3 ${
+                            isActive
+                              ? 'bg-[#F0FDFA] text-[#0F766E] font-medium border-l-[3px] border-[#0F766E]'
+                              : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-normal'
+                          }`
                     }`}
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0F766E]' : 'text-[#64748B]'}`} />
+                    <div className={`flex items-center min-w-0 ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+                      <div className="relative flex items-center justify-center">
+                        <Icon className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} shrink-0 ${isActive ? 'text-[#0F766E]' : 'text-[#64748B]'}`} />
+                        {isCollapsed && item.badge !== null && (
+                          <span className="absolute -top-1.5 -right-2 min-w-[17px] h-[17px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center tabular-nums shadow-xs ring-2 ring-white bg-[#FEF9C3] text-[#854D0E] border border-[#FDE047]">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
                       {!isCollapsed && <span className="truncate">{item.label}</span>}
                     </div>
 
@@ -268,19 +283,52 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onOpenSettings();
                   onCloseMobile();
                 }}
-                title={isCollapsed ? 'Settings' : undefined}
-                className={`w-full h-9 flex items-center rounded-lg text-sm text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-normal transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1 ${
-                  isCollapsed ? 'justify-center px-0' : 'justify-start px-3 gap-3'
+                title={isCollapsed ? 'Clinic Settings' : undefined}
+                aria-label="Clinic Settings"
+                className={`transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1 ${
+                  isCollapsed
+                    ? 'w-11 h-11 mx-auto rounded-xl flex items-center justify-center text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                    : 'w-full h-9 flex items-center rounded-lg text-sm text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAFC] font-normal justify-start px-3 gap-3'
                 }`}
               >
-                <Settings className="w-4 h-4 text-[#64748B] shrink-0" />
+                <Settings className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} text-[#64748B] shrink-0`} />
                 {!isCollapsed && <span>Settings</span>}
               </button>
             </div>
           </div>
 
+          {/* Vrindavan Healthcare Clinic Status & OPD Timings Card (Butter Yellow like website) */}
+          {isCollapsed ? (
+            <div className="px-2 pb-2 shrink-0">
+              <div
+                className="w-11 h-11 mx-auto rounded-xl bg-[#FEFCE8] border border-[#FEF08A] flex items-center justify-center cursor-pointer shadow-xs hover:border-[#FDE047] transition-all"
+                title="Clinic OPD Active: 9:00 AM – 1:00 PM & 5:00 PM – 9:00 PM"
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-[#EAB308] animate-pulse" />
+              </div>
+            </div>
+          ) : (
+            <div className="px-3 pb-2 shrink-0">
+              <div className="p-2.5 rounded-lg bg-[#FEFCE8] border border-[#FEF08A] text-xs">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-semibold text-[#854D0E] flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#EAB308] animate-pulse" />
+                    OPD Clinic Active
+                  </span>
+                  <span className="text-[10px] font-medium text-[#854D0E] bg-[#FEF08A] px-1.5 py-0.5 rounded">
+                    Walk-in / Appt
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#A16207] leading-tight">
+                  Morning: 9:00 AM – 1:00 PM<br />
+                  Evening: 5:00 PM – 9:00 PM
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Compact Sync Indicator Footer */}
-          <div className="p-3 border-t border-[#E2E8F0] bg-white shrink-0">
+          <div className={`p-3 border-t border-[#E2E8F0] bg-white shrink-0 ${isCollapsed ? 'flex justify-center' : ''}`}>
             <button
               onClick={onOpenSyncDrawer}
               title={
@@ -290,12 +338,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   ? `${syncState.pendingCount} changes waiting to sync`
                   : 'All changes synced with cloud'
               }
-              className={`w-full py-2 px-2.5 rounded-lg border border-[#E2E8F0] hover:bg-[#F8FAFC] text-left transition-colors flex items-center ${
-                isCollapsed ? 'justify-center' : 'justify-between'
+              className={`rounded-xl border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-all relative ${
+                isCollapsed
+                  ? 'w-11 h-11 flex items-center justify-center shadow-xs'
+                  : 'w-full py-2 px-2.5 text-left flex items-center justify-between'
               }`}
             >
               <div className="flex items-center gap-2 min-w-0">
-                <Database className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
+                <Database className={`${isCollapsed ? 'w-5 h-5' : 'w-3.5 h-3.5'} text-[#64748B] shrink-0`} />
                 {!isCollapsed && (
                   <span className="text-xs text-[#0F172A] font-medium truncate">
                     {!syncState.isOnline
@@ -307,7 +357,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 )}
               </div>
               <span
-                className={`w-2 h-2 rounded-full shrink-0 ${
+                className={`shrink-0 rounded-full ${
+                  isCollapsed
+                    ? 'absolute top-1.5 right-1.5 w-2.5 h-2.5 ring-2 ring-white'
+                    : 'w-2 h-2'
+                } ${
                   !syncState.isOnline
                     ? 'bg-[#B54708]'
                     : syncState.pendingCount > 0
