@@ -1,0 +1,21 @@
+{
+  "short_name": "Vrindavan CRM",
+  "name": "Vrindavan Healthcare CRM",
+  "icons": [
+    {
+      "src": "/Vrindavan_Healthcare_logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/Vrindavan_Healthcare_logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0F766E",
+  "theme_color": "#0F766E",
+  "display": "standalone",
+  "orientation": "portrait"
+}
