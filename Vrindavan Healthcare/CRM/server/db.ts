@@ -42,3 +42,31 @@ export async function testDbConnection(): Promise<{ connected: boolean; message:
     };
   }
 }
+
+/**
+ * Automatically ensures new columns and indexes exist on any existing database.
+ * Completely idempotent: runs on server startup so no manual SQL is required.
+ */
+export async function ensureSchemaMigrations(): Promise<void> {
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query(`
+        ALTER TABLE public.customers ADD COLUMN IF NOT EXISTS clinic_id VARCHAR(64) DEFAULT 'raman-reti';
+        ALTER TABLE public.followups ADD COLUMN IF NOT EXISTS doctor_assigned VARCHAR(255) DEFAULT 'Dr. Chaitanya Gupta';
+        ALTER TABLE public.followups ADD COLUMN IF NOT EXISTS clinic_id VARCHAR(64) DEFAULT 'raman-reti';
+        ALTER TABLE public.whatsapp_logs ADD COLUMN IF NOT EXISTS clinic_id VARCHAR(64) DEFAULT 'raman-reti';
+        ALTER TABLE public.clinic_settings ADD COLUMN IF NOT EXISTS active_doctor_id VARCHAR(64) DEFAULT 'chaitanya';
+        ALTER TABLE public.clinic_settings ADD COLUMN IF NOT EXISTS active_clinic_id VARCHAR(64) DEFAULT 'raman-reti';
+        CREATE INDEX IF NOT EXISTS idx_customers_clinic_id ON public.customers(clinic_id);
+        CREATE INDEX IF NOT EXISTS idx_followups_clinic_id ON public.followups(clinic_id);
+      `);
+      console.log('✅ [PostgreSQL Schema] Multi-clinic columns verified/migrated automatically.');
+    } finally {
+      client.release();
+    }
+  } catch (err: any) {
+    console.warn('⚠️ [PostgreSQL Migration Note]', err?.message);
+  }
+}
+

@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS public.customers (
     phone VARCHAR(32) NOT NULL,
     email VARCHAR(255),
     doctor_assigned VARCHAR(255) DEFAULT 'Dr. Vrindavan Healthcare Team',
+    clinic_id VARCHAR(64) DEFAULT 'raman-reti' NOT NULL,
     category VARCHAR(150) DEFAULT 'General consultation',
     last_contact TIMESTAMPTZ,
     next_follow_up TIMESTAMPTZ,
@@ -43,6 +44,8 @@ CREATE TABLE IF NOT EXISTS public.followups (
     customer_id VARCHAR(64) NOT NULL REFERENCES public.customers(id) ON DELETE CASCADE,
     customer_name VARCHAR(255) NOT NULL,
     customer_phone VARCHAR(32) NOT NULL,
+    doctor_assigned VARCHAR(255) DEFAULT 'Dr. Chaitanya Gupta',
+    clinic_id VARCHAR(64) DEFAULT 'raman-reti' NOT NULL,
     date TIMESTAMPTZ NOT NULL,
     status VARCHAR(50) DEFAULT 'pending' 
         CHECK (status IN ('pending', 'completed', 'rescheduled', 'cancelled')),
@@ -73,6 +76,7 @@ CREATE TABLE IF NOT EXISTS public.whatsapp_logs (
     customer_id VARCHAR(64) REFERENCES public.customers(id) ON DELETE SET NULL,
     customer_name VARCHAR(255) NOT NULL,
     phone VARCHAR(32) NOT NULL,
+    clinic_id VARCHAR(64) DEFAULT 'raman-reti',
     template_title VARCHAR(150),
     message_body TEXT NOT NULL,
     channel VARCHAR(50) DEFAULT 'wa_me' CHECK (channel IN ('wa_me', 'cloud_api')),
@@ -102,6 +106,8 @@ CREATE TABLE IF NOT EXISTS public.clinic_settings (
     phone VARCHAR(32) DEFAULT '+919876543210',
     email VARCHAR(255) DEFAULT 'care@vrindavanhealthcare.in',
     address TEXT DEFAULT 'Vrindavan Healthcare Clinic, Main Medical Road, Mathura / Vrindavan, UP',
+    active_doctor_id VARCHAR(64) DEFAULT 'chaitanya',
+    active_clinic_id VARCHAR(64) DEFAULT 'raman-reti',
     supabase_url TEXT,
     supabase_anon_key TEXT,
     whatsapp_phone_id VARCHAR(100),
@@ -114,12 +120,14 @@ CREATE TABLE IF NOT EXISTS public.clinic_settings (
 -- 3. Performance Indexes
 CREATE INDEX IF NOT EXISTS idx_customers_phone ON public.customers(phone);
 CREATE INDEX IF NOT EXISTS idx_customers_name ON public.customers(name);
+CREATE INDEX IF NOT EXISTS idx_customers_clinic_id ON public.customers(clinic_id);
 CREATE INDEX IF NOT EXISTS idx_customers_next_follow_up ON public.customers(next_follow_up);
 CREATE INDEX IF NOT EXISTS idx_customers_follow_up_status ON public.customers(follow_up_status);
 CREATE INDEX IF NOT EXISTS idx_customers_sync_status ON public.customers(sync_status);
 CREATE INDEX IF NOT EXISTS idx_customers_created_at ON public.customers(created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_followups_customer_id ON public.followups(customer_id);
+CREATE INDEX IF NOT EXISTS idx_followups_clinic_id ON public.followups(clinic_id);
 CREATE INDEX IF NOT EXISTS idx_followups_date ON public.followups(date);
 CREATE INDEX IF NOT EXISTS idx_followups_status ON public.followups(status);
 CREATE INDEX IF NOT EXISTS idx_followups_sync_status ON public.followups(sync_status);

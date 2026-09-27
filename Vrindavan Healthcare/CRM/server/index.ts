@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { testDbConnection } from './db.ts';
+import { testDbConnection, ensureSchemaMigrations } from './db.ts';
 import { healthRouter } from './routes/health.ts';
 import { customersRouter } from './routes/customers.ts';
 import { followupsRouter } from './routes/followups.ts';
@@ -47,6 +47,7 @@ app.listen(PORT, async () => {
   const dbStatus = await testDbConnection();
   if (dbStatus.connected) {
     console.log(`✅ [PostgreSQL] ${dbStatus.message}`);
+    await ensureSchemaMigrations();
   } else {
     console.warn(`⚠️ [PostgreSQL] ${dbStatus.message}`);
     console.warn(`👉 Hint: Ensure your PostgreSQL service is running and execute CRM/db/schema_all_in_one.sql`);
