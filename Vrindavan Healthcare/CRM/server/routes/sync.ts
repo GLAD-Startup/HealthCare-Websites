@@ -32,16 +32,17 @@ syncRouter.post('/', async (req, res) => {
             await client.query(
               `
               INSERT INTO public.customers (
-                id, name, phone, email, doctor_assigned, category, 
+                id, name, phone, email, doctor_assigned, clinic_id, category, 
                 last_contact, next_follow_up, follow_up_status, notes, 
                 whatsapp_status, sync_status, created_at, updated_at
               )
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'synced', $12, $13)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'synced', $13, $14)
               ON CONFLICT (id) DO UPDATE SET
                 name = EXCLUDED.name,
                 phone = EXCLUDED.phone,
                 email = EXCLUDED.email,
                 doctor_assigned = EXCLUDED.doctor_assigned,
+                clinic_id = EXCLUDED.clinic_id,
                 category = EXCLUDED.category,
                 last_contact = EXCLUDED.last_contact,
                 next_follow_up = EXCLUDED.next_follow_up,
@@ -57,6 +58,7 @@ syncRouter.post('/', async (req, res) => {
                 c.phone,
                 c.email || null,
                 c.doctorAssigned || 'Dr. Vrindavan Healthcare Team',
+                c.clinicId || 'raman-reti',
                 c.category || 'General consultation',
                 c.lastContact || null,
                 c.nextFollowUp || null,
@@ -77,13 +79,15 @@ syncRouter.post('/', async (req, res) => {
             await client.query(
               `
               INSERT INTO public.followups (
-                id, customer_id, customer_name, customer_phone, date, 
+                id, customer_id, customer_name, customer_phone, doctor_assigned, clinic_id, date, 
                 status, notes, reminder_sent, sync_status, created_at, updated_at
               )
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'synced', $9, $10)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'synced', $11, $12)
               ON CONFLICT (id) DO UPDATE SET
                 customer_name = EXCLUDED.customer_name,
                 customer_phone = EXCLUDED.customer_phone,
+                doctor_assigned = EXCLUDED.doctor_assigned,
+                clinic_id = EXCLUDED.clinic_id,
                 date = EXCLUDED.date,
                 status = EXCLUDED.status,
                 notes = EXCLUDED.notes,
@@ -96,6 +100,8 @@ syncRouter.post('/', async (req, res) => {
                 f.customerId,
                 f.customerName || '',
                 f.customerPhone || '',
+                f.doctorAssigned || 'Dr. Vrindavan Healthcare Team',
+                f.clinicId || 'raman-reti',
                 f.date,
                 f.status || 'pending',
                 f.notes || '',
@@ -120,6 +126,7 @@ syncRouter.post('/', async (req, res) => {
       SELECT 
         id, name, phone, email, 
         doctor_assigned AS "doctorAssigned", 
+        clinic_id AS "clinicId",
         category, 
         last_contact AS "lastContact", 
         next_follow_up AS "nextFollowUp", 
@@ -138,6 +145,8 @@ syncRouter.post('/', async (req, res) => {
         customer_id AS "customerId", 
         customer_name AS "customerName", 
         customer_phone AS "customerPhone", 
+        doctor_assigned AS "doctorAssigned",
+        clinic_id AS "clinicId",
         date, status, notes, 
         reminder_sent AS "reminderSent", 
         sync_status AS "syncStatus", 

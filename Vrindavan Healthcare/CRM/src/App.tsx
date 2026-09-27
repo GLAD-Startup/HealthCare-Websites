@@ -24,6 +24,7 @@ import { ToastContainer, type ToastMessage } from './components/Toast.tsx';
 import { NotFoundView } from './components/NotFoundView.tsx';
 import { useClinicalCounts } from './hooks/useClinicalCounts.ts';
 import { formatDate, getTodayStrIST } from './utils/formatters.ts';
+import { useClinicContext } from './context/ClinicContext.tsx';
 
 const VALID_TABS: NavTab[] = ['dashboard', 'patients', 'followups', 'whatsapp', 'sync'];
 
@@ -50,6 +51,7 @@ function getInitialTab(): { tab: NavTab; invalid: string | null } {
 }
 
 export function App() {
+  const { activeDoctor, activeClinic } = useClinicContext();
   const [currentTab, setCurrentTab] = useState<NavTab>(() => getInitialTab().tab);
   const [invalidRoute, setInvalidRoute] = useState<string | null>(() => getInitialTab().invalid);
   const [selectedPatient, setSelectedPatient] = useState<Customer | null>(null);
@@ -197,6 +199,8 @@ export function App() {
               customerId: customer.id,
               customerName: customer.name,
               customerPhone: customer.phone,
+              doctorAssigned: customer.doctorAssigned || activeDoctor.name,
+              clinicId: customer.clinicId || activeClinic.id,
               date: effectiveDate,
               status: 'pending',
               notes: customer.notes || 'Routine consultation follow-up',
@@ -276,6 +280,8 @@ export function App() {
             ...existingFollowup,
             customerName: updatedCustomer.name,
             customerPhone: updatedCustomer.phone,
+            doctorAssigned: updatedCustomer.doctorAssigned || activeDoctor.name,
+            clinicId: updatedCustomer.clinicId || activeClinic.id,
             date: updatedCustomer.nextFollowUp,
             notes: updatedCustomer.notes || existingFollowup.notes || 'Routine consultation follow-up',
             updatedAt: now,
@@ -289,6 +295,8 @@ export function App() {
             customerId: updatedCustomer.id,
             customerName: updatedCustomer.name,
             customerPhone: updatedCustomer.phone,
+            doctorAssigned: updatedCustomer.doctorAssigned || activeDoctor.name,
+            clinicId: updatedCustomer.clinicId || activeClinic.id,
             date: updatedCustomer.nextFollowUp,
             status: 'pending',
             notes: updatedCustomer.notes || 'Routine consultation follow-up',
@@ -310,7 +318,8 @@ export function App() {
         name: patientData.name || 'Patient',
         phone: patientData.phone || '',
         email: patientData.email,
-        doctorAssigned: patientData.doctorAssigned || 'Dr. Vrindavan',
+        doctorAssigned: patientData.doctorAssigned || activeDoctor.name,
+        clinicId: patientData.clinicId || activeClinic.id,
         category: patientData.category || 'General Consultation',
         createdAt: now,
         updatedAt: now,
@@ -332,6 +341,8 @@ export function App() {
           customerId: newCustomer.id,
           customerName: newCustomer.name,
           customerPhone: newCustomer.phone,
+          doctorAssigned: newCustomer.doctorAssigned || activeDoctor.name,
+          clinicId: newCustomer.clinicId || activeClinic.id,
           date: newCustomer.nextFollowUp,
           status: 'pending',
           notes: newCustomer.notes || 'Initial consultation follow-up',
@@ -421,6 +432,8 @@ export function App() {
           customerId: patient.id,
           customerName: patient.name,
           customerPhone: patient.phone,
+          doctorAssigned: patient.doctorAssigned || activeDoctor.name,
+          clinicId: patient.clinicId || activeClinic.id,
           date: effectiveDate,
           status: 'pending',
           notes: patient.notes || 'Routine consultation follow-up',
@@ -463,6 +476,8 @@ export function App() {
       customerId: customer.id,
       customerName: customer.name,
       customerPhone: customer.phone,
+      doctorAssigned: customer.doctorAssigned || activeDoctor.name,
+      clinicId: customer.clinicId || activeClinic.id,
       date,
       status: 'pending',
       notes,
@@ -604,6 +619,8 @@ export function App() {
           customerId: customer.id,
           customerName: customer.name,
           customerPhone: customer.phone,
+          doctorAssigned: customer.doctorAssigned || activeDoctor.name,
+          clinicId: customer.clinicId || activeClinic.id,
           date: customer.nextFollowUp || new Date().toISOString().split('T')[0],
           status: 'pending',
           notes: customer.notes || 'Routine consultation follow-up',

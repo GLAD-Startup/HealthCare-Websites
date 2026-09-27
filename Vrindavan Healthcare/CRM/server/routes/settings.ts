@@ -13,6 +13,8 @@ settingsRouter.get('/', async (_req, res) => {
         phone, 
         email, 
         address, 
+        active_doctor_id AS "activeDoctorId",
+        active_clinic_id AS "activeClinicId",
         last_sync_timestamp AS "lastSyncTimestamp"
       FROM public.clinic_settings 
       WHERE id = 'clinic-settings'
@@ -31,15 +33,17 @@ settingsRouter.post('/', async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO public.clinic_settings (
-        id, clinic_name, doctor_name, phone, email, address, updated_at
+        id, clinic_name, doctor_name, phone, email, address, active_doctor_id, active_clinic_id, updated_at
       )
-      VALUES ('clinic-settings', $1, $2, $3, $4, $5, timezone('utc'::text, now()))
+      VALUES ('clinic-settings', $1, $2, $3, $4, $5, $6, $7, timezone('utc'::text, now()))
       ON CONFLICT (id) DO UPDATE SET
         clinic_name = EXCLUDED.clinic_name,
         doctor_name = EXCLUDED.doctor_name,
         phone = EXCLUDED.phone,
         email = EXCLUDED.email,
         address = EXCLUDED.address,
+        active_doctor_id = EXCLUDED.active_doctor_id,
+        active_clinic_id = EXCLUDED.active_clinic_id,
         updated_at = timezone('utc'::text, now())
       RETURNING 
         id, 
@@ -48,6 +52,8 @@ settingsRouter.post('/', async (req, res) => {
         phone, 
         email, 
         address, 
+        active_doctor_id AS "activeDoctorId",
+        active_clinic_id AS "activeClinicId",
         last_sync_timestamp AS "lastSyncTimestamp"
       `,
       [
@@ -56,6 +62,8 @@ settingsRouter.post('/', async (req, res) => {
         s.phone || '+919876543210',
         s.email || 'care@vrindavanhealthcare.in',
         s.address || 'Vrindavan Healthcare Clinic, Main Medical Road, Mathura / Vrindavan, UP',
+        s.activeDoctorId || 'chaitanya',
+        s.activeClinicId || 'raman-reti',
       ]
     );
     res.json(result.rows[0]);

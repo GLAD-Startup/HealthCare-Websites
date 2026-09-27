@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Phone, Mail, Calendar, Stethoscope, CheckCircle2 } from 'lucide-react';
+import { X, User, Phone, Mail, Calendar, Stethoscope, CheckCircle2, Building2 } from 'lucide-react';
 import type { Customer, FollowUpStatus } from '../types/index.ts';
 import { getDateStrIST } from '../utils/formatters.ts';
+import { useClinicContext } from '../context/ClinicContext.tsx';
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -27,11 +28,13 @@ export const PatientModal: React.FC<PatientModalProps> = ({
   onSave,
   patientToEdit,
 }) => {
+  const { activeDoctor, activeClinic, doctors, clinics } = useClinicContext();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
-  const [doctorAssigned, setDoctorAssigned] = useState('Dr. Vrindavan');
+  const [doctorAssigned, setDoctorAssigned] = useState(activeDoctor.name);
+  const [clinicId, setClinicId] = useState(activeClinic.id);
   const [followUpStatus, setFollowUpStatus] = useState<FollowUpStatus>('pending');
   const [nextFollowUp, setNextFollowUp] = useState('');
   const [notes, setNotes] = useState('');
@@ -44,7 +47,8 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       setPhone(patientToEdit.phone || '');
       setEmail(patientToEdit.email || '');
       setCategory(patientToEdit.category || CATEGORIES[0]);
-      setDoctorAssigned(patientToEdit.doctorAssigned || 'Dr. Vrindavan');
+      setDoctorAssigned(patientToEdit.doctorAssigned || activeDoctor.name);
+      setClinicId(patientToEdit.clinicId || activeClinic.id);
       setFollowUpStatus(patientToEdit.followUpStatus || 'pending');
       setNextFollowUp(getDateStrIST(patientToEdit.nextFollowUp));
       setNotes(patientToEdit.notes || '');
@@ -53,13 +57,14 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       setPhone('+91 ');
       setEmail('');
       setCategory(CATEGORIES[0]);
-      setDoctorAssigned('Dr. Vrindavan');
+      setDoctorAssigned(activeDoctor.name);
+      setClinicId(activeClinic.id);
       setFollowUpStatus('pending');
       setNextFollowUp('');
       setNotes('');
     }
     setError('');
-  }, [patientToEdit, isOpen]);
+  }, [patientToEdit, isOpen, activeClinic.id, activeDoctor.name]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -94,6 +99,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         email: email.trim() || undefined,
         category,
         doctorAssigned,
+        clinicId,
         followUpStatus,
         nextFollowUp: nextFollowUp || null,
         notes: notes.trim(),
@@ -197,37 +203,62 @@ export const PatientModal: React.FC<PatientModalProps> = ({
           </div>
 
           {/* Specialty / Category */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-[#475569] uppercase tracking-wider mb-1.5">
-                Specialty / Department
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="clinical-input w-full"
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <label className="block text-xs font-medium text-[#475569] uppercase tracking-wider mb-1.5">
+              Specialty / Department
+            </label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="clinical-input w-full"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            {/* Doctor Assigned */}
+          {/* Doctor Assigned & Clinic Location */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-[#475569] uppercase tracking-wider mb-1.5">
                 Attending doctor
               </label>
               <div className="relative">
                 <Stethoscope className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input
-                  type="text"
+                <select
                   value={doctorAssigned}
                   onChange={(e) => setDoctorAssigned(e.target.value)}
                   className="clinical-input w-full pl-10"
-                />
+                >
+                  {doctors.map((doc) => (
+                    <option key={doc.id} value={doc.name}>
+                      {doc.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[#475569] uppercase tracking-wider mb-1.5">
+                Clinic Location
+              </label>
+              <div className="relative">
+                <Building2 className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <select
+                  value={clinicId}
+                  onChange={(e) => setClinicId(e.target.value)}
+                  className="clinical-input w-full pl-10"
+                >
+                  {clinics.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>

@@ -14,6 +14,9 @@ import {
   HardDrive
 } from 'lucide-react';
 import { syncEngine, type SyncEngineState } from '../services/syncEngine.ts';
+import { ClinicSwitcher } from './ClinicSwitcher.tsx';
+import { useClinicContext } from '../context/ClinicContext.tsx';
+
 
 export type NavTab = 'dashboard' | 'patients' | 'followups' | 'whatsapp' | 'sync';
 
@@ -67,6 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const [isMoreSheetOpen, setIsMoreSheetOpen] = useState(false);
   const [syncState, setSyncState] = useState<SyncEngineState>(syncEngine.getState());
+  const { activeClinic } = useClinicContext();
 
   useEffect(() => {
     const unsub = syncEngine.subscribe(setSyncState);
@@ -159,6 +163,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Doctor & Clinic Switcher */}
+          <div className={`shrink-0 ${isCollapsed ? 'pt-2' : 'pt-2.5'}`}>
+            <ClinicSwitcher isCollapsed={isCollapsed} />
           </div>
 
           {/* Navigation Menu */}
@@ -296,12 +305,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
 
-          {/* Vrindavan Healthcare Clinic Status & OPD Timings Card (Butter Yellow like website) */}
+          {/* Active Clinic Status & OPD Timings Card (Butter Yellow like website) */}
           {isCollapsed ? (
             <div className="px-2 pb-2 shrink-0">
               <div
                 className="w-11 h-11 mx-auto rounded-xl bg-[#FEFCE8] border border-[#FEF08A] flex items-center justify-center cursor-pointer shadow-xs hover:border-[#FDE047] transition-all"
-                title="Clinic OPD Active: 9:00 AM – 1:00 PM & 5:00 PM – 9:00 PM"
+                title={`${activeClinic.shortName} OPD: ${activeClinic.timing}`}
               >
                 <span className="w-2.5 h-2.5 rounded-full bg-[#EAB308] animate-pulse" />
               </div>
@@ -319,8 +328,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-[#A16207] leading-tight">
-                  Morning: 9:00 AM – 1:00 PM<br />
-                  Evening: 5:00 PM – 9:00 PM
+                  {activeClinic.shortName}: {activeClinic.timing}
                 </p>
               </div>
             </div>

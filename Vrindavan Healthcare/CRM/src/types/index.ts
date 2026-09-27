@@ -10,6 +10,7 @@ export interface Customer {
   phone: string;
   email?: string;
   doctorAssigned?: string;
+  clinicId?: string;
   category?: string;
   createdAt: string;
   updatedAt: string;
@@ -26,6 +27,8 @@ export interface FollowUp {
   customerId: string;
   customerName: string;
   customerPhone: string;
+  doctorAssigned?: string;
+  clinicId?: string;
   date: string;
   status: 'pending' | 'completed' | 'rescheduled' | 'cancelled';
   notes: string;
@@ -61,6 +64,7 @@ export interface WhatsAppLog {
   customerId?: string;
   customerName: string;
   phone: string;
+  clinicId?: string;
   templateTitle?: string;
   messageBody: string;
   channel: 'wa_me' | 'cloud_api';
@@ -75,6 +79,8 @@ export interface ClinicSettings {
   phone: string;
   email: string;
   address: string;
+  activeDoctorId?: string;
+  activeClinicId?: string;
   apiUrl?: string;
   databaseUrl?: string;
   supabaseUrl?: string;

@@ -11,12 +11,24 @@ export class VrindavanCRMDatabase extends Dexie {
 
   constructor() {
     super('vrindavan_healthcare_crm');
+
+    // Version 1 — original schema (kept for migration)
     this.version(1).stores({
       customers: 'id, name, phone, followUpStatus, nextFollowUp, syncStatus, createdAt',
       followups: 'id, customerId, customerName, date, status, syncStatus',
       syncQueue: 'id, entity, entityId, operation, status, createdAt',
       templates: 'id, title, category, isActive',
       whatsappLogs: 'id, customerId, phone, sentAt, status',
+      settings: 'id'
+    });
+
+    // Version 2 — adds clinicId index for multi-location tagging
+    this.version(2).stores({
+      customers: 'id, name, phone, followUpStatus, nextFollowUp, syncStatus, createdAt, clinicId',
+      followups: 'id, customerId, customerName, date, status, syncStatus, clinicId',
+      syncQueue: 'id, entity, entityId, operation, status, createdAt',
+      templates: 'id, title, category, isActive',
+      whatsappLogs: 'id, customerId, phone, sentAt, status, clinicId',
       settings: 'id'
     });
   }
@@ -30,16 +42,16 @@ export const DEFAULT_TEMPLATES: WhatsAppTemplate[] = [
     id: 'tmpl-1',
     title: 'Welcome & Patient Greeting',
     category: 'greeting',
-    content: 'Namaste {{patient_name}} ji! Welcome to Vrindavan Healthcare. We are committed to providing you with gentle, comprehensive care. If you need any medical advice or wish to consult the doctor, feel free to reply directly here. Wishing you vibrant health! - Dr. Vrindavan Healthcare',
-    variables: ['patient_name'],
+    content: 'Namaste {{patient_name}} ji! Welcome to Vrindavan Healthcare. We are committed to providing you with gentle, comprehensive care. If you need any medical advice or wish to consult the doctor, feel free to reply directly here. Wishing you vibrant health! — {{doctor_name}}, Vrindavan Healthcare',
+    variables: ['patient_name', 'doctor_name'],
     isActive: true,
   },
   {
     id: 'tmpl-2',
     title: 'Consultation & Recovery Follow-up',
     category: 'followup',
-    content: 'Namaste {{patient_name}} ji, this is Dr. Vrindavan Healthcare following up on your recent consultation. How are your symptoms progressing? Please ensure you are taking your prescribed medications on schedule. If you have any discomfort, please reply to this message.',
-    variables: ['patient_name'],
+    content: 'Namaste {{patient_name}} ji, this is {{doctor_name}} from Vrindavan Healthcare following up on your recent consultation. How are your symptoms progressing? Please ensure you are taking your prescribed medications on schedule. If you have any discomfort, please reply to this message.',
+    variables: ['patient_name', 'doctor_name'],
     isActive: true,
   },
   {

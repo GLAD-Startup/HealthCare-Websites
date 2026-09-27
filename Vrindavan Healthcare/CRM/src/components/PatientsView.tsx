@@ -62,6 +62,7 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [clinicFilter, setClinicFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [urgencyFilter, setUrgencyFilter] = useState<'all' | 'overdue' | 'due-today'>('all');
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
@@ -203,10 +204,14 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
       const matchCategory = categoryFilter === 'all' || c.category === categoryFilter;
       const urgencyMatch =
         urgencyFilter === 'all' || getDueUrgency(c.nextFollowUp).urgency === urgencyFilter;
+      const matchClinic =
+        clinicFilter === 'all' ||
+        c.clinicId === clinicFilter ||
+        (!c.clinicId && clinicFilter === 'raman-reti');
 
-      return matchSearch && matchStatus && matchCategory && urgencyMatch;
+      return matchSearch && matchStatus && matchCategory && urgencyMatch && matchClinic;
     });
-  }, [customers, searchTerm, statusFilter, categoryFilter, urgencyFilter]);
+  }, [customers, searchTerm, statusFilter, categoryFilter, urgencyFilter, clinicFilter]);
 
   // Sorted patients
   const sortedCustomers = useMemo(() => {
@@ -321,6 +326,20 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
               <option value="contacted">Contacted</option>
               <option value="completed">Completed</option>
               <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          {/* Clinic filter */}
+          <div className="shrink-0">
+            <select
+              value={clinicFilter}
+              onChange={(e) => setClinicFilter(e.target.value)}
+              className="clinical-input h-9 text-xs sm:text-sm font-normal py-1"
+              aria-label="Filter by clinic location"
+            >
+              <option value="all">All Clinics</option>
+              <option value="raman-reti">Raman Reti</option>
+              <option value="hanuman-bagh">Hanuman Bagh</option>
             </select>
           </div>
 
@@ -613,9 +632,18 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                       <span className="font-semibold text-sm text-[#0F172A] truncate block">
                         {c.name}
                       </span>
-                      <span className="text-[11px] text-[#64748B] tabular-nums block">
-                        Patient ID {formatPatientDisplayId(c.id)}
-                      </span>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-[11px] text-[#64748B] tabular-nums block">
+                          Patient ID {formatPatientDisplayId(c.id)}
+                        </span>
+                        <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium ${
+                          c.clinicId === 'hanuman-bagh' 
+                            ? 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]' 
+                            : 'bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0]'
+                        }`}>
+                          {c.clinicId === 'hanuman-bagh' ? 'Hanuman Bagh' : 'Raman Reti'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div 
@@ -811,9 +839,18 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                               )}
                             </div>
 
-                            <span className="text-xs text-[#64748B] tabular-nums block mt-0.5">
-                              <span className="text-[#64748B]">Patient ID </span>{formatPatientDisplayId(c.id)}
-                            </span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-xs text-[#64748B] tabular-nums">
+                                <span className="text-[#64748B]">Patient ID </span>{formatPatientDisplayId(c.id)}
+                              </span>
+                              <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium ${
+                                c.clinicId === 'hanuman-bagh' 
+                                  ? 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]' 
+                                  : 'bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0]'
+                              }`}>
+                                {c.clinicId === 'hanuman-bagh' ? 'Hanuman Bagh' : 'Raman Reti'}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -1003,9 +1040,18 @@ export const PatientsView: React.FC<PatientsViewProps> = ({
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-[#64748B] tabular-nums whitespace-nowrap">
-                          <span className="text-[#64748B]">Patient ID </span>{formatPatientDisplayId(c.id)}
-                        </p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <p className="text-xs text-[#64748B] tabular-nums whitespace-nowrap">
+                            <span className="text-[#64748B]">Patient ID </span>{formatPatientDisplayId(c.id)}
+                          </p>
+                          <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium ${
+                            c.clinicId === 'hanuman-bagh' 
+                              ? 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]' 
+                              : 'bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0]'
+                          }`}>
+                            {c.clinicId === 'hanuman-bagh' ? 'Hanuman Bagh' : 'Raman Reti'}
+                          </span>
+                        </div>
                       </div>
                     </div>
 

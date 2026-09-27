@@ -12,6 +12,8 @@ followupsRouter.get('/', async (_req, res) => {
         customer_id AS "customerId", 
         customer_name AS "customerName", 
         customer_phone AS "customerPhone", 
+        doctor_assigned AS "doctorAssigned",
+        clinic_id AS "clinicId",
         date, 
         status, 
         notes, 
@@ -43,13 +45,15 @@ followupsRouter.post('/', async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO public.followups (
-        id, customer_id, customer_name, customer_phone, date, 
+        id, customer_id, customer_name, customer_phone, doctor_assigned, clinic_id, date, 
         status, notes, reminder_sent, sync_status, created_at, updated_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'synced', $9, $10)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'synced', $10, $11)
       ON CONFLICT (id) DO UPDATE SET
         customer_name = EXCLUDED.customer_name,
         customer_phone = EXCLUDED.customer_phone,
+        doctor_assigned = EXCLUDED.doctor_assigned,
+        clinic_id = EXCLUDED.clinic_id,
         date = EXCLUDED.date,
         status = EXCLUDED.status,
         notes = EXCLUDED.notes,
@@ -61,6 +65,8 @@ followupsRouter.post('/', async (req, res) => {
         customer_id AS "customerId", 
         customer_name AS "customerName", 
         customer_phone AS "customerPhone", 
+        doctor_assigned AS "doctorAssigned",
+        clinic_id AS "clinicId",
         date, 
         status, 
         notes, 
@@ -74,6 +80,8 @@ followupsRouter.post('/', async (req, res) => {
         f.customerId,
         f.customerName || '',
         f.customerPhone || '',
+        f.doctorAssigned || 'Dr. Vrindavan Healthcare Team',
+        f.clinicId || 'raman-reti',
         f.date,
         f.status || 'pending',
         f.notes || '',

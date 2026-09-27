@@ -21,6 +21,7 @@ import { WhatsAppGlyph } from './WhatsAppGlyph.tsx';
 import { DueBadge } from './DueBadge.tsx';
 import { StatusBadge } from './StatusBadge.tsx';
 import { formatPhone, formatDate, formatTime } from '../utils/formatters.ts';
+import { useClinicContext } from '../context/ClinicContext.tsx';
 
 interface WhatsAppViewProps {
   customers: Customer[];
@@ -44,10 +45,11 @@ export const WhatsAppView: React.FC<WhatsAppViewProps> = ({
   onSendMessage,
   onSaveTemplate,
 }) => {
+  const { activeDoctor } = useClinicContext();
   // Read clinic settings from Dexie
   const settings = useLiveQuery(() => db.settings.get('clinic_default'), []);
   const clinicName = settings?.clinicName || 'Vrindavan Healthcare';
-  const doctorName = settings?.doctorName || 'Dr. Vrindavan';
+  const doctorName = settings?.doctorName || activeDoctor.name;
   const isMetaCloudApiConfigured = Boolean(settings?.whatsappToken && settings?.whatsappPhoneId);
 
   // Selected customer

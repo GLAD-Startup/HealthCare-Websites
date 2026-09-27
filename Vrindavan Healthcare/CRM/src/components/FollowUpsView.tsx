@@ -67,6 +67,7 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
   });
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [clinicFilter, setClinicFilter] = useState<string>('all');
 
   // Dropdown states for reschedule menu & pick date picker
   const [openRescheduleId, setOpenRescheduleId] = useState<string | null>(null);
@@ -132,6 +133,12 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
     else if (activeTab === 'completed') list = completedList;
     else list = allList;
 
+    if (clinicFilter !== 'all') {
+      list = list.filter(
+        (f) => f.clinicId === clinicFilter || (!f.clinicId && clinicFilter === 'raman-reti')
+      );
+    }
+
     if (!searchTerm.trim()) return list;
 
     const query = searchTerm.toLowerCase().trim();
@@ -143,7 +150,7 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
         (rawDigits && f.customerPhone.replace(/\D/g, '').includes(rawDigits)) ||
         (f.notes && f.notes.toLowerCase().includes(query))
     );
-  }, [activeTab, overdueList, todayList, upcomingList, completedList, allList, searchTerm]);
+  }, [activeTab, overdueList, todayList, upcomingList, completedList, allList, searchTerm, clinicFilter]);
 
   // Quick Reschedule helper
   const handleReschedule = async (followupId: string, daysToAdd: number) => {
@@ -286,16 +293,30 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
           })}
         </div>
 
-        {/* Search below the tabs */}
-        <div className="relative">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search follow-ups by patient name, phone, notes..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="clinical-input w-full pl-10 h-9 text-sm"
-          />
+        {/* Search & Clinic filter below the tabs */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search follow-ups by patient name, phone, notes..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="clinical-input w-full pl-10 h-9 text-sm"
+            />
+          </div>
+          <div className="shrink-0">
+            <select
+              value={clinicFilter}
+              onChange={(e) => setClinicFilter(e.target.value)}
+              className="clinical-input h-9 text-xs sm:text-sm font-normal py-1"
+              aria-label="Filter follow-ups by clinic"
+            >
+              <option value="all">All Clinics</option>
+              <option value="raman-reti">Raman Reti</option>
+              <option value="hanuman-bagh">Hanuman Bagh</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -431,9 +452,18 @@ export const FollowUpsView: React.FC<FollowUpsViewProps> = ({
                     </button>
                     <DueBadge date={f.date} />
                   </div>
-                  <p className="text-xs text-[#64748B] tabular-nums whitespace-nowrap">
-                    {formatPhone(f.customerPhone)}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-[#64748B] tabular-nums whitespace-nowrap">
+                      {formatPhone(f.customerPhone)}
+                    </p>
+                    <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium ${
+                      f.clinicId === 'hanuman-bagh' 
+                        ? 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]' 
+                        : 'bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0]'
+                    }`}>
+                      {f.clinicId === 'hanuman-bagh' ? 'Hanuman Bagh' : 'Raman Reti'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Middle: Follow-up reason as normal text (caps label and grey box removed) */}

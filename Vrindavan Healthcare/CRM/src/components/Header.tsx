@@ -15,6 +15,7 @@ import {
 import type { Customer } from '../types/index.ts';
 import { syncEngine, type SyncEngineState } from '../services/syncEngine.ts';
 import { formatTime } from '../utils/formatters.ts';
+import { useClinicContext } from '../context/ClinicContext.tsx';
 
 interface HeaderProps {
   pageTitle: string;
@@ -41,6 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSyncDrawer,
   onTriggerSync,
 }) => {
+  const { activeDoctor, activeClinic } = useClinicContext();
   const [syncState, setSyncState] = useState<SyncEngineState>(syncEngine.getState());
   
   // Dropdown states
@@ -283,18 +285,18 @@ export const Header: React.FC<HeaderProps> = ({
         <div ref={userMenuRef} className="relative">
           <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="w-9 h-9 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] rounded-full bg-[#F1F5F9] border border-[#CBD5E1] text-[#0F172A] flex items-center justify-center font-semibold text-xs hover:border-[#0F766E] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1"
-            title="Doctor profile & clinic settings"
+            className="w-9 h-9 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] rounded-full bg-[#F0FDFA] border border-[#99F6E4] text-[#0F766E] flex items-center justify-center font-bold text-[10px] tracking-tight hover:border-[#0F766E] hover:shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E] focus-visible:ring-offset-1"
+            title={`${activeDoctor.shortName} · ${activeClinic.shortName}`}
             aria-label="Doctor profile and clinic settings"
           >
-            DR
+            {activeDoctor.initials}
           </button>
 
           {isUserMenuOpen && (
             <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-[#E2E8F0] rounded-xl shadow-lg z-50 p-1 animate-in fade-in">
               <div className="p-3 border-b border-[#F1F5F9]">
-                <p className="text-sm font-semibold text-[#0F172A] leading-5">Dr. Vrindavan</p>
-                <p className="text-xs text-[#64748B] leading-4">Lead Physician · Clinic Admin</p>
+                <p className="text-sm font-semibold text-[#0F172A] leading-5">{activeDoctor.shortName}</p>
+                <p className="text-xs text-[#64748B] leading-4">{activeClinic.shortName} · Clinic Admin</p>
               </div>
 
               <div className="py-1">

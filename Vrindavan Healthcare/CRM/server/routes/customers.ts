@@ -13,6 +13,7 @@ customersRouter.get('/', async (_req, res) => {
         phone, 
         email, 
         doctor_assigned AS "doctorAssigned", 
+        clinic_id AS "clinicId",
         category, 
         last_contact AS "lastContact", 
         next_follow_up AS "nextFollowUp", 
@@ -46,16 +47,17 @@ customersRouter.post('/', async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO public.customers (
-        id, name, phone, email, doctor_assigned, category, 
+        id, name, phone, email, doctor_assigned, clinic_id, category, 
         last_contact, next_follow_up, follow_up_status, notes, 
         whatsapp_status, sync_status, created_at, updated_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'synced', $12, $13)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'synced', $13, $14)
       ON CONFLICT (id) DO UPDATE SET
         name = EXCLUDED.name,
         phone = EXCLUDED.phone,
         email = EXCLUDED.email,
         doctor_assigned = EXCLUDED.doctor_assigned,
+        clinic_id = EXCLUDED.clinic_id,
         category = EXCLUDED.category,
         last_contact = EXCLUDED.last_contact,
         next_follow_up = EXCLUDED.next_follow_up,
@@ -67,6 +69,7 @@ customersRouter.post('/', async (req, res) => {
       RETURNING 
         id, name, phone, email, 
         doctor_assigned AS "doctorAssigned", 
+        clinic_id AS "clinicId",
         category, 
         last_contact AS "lastContact", 
         next_follow_up AS "nextFollowUp", 
@@ -83,6 +86,7 @@ customersRouter.post('/', async (req, res) => {
         c.phone,
         c.email || null,
         c.doctorAssigned || 'Dr. Vrindavan Healthcare Team',
+        c.clinicId || 'raman-reti',
         c.category || 'General consultation',
         c.lastContact || null,
         c.nextFollowUp || null,

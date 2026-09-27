@@ -17,6 +17,7 @@ import { StatusBadge } from './StatusBadge.tsx';
 import { formatPhone, cleanPhoneForLink, formatDate, formatPatientDisplayId, getTodayStrIST } from '../utils/formatters.ts';
 import { useClinicalCounts } from '../hooks/useClinicalCounts.ts';
 import { StatCardSkeleton, ListRowSkeleton } from './SkeletonLoader.tsx';
+import { useClinicContext } from '../context/ClinicContext.tsx';
 
 interface DashboardProps {
   customers: Customer[];
@@ -41,6 +42,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onSendWhatsApp,
   onMarkFollowUpComplete,
 }) => {
+  const { activeDoctor, activeClinic } = useClinicContext();
   const counts = useClinicalCounts(customers, followups);
   const {
     todayStrIST,
@@ -90,7 +92,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div>
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-2xl font-semibold leading-8 text-[#0F172A]">
-              {getGreeting()}, Dr. Vrindavan
+              {getGreeting()}, {activeDoctor.shortName}
             </h2>
             <span className="badge-butter font-semibold text-[11px]">
               ★ Clinic OPD Active
@@ -102,7 +104,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             )}
           </div>
           <p className="text-sm font-normal text-[#64748B] leading-5 mt-0.5">
-            {formattedTodayDate} · Vrindavan Healthcare Clinic
+            {formattedTodayDate} · {activeClinic.shortName} Clinic
           </p>
         </div>
 

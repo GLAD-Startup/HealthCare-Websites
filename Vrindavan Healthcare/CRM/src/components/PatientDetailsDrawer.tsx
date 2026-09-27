@@ -8,6 +8,7 @@ import {
   Send
 } from 'lucide-react';
 import type { Customer, FollowUp, WhatsAppLog, FollowUpStatus } from '../types/index.ts';
+import { useClinicContext } from '../context/ClinicContext.tsx';
 import { WhatsAppGlyph } from './WhatsAppGlyph.tsx';
 import { DueBadge } from './DueBadge.tsx';
 import { StatusBadge } from './StatusBadge.tsx';
@@ -39,6 +40,7 @@ export const PatientDetailsDrawer: React.FC<PatientDetailsDrawerProps> = ({
   onMarkFollowUpComplete,
   onUpdateStatus,
 }) => {
+  const { activeDoctor, activeClinic } = useClinicContext();
   const [activeTab, setActiveTab] = useState<'overview' | 'followups' | 'whatsapp'>('overview');
   const [newFollowUpDate, setNewFollowUpDate] = useState('');
   const [newFollowUpNotes, setNewFollowUpNotes] = useState('');
@@ -192,7 +194,13 @@ export const PatientDetailsDrawer: React.FC<PatientDetailsDrawerProps> = ({
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
                     <span className="text-[#64748B] block">Attending doctor</span>
-                    <span className="font-medium text-[#0F172A]">{patient.doctorAssigned || 'Dr. Vrindavan'}</span>
+                    <span className="font-medium text-[#0F172A]">{patient.doctorAssigned || activeDoctor.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#64748B] block">Clinic location</span>
+                    <span className="font-medium text-[#0F172A]">
+                      {patient.clinicId === 'hanuman-bagh' ? 'Hanuman Bagh' : patient.clinicId === 'raman-reti' ? 'Raman Reti' : activeClinic.shortName}
+                    </span>
                   </div>
                   <div>
                     <span className="text-[#64748B] block mb-1">Follow-up status</span>

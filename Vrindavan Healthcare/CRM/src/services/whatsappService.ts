@@ -31,7 +31,7 @@ export function renderTemplate(
   result = result.replace(/\{\{\s*name\s*\}\}/gi, variables.patient_name || 'Patient');
   result = result.replace(/\{\{\s*date\s*\}\}/gi, variables.date || 'today');
   result = result.replace(/\{\{\s*clinic_name\s*\}\}/gi, variables.clinic_name || 'Vrindavan Healthcare');
-  result = result.replace(/\{\{\s*doctor_name\s*\}\}/gi, variables.doctor_name || 'Dr. Vrindavan');
+  result = result.replace(/\{\{\s*doctor_name\s*\}\}/gi, variables.doctor_name || 'Vrindavan Healthcare');
   result = result.replace(/\{\{\s*notes\s*\}\}/gi, variables.notes || '');
   return result;
 }
@@ -95,6 +95,7 @@ export async function sendWhatsAppMessage({
       customerId: customer.id,
       customerName: customer.name,
       phone: customer.phone,
+      clinicId: customer.clinicId,
       templateTitle: templateTitle || 'Direct Message',
       messageBody: message,
       channel,
